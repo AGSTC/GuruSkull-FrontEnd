@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTheme } from '../../context/ThemeContext';
 import Header from '../../components/layout/Header';
 import Sidebar from '../../components/layout/Sidebar';
 import Footer from '../../components/layout/Footer';
-
 import { 
   Plus,
   Search,
@@ -19,7 +18,10 @@ import {
   DollarSign,
   GraduationCap,
   Clock,
-  CheckCircle
+  CheckCircle,
+  X,
+  Archive,
+  Send
 } from 'lucide-react';
 
 const AnnouncementManagement = () => {
@@ -30,16 +32,113 @@ const AnnouncementManagement = () => {
   const [selectedStatus, setSelectedStatus] = useState('All Status');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedAnnouncements, setSelectedAnnouncements] = useState([]);
+  const [announcements, setAnnouncements] = useState([]);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedAnnouncement, setSelectedAnnouncement] = useState(null);
+  const [newAnnouncement, setNewAnnouncement] = useState({
+    title: '',
+    description: '',
+    category: 'Academic',
+    priority: 'Medium',
+    status: 'Draft'
+  });
 
   const toggleSidebar = () => {
     setIsSidebarExpanded(!isSidebarExpanded);
   };
 
+  // Initialize announcements
+  useEffect(() => {
+    const initialAnnouncements = [
+      {
+        id: 1,
+        category: 'Academic',
+        title: 'Mid-Term Examination Schedule Released',
+        description: 'The mid-term examination schedule for all classes has been released. Please check the notice board for detailed timings and subject-wise schedules.',
+        priority: 'High',
+        status: 'Active',
+        author: 'Mrs. Priya Sharma',
+        date: '15 Jan 2024, 04:30 pm',
+        views: 245,
+        categoryIcon: BookOpen,
+        categoryColor: 'bg-blue-100 text-blue-800'
+      },
+      {
+        id: 2,
+        category: 'Events',
+        title: 'Annual Sports Day Celebration',
+        description: 'Join us for the annual sports day celebration. Various competitions and activities planned for all students.',
+        priority: 'Medium',
+        status: 'Active',
+        author: 'Mr. Rajesh Kumar',
+        date: '14 Jan 2024, 02:15 pm',
+        views: 189,
+        categoryIcon: PartyPopper,
+        categoryColor: 'bg-green-100 text-green-800'
+      },
+      {
+        id: 3,
+        category: 'Fees',
+        title: 'Fee Structure Update for Next Session',
+        description: 'Updated fee structure for the upcoming academic session. Please review the changes and contact office for queries.',
+        priority: 'High',
+        status: 'Active',
+        author: 'Mrs. Priya Sharma',
+        date: '13 Jan 2024, 11:45 am',
+        views: 324,
+        categoryIcon: DollarSign,
+        categoryColor: 'bg-purple-100 text-purple-800'
+      },
+      {
+        id: 4,
+        category: 'Holidays',
+        title: 'Winter Break Holiday Notice',
+        description: 'Winter break holidays announced. Classes will resume after the holiday period with regular schedule.',
+        priority: 'Low',
+        status: 'Active',
+        author: 'Mrs. Priya Sharma',
+        date: '12 Jan 2024, 09:30 am',
+        views: 156,
+        categoryIcon: Calendar,
+        categoryColor: 'bg-red-100 text-red-800'
+      },
+      {
+        id: 5,
+        category: 'Schedule',
+        title: 'Class Schedule Changes This Week',
+        description: 'Important changes in class schedules for this week due to teacher training program.',
+        priority: 'Medium',
+        status: 'Draft',
+        author: 'Mrs. Priya Sharma',
+        date: '11 Jan 2024, 03:20 pm',
+        views: 98,
+        categoryIcon: Clock,
+        categoryColor: 'bg-yellow-100 text-yellow-800'
+      },
+      {
+        id: 6,
+        category: 'Academic',
+        title: 'Science Fair Project Submissions',
+        description: 'Last date for science fair project submissions. Students are requested to submit their projects by the deadline.',
+        priority: 'High',
+        status: 'Active',
+        author: 'Dr. Sarah Johnson',
+        date: '10 Jan 2024, 01:45 pm',
+        views: 267,
+        categoryIcon: BookOpen,
+        categoryColor: 'bg-blue-100 text-blue-800'
+      }
+    ];
+    setAnnouncements(initialAnnouncements);
+  }, []);
+
   // Stats data
   const stats = [
     {
       title: 'Total Announcements',
-      value: '48',
+      value: announcements.length.toString(),
       icon: '📢',
       bgColor: 'bg-blue-50',
       iconBg: 'bg-blue-100',
@@ -47,7 +146,7 @@ const AnnouncementManagement = () => {
     },
     {
       title: 'Active Announcements',
-      value: '32',
+      value: announcements.filter(a => a.status === 'Active').length.toString(),
       icon: '🟢',
       bgColor: 'bg-green-50',
       iconBg: 'bg-green-100',
@@ -55,7 +154,7 @@ const AnnouncementManagement = () => {
     },
     {
       title: 'Scheduled',
-      value: '6',
+      value: announcements.filter(a => a.status === 'Scheduled').length.toString(),
       icon: '📅',
       bgColor: 'bg-orange-50',
       iconBg: 'bg-orange-100',
@@ -63,7 +162,7 @@ const AnnouncementManagement = () => {
     },
     {
       title: 'Total Views',
-      value: '1,247',
+      value: announcements.reduce((sum, a) => sum + a.views, 0).toLocaleString(),
       icon: '👁️',
       bgColor: 'bg-purple-50',
       iconBg: 'bg-purple-100',
@@ -82,87 +181,17 @@ const AnnouncementManagement = () => {
     'Faculty'
   ];
 
-  // Sample announcements data
-  const announcements = [
-    {
-      id: 1,
-      category: 'Academic',
-      title: 'Mid-Term Examination Schedule Released',
-      description: 'The mid-term examination schedule for all classes has been released. Please check the notice board for detailed timings and subject-wise schedules.',
-      priority: 'High',
-      status: 'Active',
-      author: 'Mrs. Priya Sharma',
-      date: '15 Jan 2024, 04:30 pm',
-      views: 245,
-      categoryIcon: BookOpen,
-      categoryColor: 'bg-blue-100 text-blue-800'
-    },
-    {
-      id: 2,
-      category: 'Events',
-      title: 'Annual Sports Day Celebration',
-      description: 'Join us for the annual sports day celebration. Various competitions and activities planned for all students.',
-      priority: 'Medium',
-      status: 'Active',
-      author: 'Mr. Rajesh Kumar',
-      date: '14 Jan 2024, 02:15 pm',
-      views: 189,
-      categoryIcon: PartyPopper,
-      categoryColor: 'bg-green-100 text-green-800'
-    },
-    {
-      id: 3,
-      category: 'Fees',
-      title: 'Fee Structure Update for Next Session',
-      description: 'Updated fee structure for the upcoming academic session. Please review the changes and contact office for queries.',
-      priority: 'High',
-      status: 'Active',
-      author: 'Mrs. Priya Sharma',
-      date: '13 Jan 2024, 11:45 am',
-      views: 324,
-      categoryIcon: DollarSign,
-      categoryColor: 'bg-purple-100 text-purple-800'
-    },
-    {
-      id: 4,
-      category: 'Holidays',
-      title: 'Winter Break Holiday Notice',
-      description: 'Winter break holidays announced. Classes will resume after the holiday period with regular schedule.',
-      priority: 'Low',
-      status: 'Active',
-      author: 'Mrs. Priya Sharma',
-      date: '12 Jan 2024, 09:30 am',
-      views: 156,
-      categoryIcon: Calendar,
-      categoryColor: 'bg-red-100 text-red-800'
-    },
-    {
-      id: 5,
-      category: 'Schedule',
-      title: 'Class Schedule Changes This Week',
-      description: 'Important changes in class schedules for this week due to teacher training program.',
-      priority: 'Medium',
-      status: 'Draft',
-      author: 'Mrs. Priya Sharma',
-      date: '11 Jan 2024, 03:20 pm',
-      views: 98,
-      categoryIcon: Clock,
-      categoryColor: 'bg-yellow-100 text-yellow-800'
-    },
-    {
-      id: 6,
-      category: 'Academic',
-      title: 'Science Fair Project Submissions',
-      description: 'Last date for science fair project submissions. Students are requested to submit their projects by the deadline.',
-      priority: 'High',
-      status: 'Active',
-      author: 'Dr. Sarah Johnson',
-      date: '10 Jan 2024, 01:45 pm',
-      views: 267,
-      categoryIcon: BookOpen,
-      categoryColor: 'bg-blue-100 text-blue-800'
-    }
-  ];
+  // Filter announcements based on selected filters and search
+  const filteredAnnouncements = announcements.filter(announcement => {
+    const matchesCategory = selectedCategory === 'All Categories' || announcement.category === selectedCategory;
+    const matchesPriority = selectedPriority === 'All Priorities' || announcement.priority === selectedPriority;
+    const matchesStatus = selectedStatus === 'All Status' || announcement.status === selectedStatus;
+    const matchesSearch = searchQuery === '' || 
+      announcement.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      announcement.description.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    return matchesCategory && matchesPriority && matchesStatus && matchesSearch;
+  });
 
   const handleCategoryClick = (category) => {
     setSelectedCategory(category);
@@ -177,17 +206,111 @@ const AnnouncementManagement = () => {
   };
 
   const handleSelectAll = () => {
-    if (selectedAnnouncements.length === announcements.length) {
+    if (selectedAnnouncements.length === filteredAnnouncements.length) {
       setSelectedAnnouncements([]);
     } else {
-      setSelectedAnnouncements(announcements.map(announcement => announcement.id));
+      setSelectedAnnouncements(filteredAnnouncements.map(announcement => announcement.id));
     }
   };
 
   const handleBulkAction = (action) => {
-    console.log(`Bulk ${action} for announcements:`, selectedAnnouncements);
-    // Add your bulk action logic here
+    const updatedAnnouncements = announcements.map(announcement => {
+      if (selectedAnnouncements.includes(announcement.id)) {
+        return {
+          ...announcement,
+          status: action === 'publish' ? 'Active' : 
+                  action === 'archive' ? 'Archived' : announcement.status
+        };
+      }
+      return announcement;
+    });
+
+    if (action === 'delete') {
+      setAnnouncements(announcements.filter(a => !selectedAnnouncements.includes(a.id)));
+    } else {
+      setAnnouncements(updatedAnnouncements);
+    }
     setSelectedAnnouncements([]);
+  };
+
+  const handleCreateAnnouncement = () => {
+    const newAnnouncementObj = {
+      id: announcements.length + 1,
+      ...newAnnouncement,
+      author: 'Mrs. Priya Sharma',
+      date: new Date().toLocaleDateString('en-GB', { 
+        day: 'numeric', 
+        month: 'short', 
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      }),
+      views: 0,
+      categoryIcon: getCategoryIcon(newAnnouncement.category),
+      categoryColor: getCategoryColor(newAnnouncement.category)
+    };
+    
+    setAnnouncements([newAnnouncementObj, ...announcements]);
+    setIsCreateModalOpen(false);
+    // Reset form after closing modal
+    setNewAnnouncement({
+      title: '',
+      description: '',
+      category: 'Academic',
+      priority: 'Medium',
+      status: 'Draft'
+    });
+  };
+
+  const handleEditAnnouncement = () => {
+    const updatedAnnouncements = announcements.map(announcement => 
+      announcement.id === selectedAnnouncement.id 
+        ? { ...selectedAnnouncement }
+        : announcement
+    );
+    setAnnouncements(updatedAnnouncements);
+    setIsEditModalOpen(false);
+  };
+
+  const handleDeleteAnnouncement = (id) => {
+    setAnnouncements(announcements.filter(a => a.id !== id));
+    setSelectedAnnouncements(selectedAnnouncements.filter(annId => annId !== id));
+  };
+
+  const handleCreateModalClose = () => {
+    setIsCreateModalOpen(false);
+    // Reset form when closing modal
+    setNewAnnouncement({
+      title: '',
+      description: '',
+      category: 'Academic',
+      priority: 'Medium',
+      status: 'Draft'
+    });
+  };
+
+  const getCategoryIcon = (category) => {
+    switch (category) {
+      case 'Academic': return BookOpen;
+      case 'Events': return PartyPopper;
+      case 'Fees': return DollarSign;
+      case 'Holidays': return Calendar;
+      case 'Schedule': return Clock;
+      case 'Faculty': return Users;
+      default: return BookOpen;
+    }
+  };
+
+  const getCategoryColor = (category) => {
+    switch (category) {
+      case 'Academic': return 'bg-blue-100 text-blue-800';
+      case 'Events': return 'bg-green-100 text-green-800';
+      case 'Fees': return 'bg-purple-100 text-purple-800';
+      case 'Holidays': return 'bg-red-100 text-red-800';
+      case 'Schedule': return 'bg-yellow-100 text-yellow-800';
+      case 'Faculty': return 'bg-indigo-100 text-indigo-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
   };
 
   const getPriorityColor = (priority) => {
@@ -204,9 +327,322 @@ const AnnouncementManagement = () => {
       case 'Active': return 'bg-green-100 text-green-800';
       case 'Draft': return 'bg-gray-100 text-gray-800';
       case 'Scheduled': return 'bg-blue-100 text-blue-800';
+      case 'Archived': return 'bg-orange-100 text-orange-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
+
+  // Modals
+  const CreateAnnouncementModal = () => (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className={`p-6 rounded-2xl w-full max-w-md ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>
+        <div className="flex justify-between items-center mb-4">
+          <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            Create New Announcement
+          </h3>
+          <button onClick={handleCreateModalClose} className={`p-1 rounded-full ${isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-700'}`}>
+            <X size={20} />
+          </button>
+        </div>
+        
+        <div className="space-y-4">
+          <div>
+            <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+              Title
+            </label>
+            <input
+              type="text"
+              value={newAnnouncement.title}
+              onChange={(e) => setNewAnnouncement({...newAnnouncement, title: e.target.value})}
+              className={`w-full px-3 py-2 rounded-lg border text-sm ${
+                isDarkMode 
+                  ? 'bg-slate-700 border-slate-600 text-white' 
+                  : 'bg-white border-gray-300 text-gray-900'
+              }`}
+              placeholder="Enter announcement title"
+            />
+          </div>
+          
+          <div>
+            <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+              Description
+            </label>
+            <textarea
+              value={newAnnouncement.description}
+              onChange={(e) => setNewAnnouncement({...newAnnouncement, description: e.target.value})}
+              rows={3}
+              className={`w-full px-3 py-2 rounded-lg border text-sm ${
+                isDarkMode 
+                  ? 'bg-slate-700 border-slate-600 text-white' 
+                  : 'bg-white border-gray-300 text-gray-900'
+              }`}
+              placeholder="Enter announcement description"
+            />
+          </div>
+          
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                Category
+              </label>
+              <select
+                value={newAnnouncement.category}
+                onChange={(e) => setNewAnnouncement({...newAnnouncement, category: e.target.value})}
+                className={`w-full px-3 py-2 rounded-lg border text-sm ${
+                  isDarkMode 
+                    ? 'bg-slate-700 border-slate-600 text-white' 
+                    : 'bg-white border-gray-300 text-gray-900'
+                }`}
+              >
+                {categories.filter(cat => cat !== 'All Categories').map(category => (
+                  <option key={category} value={category}>{category}</option>
+                ))}
+              </select>
+            </div>
+            
+            <div>
+              <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                Priority
+              </label>
+              <select
+                value={newAnnouncement.priority}
+                onChange={(e) => setNewAnnouncement({...newAnnouncement, priority: e.target.value})}
+                className={`w-full px-3 py-2 rounded-lg border text-sm ${
+                  isDarkMode 
+                    ? 'bg-slate-700 border-slate-600 text-white' 
+                    : 'bg-white border-gray-300 text-gray-900'
+                }`}
+              >
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+              </select>
+            </div>
+          </div>
+          
+          <div>
+            <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+              Status
+            </label>
+            <select
+              value={newAnnouncement.status}
+              onChange={(e) => setNewAnnouncement({...newAnnouncement, status: e.target.value})}
+              className={`w-full px-3 py-2 rounded-lg border text-sm ${
+                isDarkMode 
+                  ? 'bg-slate-700 border-slate-600 text-white' 
+                  : 'bg-white border-gray-300 text-gray-900'
+              }`}
+            >
+              <option value="Draft">Draft</option>
+              <option value="Scheduled">Scheduled</option>
+              <option value="Active">Active</option>
+            </select>
+          </div>
+        </div>
+        
+        <div className="flex gap-3 mt-6">
+          <button
+            onClick={handleCreateModalClose}
+            className={`flex-1 px-4 py-2 rounded-lg text-sm font-medium ${
+              isDarkMode 
+                ? 'bg-slate-700 text-gray-300 hover:bg-slate-600' 
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleCreateAnnouncement}
+            className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600"
+          >
+            Create
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  const ViewAnnouncementModal = () => (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className={`p-6 rounded-2xl w-full max-w-md ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>
+        <div className="flex justify-between items-center mb-4">
+          <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            Announcement Details
+          </h3>
+          <button onClick={() => setIsViewModalOpen(false)} className={`p-1 rounded-full ${isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-700'}`}>
+            <X size={20} />
+          </button>
+        </div>
+        
+        {selectedAnnouncement && (
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <span className={`px-2 py-1 rounded-full text-xs font-medium ${getCategoryColor(selectedAnnouncement.category)}`}>
+                {selectedAnnouncement.category}
+              </span>
+              <span className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(selectedAnnouncement.priority)}`}>
+                {selectedAnnouncement.priority}
+              </span>
+              <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(selectedAnnouncement.status)}`}>
+                {selectedAnnouncement.status}
+              </span>
+            </div>
+            
+            <h4 className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              {selectedAnnouncement.title}
+            </h4>
+            
+            <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+              {selectedAnnouncement.description}
+            </p>
+            
+            <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+              <p>Author: {selectedAnnouncement.author}</p>
+              <p>Date: {selectedAnnouncement.date}</p>
+              <p>Views: {selectedAnnouncement.views}</p>
+            </div>
+          </div>
+        )}
+        
+        <button
+          onClick={() => setIsViewModalOpen(false)}
+          className="w-full mt-6 px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  );
+
+  const EditAnnouncementModal = () => (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className={`p-6 rounded-2xl w-full max-w-md ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>
+        <div className="flex justify-between items-center mb-4">
+          <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            Edit Announcement
+          </h3>
+          <button onClick={() => setIsEditModalOpen(false)} className={`p-1 rounded-full ${isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-700'}`}>
+            <X size={20} />
+          </button>
+        </div>
+        
+        {selectedAnnouncement && (
+          <div className="space-y-4">
+            <div>
+              <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                Title
+              </label>
+              <input
+                type="text"
+                value={selectedAnnouncement.title}
+                onChange={(e) => setSelectedAnnouncement({...selectedAnnouncement, title: e.target.value})}
+                className={`w-full px-3 py-2 rounded-lg border text-sm ${
+                  isDarkMode 
+                    ? 'bg-slate-700 border-slate-600 text-white' 
+                    : 'bg-white border-gray-300 text-gray-900'
+                }`}
+              />
+            </div>
+            
+            <div>
+              <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                Description
+              </label>
+              <textarea
+                value={selectedAnnouncement.description}
+                onChange={(e) => setSelectedAnnouncement({...selectedAnnouncement, description: e.target.value})}
+                rows={3}
+                className={`w-full px-3 py-2 rounded-lg border text-sm ${
+                  isDarkMode 
+                    ? 'bg-slate-700 border-slate-600 text-white' 
+                    : 'bg-white border-gray-300 text-gray-900'
+                }`}
+              />
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Category
+                </label>
+                <select
+                  value={selectedAnnouncement.category}
+                  onChange={(e) => setSelectedAnnouncement({...selectedAnnouncement, category: e.target.value})}
+                  className={`w-full px-3 py-2 rounded-lg border text-sm ${
+                    isDarkMode 
+                      ? 'bg-slate-700 border-slate-600 text-white' 
+                      : 'bg-white border-gray-300 text-gray-900'
+                  }`}
+                >
+                  {categories.filter(cat => cat !== 'All Categories').map(category => (
+                    <option key={category} value={category}>{category}</option>
+                  ))}
+                </select>
+              </div>
+              
+              <div>
+                <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Priority
+                </label>
+                <select
+                  value={selectedAnnouncement.priority}
+                  onChange={(e) => setSelectedAnnouncement({...selectedAnnouncement, priority: e.target.value})}
+                  className={`w-full px-3 py-2 rounded-lg border text-sm ${
+                    isDarkMode 
+                      ? 'bg-slate-700 border-slate-600 text-white' 
+                      : 'bg-white border-gray-300 text-gray-900'
+                  }`}
+                >
+                  <option value="High">High</option>
+                  <option value="Medium">Medium</option>
+                  <option value="Low">Low</option>
+                </select>
+              </div>
+            </div>
+            
+            <div>
+              <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                Status
+              </label>
+              <select
+                value={selectedAnnouncement.status}
+                onChange={(e) => setSelectedAnnouncement({...selectedAnnouncement, status: e.target.value})}
+                className={`w-full px-3 py-2 rounded-lg border text-sm ${
+                  isDarkMode 
+                    ? 'bg-slate-700 border-slate-600 text-white' 
+                    : 'bg-white border-gray-300 text-gray-900'
+                }`}
+              >
+                <option value="Draft">Draft</option>
+                <option value="Scheduled">Scheduled</option>
+                <option value="Active">Active</option>
+                <option value="Archived">Archived</option>
+              </select>
+            </div>
+          </div>
+        )}
+        
+        <div className="flex gap-3 mt-6">
+          <button
+            onClick={() => setIsEditModalOpen(false)}
+            className={`flex-1 px-4 py-2 rounded-lg text-sm font-medium ${
+              isDarkMode 
+                ? 'bg-slate-700 text-gray-300 hover:bg-slate-600' 
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleEditAnnouncement}
+            className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600"
+          >
+            Save Changes
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className={`min-h-screen w-full ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
@@ -335,6 +771,7 @@ const AnnouncementManagement = () => {
                     <option value="Active">Active</option>
                     <option value="Draft">Draft</option>
                     <option value="Scheduled">Scheduled</option>
+                    <option value="Archived">Archived</option>
                   </select>
                 </div>
 
@@ -357,7 +794,10 @@ const AnnouncementManagement = () => {
                 </div>
               </div>
 
-              <button className="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors flex items-center gap-2">
+              <button 
+                onClick={() => setIsCreateModalOpen(true)}
+                className="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors flex items-center gap-2"
+              >
                 <Plus size={16} />
                 Create Announcement
               </button>
@@ -373,20 +813,23 @@ const AnnouncementManagement = () => {
                   <div className="flex gap-2">
                     <button
                       onClick={() => handleBulkAction('publish')}
-                      className="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600 transition-colors"
+                      className="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600 transition-colors flex items-center gap-1"
                     >
+                      <Send size={14} />
                       Publish
                     </button>
                     <button
                       onClick={() => handleBulkAction('archive')}
-                      className="px-3 py-1 bg-gray-500 text-white rounded text-sm hover:bg-gray-600 transition-colors"
+                      className="px-3 py-1 bg-orange-500 text-white rounded text-sm hover:bg-orange-600 transition-colors flex items-center gap-1"
                     >
+                      <Archive size={14} />
                       Archive
                     </button>
                     <button
                       onClick={() => handleBulkAction('delete')}
-                      className="px-3 py-1 bg-red-500 text-white rounded text-sm hover:bg-red-600 transition-colors"
+                      className="px-3 py-1 bg-red-500 text-white rounded text-sm hover:bg-red-600 transition-colors flex items-center gap-1"
                     >
+                      <Trash2 size={14} />
                       Delete
                     </button>
                   </div>
@@ -397,7 +840,7 @@ const AnnouncementManagement = () => {
 
           {/* Announcements Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {announcements.map((announcement) => {
+            {filteredAnnouncements.map((announcement) => {
               const CategoryIcon = announcement.categoryIcon;
               return (
                 <div
@@ -458,13 +901,28 @@ const AnnouncementManagement = () => {
                         <span>{announcement.views}</span>
                       </div>
                       <div className="flex gap-1">
-                        <button className={`p-1 rounded hover:bg-gray-100 dark:hover:bg-slate-700 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                        <button 
+                          onClick={() => {
+                            setSelectedAnnouncement(announcement);
+                            setIsViewModalOpen(true);
+                          }}
+                          className={`p-1 rounded hover:bg-gray-100 dark:hover:bg-slate-700 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
+                        >
                           <Eye className="w-4 h-4" />
                         </button>
-                        <button className={`p-1 rounded hover:bg-gray-100 dark:hover:bg-slate-700 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                        <button 
+                          onClick={() => {
+                            setSelectedAnnouncement({...announcement});
+                            setIsEditModalOpen(true);
+                          }}
+                          className={`p-1 rounded hover:bg-gray-100 dark:hover:bg-slate-700 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
+                        >
                           <Edit className="w-4 h-4" />
                         </button>
-                        <button className={`p-1 rounded hover:bg-gray-100 dark:hover:bg-slate-700 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                        <button 
+                          onClick={() => handleDeleteAnnouncement(announcement.id)}
+                          className={`p-1 rounded hover:bg-gray-100 dark:hover:bg-slate-700 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
+                        >
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -478,6 +936,11 @@ const AnnouncementManagement = () => {
       </main>
 
       <Footer isSidebarExpanded={isSidebarExpanded} />
+
+      {/* Modals */}
+      {isCreateModalOpen && <CreateAnnouncementModal />}
+      {isViewModalOpen && <ViewAnnouncementModal />}
+      {isEditModalOpen && <EditAnnouncementModal />}
     </div>
   );
 };

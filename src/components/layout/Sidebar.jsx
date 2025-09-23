@@ -1,4 +1,4 @@
-// Fixed Sidebar.jsx with proper role handling
+// Updated Sidebar.jsx with profile photo handling
 import React, { useState, useEffect } from 'react';
 import { useTheme } from '../../context/ThemeContext';
 import profile from '../../assets/images/profile.png';
@@ -29,57 +29,89 @@ const Sidebar = ({ isExpanded, activeItem = 'dashboard' }) => {
   const [openItems, setOpenItems] = useState({});
   const [userRole, setUserRole] = useState('tuition_owner');
   const [userData, setUserData] = useState(null);
+  const [profilePhoto, setProfilePhoto] = useState(profile);
   const navigate = useNavigate();
 
-  // Function to get current user data
+  // Function to get current user data and profile photo
   const getCurrentUserData = () => {
     try {
       const storedUser = localStorage.getItem('user');
-      console.log('Sidebar - Raw stored user:', storedUser); // Debug log
+      console.log('Sidebar - Raw stored user:', storedUser);
       
       if (storedUser) {
         const user = JSON.parse(storedUser);
-        console.log('Sidebar - Parsed user data:', user); // Debug log
+        console.log('Sidebar - Parsed user data:', user);
         setUserData(user);
         setUserRole(user.role || 'tuition_owner');
+        
+        // Set profile photo from localStorage if available
+        if (user.profilePhotoUrl) {
+          setProfilePhoto(user.profilePhotoUrl);
+        } else {
+          // Fallback to role-based profile images
+          setProfilePhoto(getRoleBasedProfileImage(user.role || 'tuition_owner'));
+        }
       } else {
-        console.log('Sidebar - No user data found'); // Debug log
+        console.log('Sidebar - No user data found');
         setUserData(null);
         setUserRole('tuition_owner');
+        setProfilePhoto(profile);
       }
     } catch (error) {
       console.error('Sidebar - Error parsing user data:', error);
       setUserData(null);
       setUserRole('tuition_owner');
+      setProfilePhoto(profile);
     }
+  };
+
+  // Get role-based profile image
+  const getRoleBasedProfileImage = (role) => {
+    if (role === 'teacher') {
+      return teacherProfile;
+    } else if (role === 'student') {
+      return studentProfile;
+    } else if (role === 'parent') {
+      return parentProfile;
+    }
+    return profile;
   };
 
   useEffect(() => {
     // Initial load
     getCurrentUserData();
     
+    // Listen for profile photo changes
+    const handleProfilePhotoChange = (event) => {
+      if (event.detail && event.detail.photoUrl) {
+        setProfilePhoto(event.detail.photoUrl);
+      }
+    };
+    
     // Listen for storage changes and custom events
     const handleDataChange = () => {
-      console.log('Sidebar - Data change detected'); // Debug log
+      console.log('Sidebar - Data change detected');
       getCurrentUserData();
     };
     
     window.addEventListener('storage', handleDataChange);
     window.addEventListener('userDataChanged', handleDataChange);
+    window.addEventListener('profilePhotoChanged', handleProfilePhotoChange);
     
     return () => {
       window.removeEventListener('storage', handleDataChange);
       window.removeEventListener('userDataChanged', handleDataChange);
+      window.removeEventListener('profilePhotoChanged', handleProfilePhotoChange);
     };
   }, []);
 
-  // Also update when isExpanded changes (this helps with the expansion issue)
+  // Also update when isExpanded changes
   useEffect(() => {
-    console.log('Sidebar - isExpanded changed, refreshing user data'); // Debug log
+    console.log('Sidebar - isExpanded changed, refreshing user data');
     getCurrentUserData();
   }, [isExpanded]);
 
-  // Tuition Owner menu items (original full menu)
+  // Menu items arrays (existing code remains the same)
   const ownerMenuItems = [
     { id: 'dashboard', name: 'Dashboard', icon: LayoutDashboard, path: '/Dashboard' },
     { id: 'schedule', name: 'Schedule', icon: Calendar, path: '/Schedule' },
@@ -92,7 +124,6 @@ const Sidebar = ({ isExpanded, activeItem = 'dashboard' }) => {
     { id: 'settings', name: 'Settings', icon: Settings, path: '/SettingsManagement' }
   ];
 
-  // Student menu items (most limited menu)
   const studentMenuItems = [
     { id: 'dashboard', name: 'Dashboard', icon: LayoutDashboard, path: '/StudentDashboard' },
     { id: 'schedule', name: 'Class Schedule', icon: Calendar, path: '/StudentSchedule' },
@@ -102,7 +133,7 @@ const Sidebar = ({ isExpanded, activeItem = 'dashboard' }) => {
     { id: 'messages', name: 'Chat', icon: MessageSquare, path: '/Chat' },
     { id: 'settings', name: 'Settings', icon: Settings, path: '/StudentSettings' }
   ];
-  // Teacher menu items (limited menu)
+
   const teacherMenuItems = [
     { id: 'dashboard', name: 'Dashboard', icon: LayoutDashboard, path: '/TeacherDashboard' },
     { id: 'schedule', name: 'Schedule', icon: Calendar, path: '/TeacherSchedule' },
@@ -112,7 +143,6 @@ const Sidebar = ({ isExpanded, activeItem = 'dashboard' }) => {
     { id: 'announcements', name: 'Announcements', icon: Megaphone, path: '/TeacherAnnouncements' },
     { id: 'messages', name: 'Messages', icon: MessageSquare, path: '/Chat' },
     { id: 'settings', name: 'Settings', icon: Settings, path: '/TeacherSettings' }
-    
   ];
 
   const parentMenuItems = [
@@ -123,32 +153,15 @@ const Sidebar = ({ isExpanded, activeItem = 'dashboard' }) => {
     { id: 'announcements', name: 'Announcements', icon: Megaphone, path: '/ParentAnnouncements' },
     { id: 'messages', name: 'Messages', icon: MessageSquare, path: '/Chat' },
     { id: 'settings', name: 'Settings', icon: Settings, path: '/ParentSettings'}
-    
   ];
 
   // Get menu items based on user role
   const getMenuItems = () => {
-    console.log('Sidebar - Getting menu items for role:', userRole); // Debug log
+    console.log('Sidebar - Getting menu items for role:', userRole);
     if (userRole === 'teacher') return teacherMenuItems;
     if (userRole === 'student') return studentMenuItems;
     if (userRole === 'parent') return parentMenuItems;
     return ownerMenuItems;
-  };
-
-  // Get profile image based on user role
-  const getProfileImage = () => {
-    if (userData && userData.profileImage === 'teacher-profile.png') {
-      console.log('Sidebar - Using teacher profile image'); // Debug log
-      return teacherProfile;
-    } else if (userData && userData.profileImage === 'student-profile.png') {
-      console.log('Sidebar - Using student profile image'); // Debug log
-      return studentProfile;
-    }else if (userData && userData.profileImage === 'parent-profile.png') {
-      console.log('Sidebar - Using parent profile image'); // Debug log
-      return parentProfile;
-    }
-    console.log('Sidebar - Using default profile image'); // Debug log
-    return profile;
   };
 
   const toggleItem = (itemId) => {
@@ -164,10 +177,9 @@ const Sidebar = ({ isExpanded, activeItem = 'dashboard' }) => {
       navigate('/TeacherProfile');
     } else if (userRole === 'student') {
       navigate('/StudentProfile');
-    }else if (userRole === 'parent') {
+    } else if (userRole === 'parent') {
       navigate('/ParentSettings');
-    } 
-    else {
+    } else {
       navigate('/Profile'); // Owner profile
     }
   };
@@ -181,7 +193,7 @@ const Sidebar = ({ isExpanded, activeItem = 'dashboard' }) => {
       {/* Profile Section at the top */}
       <div className={`p-4 border-b ${isDarkMode ? 'border-slate-700' : 'border-gray-300'} flex flex-col items-center text-center`}>
         <img
-          src={getProfileImage()}
+          src={profilePhoto}
           alt="Profile"
           className={`rounded-full flex-shrink-0 transition-all duration-300 ${isExpanded ? 'w-20 h-20' : 'w-8 h-8'
             }`}
@@ -241,11 +253,11 @@ const Sidebar = ({ isExpanded, activeItem = 'dashboard' }) => {
               ? 'bg-green-100 text-green-700' 
               : userRole === 'student'
               ? 'bg-orange-100 text-orange-700'
+              : userRole === 'parent'
+              ? 'bg-purple-100 text-purple-700'
               : 'bg-blue-100 text-blue-700'
           }`}>
-            {userRole === 'teacher' ? 'Teacher' : userRole === 'student' ? 'Student' : 'Owner'} 
-            {/* Debug info - remove in production */}
-            <span className="ml-2 opacity-50">({userRole})</span>
+            {userRole === 'teacher' ? 'Teacher' : userRole === 'student' ? 'Student' : userRole === 'parent' ? 'Parent' : 'Owner'} 
           </span>
         </div>
       )}

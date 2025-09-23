@@ -1,21 +1,27 @@
 // Complete Login.jsx with role-based authentication
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Sun, Moon } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
-import logo from '../../assets/images/test.png';
+import logoDark from '../../assets/images/LogoforDark.png';
+import logoLight from '../../assets/images/LogoforLight.png';
 import { Link } from "react-router-dom";
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const { isDarkMode, toggleTheme } = useTheme();
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
     password: ''
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+
+  // Refs for input fields
+  const usernameRef = useRef(null);
+  const passwordRef = useRef(null);
 
   // User credentials for different roles
   const userCredentials = {
@@ -63,6 +69,21 @@ const LoginPage = () => {
     }
   };
 
+  // Handle keyboard navigation
+  const handleKeyDown = (e, fieldType) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      
+      if (fieldType === 'username') {
+        // Move focus to password field
+        passwordRef.current?.focus();
+      } else if (fieldType === 'password') {
+        // Submit the form
+        handleSubmit(e);
+      }
+    }
+  };
+
   const validateForm = () => {
     const newErrors = {};
 
@@ -102,6 +123,12 @@ const LoginPage = () => {
 
       localStorage.setItem('authToken', 'authenticated');
       localStorage.setItem('user', JSON.stringify(userData));
+
+      // Store remember me preference
+      if (rememberMe) {
+        localStorage.setItem('rememberMe', 'true');
+        localStorage.setItem('savedUsername', formData.username);
+      }
 
       // Dispatch custom event to notify other components of user data change
       window.dispatchEvent(new Event('userDataChanged'));
@@ -217,7 +244,8 @@ const LoginPage = () => {
 
             {/* Logo */}
             <div className="flex items-center justify-center mb-0 gap-3 w-100">
-              <img src={logo} alt="GuruSkull Logo" className='w-80'></img>
+              <img src={isDarkMode ? logoDark : logoLight} 
+                     alt="GuruSkull Logo" className='w-80'></img>
             </div>
 
             {/* Welcome Title */}
@@ -275,15 +303,17 @@ const LoginPage = () => {
               ? 'bg-black/40 border border-white/10'
               : 'bg-white/80 border border-black/10'
               }`}>
-              <div className="flex flex-col gap-5">
+              <form onSubmit={handleSubmit} className="flex flex-col gap-5">
 
                 {/* Username Input */}
                 <div>
                   <input
+                    ref={usernameRef}
                     type="text"
                     name="username"
                     value={formData.username}
                     onChange={handleInputChange}
+                    onKeyDown={(e) => handleKeyDown(e, 'username')}
                     className={`w-full px-5 py-4 rounded-xl text-base transition-all duration-300 outline-none backdrop-blur-md ${errors.username
                       ? 'border border-red-400 bg-red-50/10'
                       : isDarkMode
@@ -291,6 +321,7 @@ const LoginPage = () => {
                         : 'border border-black/20 bg-white/80 text-black placeholder:text-black/50 focus:border-primary focus:ring-2 focus:ring-primary/30'
                       }`}
                     placeholder="Username"
+                    autoComplete="username"
                   />
                   {errors.username && (
                     <p className="text-red-400 text-sm mt-1">
@@ -303,10 +334,12 @@ const LoginPage = () => {
                 <div>
                   <div className="relative">
                     <input
+                      ref={passwordRef}
                       type={showPassword ? 'text' : 'password'}
                       name="password"
                       value={formData.password}
                       onChange={handleInputChange}
+                      onKeyDown={(e) => handleKeyDown(e, 'password')}
                       className={`w-full px-5 py-4 pr-12 rounded-xl text-base transition-all duration-300 outline-none backdrop-blur-md ${errors.password
                         ? 'border border-red-400 bg-red-50/10'
                         : isDarkMode
@@ -314,6 +347,7 @@ const LoginPage = () => {
                           : 'border border-black/20 bg-white/80 text-black placeholder:text-black/50 focus:border-primary focus:ring-2 focus:ring-primary/30'
                         }`}
                       placeholder="Password"
+                      autoComplete="current-password"
                     />
                     <button
                       type="button"
@@ -334,10 +368,34 @@ const LoginPage = () => {
                 {/* Remember Me & Forgot Password */}
                 <div className="flex items-center justify-between mt-2">
                   <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="w-4 h-4 appearance-none bg-white border border-gray-400 rounded checked:bg-blue-400"
-                    />
+                    <div className="relative">
+                      <input
+                        type="checkbox"
+                        checked={rememberMe}
+                        onChange={(e) => setRememberMe(e.target.checked)}
+                        className="sr-only"
+                      />
+                      <div 
+                        className={`w-4 h-4 border rounded transition-all duration-200 flex items-center justify-center ${
+                          rememberMe 
+                            ? 'bg-blue-500 border-blue-500' 
+                            : isDarkMode 
+                              ? 'border-white/40 bg-transparent hover:border-white/60' 
+                              : 'border-gray-400 bg-transparent hover:border-gray-600'
+                        }`}
+                      >
+                        {rememberMe && (
+                          <svg 
+                            className="w-3 h-3 text-white" 
+                            fill="none" 
+                            stroke="currentColor" 
+                            viewBox="0 0 24 24"
+                          >
+                            <polyline points="20,6 9,17 4,12" strokeWidth="2"/>
+                          </svg>
+                        )}
+                      </div>
+                    </div>
                     <span className={`text-sm ${isDarkMode ? 'text-white/80' : 'text-gray-700'
                       }`}>
                       Remember Me
@@ -354,7 +412,7 @@ const LoginPage = () => {
 
                 {/* Login Button */}
                 <button
-                  onClick={handleSubmit}
+                  type="submit"
                   disabled={isLoading}
                   className="w-full bg-gradient-to-r from-primary to-primary-dark text-white py-4 rounded-xl font-semibold text-base transition-all duration-300 flex items-center justify-center gap-2 mt-2 hover:from-primary-dark hover:to-primary hover:shadow-lg hover:shadow-primary/25 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
@@ -382,7 +440,7 @@ const LoginPage = () => {
                   </div>
 
                   <div className="flex flex-col gap-3">
-                    <button className={`w-full flex items-center justify-center gap-3 py-3 px-4 rounded-xl border transition-all duration-300 ${isDarkMode
+                    <button type="button" className={`w-full flex items-center justify-center gap-3 py-3 px-4 rounded-xl border transition-all duration-300 ${isDarkMode
                         ? 'bg-white/5 border-white/10 hover:bg-white/10 text-white'
                         : 'bg-black text-white hover:bg-gray-800 border-black'
                       }`}>
@@ -397,7 +455,7 @@ const LoginPage = () => {
                       </div>
                     </button>
 
-                    <button className={`w-full flex items-center justify-center gap-3 py-3 px-4 rounded-xl border transition-all duration-300 ${isDarkMode
+                    <button type="button" className={`w-full flex items-center justify-center gap-3 py-3 px-4 rounded-xl border transition-all duration-300 ${isDarkMode
                         ? 'bg-white/5 border-white/10 hover:bg-white/10 text-white'
                         : 'bg-black text-white hover:bg-gray-800 border-black'
                       }`}>
@@ -424,7 +482,7 @@ const LoginPage = () => {
                   </Link>
                 </div> */}
 
-              </div>
+              </form>
             </div>
           </div>
         </div>

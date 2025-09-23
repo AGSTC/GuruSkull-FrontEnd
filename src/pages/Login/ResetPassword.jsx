@@ -1,13 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Sun, Moon, ArrowLeft } from 'lucide-react';
-import logo from '../../assets/images/test.png';
-import { useTheme } from '../../context/ThemeContext'; // Add this import
-
+import logoDark from '../../assets/images/LogoforDark.png';
+import logoLight from '../../assets/images/LogoforLight.png';
+import { useTheme } from '../../context/ThemeContext';
 
 const ResetPasswordPage = () => {
   const navigate = useNavigate();
-  const { isDarkMode, toggleTheme } = useTheme(); // Use theme context
+  const { isDarkMode, toggleTheme } = useTheme();
   
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [isLoading, setIsLoading] = useState(false);
@@ -49,6 +49,15 @@ const ResetPasswordPage = () => {
     if (e.key === 'Backspace' && otp[index] === '' && index > 0) {
       inputRefs.current[index - 1].focus();
     }
+    
+    // Handle Enter key - if all fields are filled, verify OTP
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const otpString = otp.join('');
+      if (otpString.length === 6) {
+        handleVerifyOTP();
+      }
+    }
   };
 
   const handlePaste = (e) => {
@@ -72,7 +81,9 @@ const ResetPasswordPage = () => {
     }
   };
 
-  const handleVerifyOTP = async () => {
+  const handleVerifyOTP = async (e) => {
+    if (e) e.preventDefault();
+    
     const otpString = otp.join('');
     if (otpString.length !== 6) return;
 
@@ -83,9 +94,9 @@ const ResetPasswordPage = () => {
     
     console.log('Verifying OTP:', otpString);
     // Navigate to new password page or success page
-    alert('OTP verified successfully!');
+    // alert('OTP verified successfully!');
     setIsLoading(false);
-    navigate('/NewPassword')
+    navigate('/NewPassword');
   };
 
   const handleResendOTP = async () => {
@@ -108,10 +119,6 @@ const ResetPasswordPage = () => {
   const handleBackToForgotPassword = () => {
     navigate('/ForgotPassword');
   };
-
-//   const toggleTheme = () => {
-//     setIsDarkMode(!isDarkMode);
-//   };
 
   const isOtpComplete = otp.every(digit => digit !== '');
 
@@ -213,8 +220,8 @@ const ResetPasswordPage = () => {
         }`}>
           
           {/* Logo */}
-          <div className="flex items-center justify-center mb-6">
-            <img src={logo} alt="GuruSkull Logo" className='w-64'></img>
+          <div className="flex items-center justify-center mb-0 gap-3 w-100">
+            <img src={isDarkMode ? logoDark : logoLight} alt="GuruSkull Logo" className='w-80'></img>
           </div>
 
           {/* Header */}
@@ -227,73 +234,76 @@ const ResetPasswordPage = () => {
             </p>
           </div>
 
-          {/* OTP Input */}
-          <div className="flex justify-center gap-3 mb-6">
-            {otp.map((digit, index) => (
-              <input
-                key={index}
-                ref={el => inputRefs.current[index] = el}
-                type="text"
-                maxLength="1"
-                value={digit}
-                onChange={(e) => handleOtpChange(index, e.target.value)}
-                onKeyDown={(e) => handleKeyDown(index, e)}
-                onPaste={handlePaste}
-                className={`w-14 h-14 text-2xl font-bold text-center rounded-xl border-2 transition-all duration-300 outline-none ${
-                  digit
-                    ? isDarkMode
-                      ? 'border-cyan-400 bg-white/10 text-white'
-                      : 'border-cyan-500 bg-white text-gray-900'
-                    : isDarkMode
-                      ? 'border-white/20 bg-white/5 text-white focus:border-cyan-400'
-                      : 'border-gray-300 bg-white text-gray-900 focus:border-cyan-500'
-                }`}
-              />
-            ))}
-          </div>
+          <form onSubmit={handleVerifyOTP}>
+            {/* OTP Input */}
+            <div className="flex justify-center gap-3 mb-6">
+              {otp.map((digit, index) => (
+                <input
+                  key={index}
+                  ref={el => inputRefs.current[index] = el}
+                  type="text"
+                  maxLength="1"
+                  value={digit}
+                  onChange={(e) => handleOtpChange(index, e.target.value)}
+                  onKeyDown={(e) => handleKeyDown(index, e)}
+                  onPaste={handlePaste}
+                  className={`w-14 h-14 text-2xl font-bold text-center rounded-xl border-2 transition-all duration-300 outline-none ${
+                    digit
+                      ? isDarkMode
+                        ? 'border-cyan-400 bg-white/10 text-white'
+                        : 'border-cyan-500 bg-white text-gray-900'
+                      : isDarkMode
+                        ? 'border-white/20 bg-white/5 text-white focus:border-cyan-400'
+                        : 'border-gray-300 bg-white text-gray-900 focus:border-cyan-500'
+                  }`}
+                />
+              ))}
+            </div>
 
-          {/* Countdown Timer */}
-          <div className="text-center mb-6">
-            <p className={`text-sm ${isDarkMode ? 'text-white/70' : 'text-gray-600'}`}>
-              {canResend ? (
-                'You can now resend the OTP'
-              ) : (
-                `Resend OTP in : ${countdown.toString().padStart(2, '0')}:59`
-              )}
-            </p>
-          </div>
+            {/* Countdown Timer */}
+            <div className="text-center mb-6">
+              <p className={`text-sm ${isDarkMode ? 'text-white/70' : 'text-gray-600'}`}>
+                {canResend ? (
+                  'You can now resend the OTP'
+                ) : (
+                  `Resend OTP in : 00:${countdown.toString().padStart(2, '0')}`
+                )}
+              </p>
+            </div>
 
-          {/* Action Buttons */}
-          <div className="flex flex-col gap-4">
-            {/* Next Button */}
-            <button
-              onClick={handleVerifyOTP}
-              disabled={!isOtpComplete || isLoading}
-              className="w-full bg-gradient-to-r from-cyan-500 to-cyan-600 text-white py-4 rounded-xl font-semibold text-base transition-all duration-300 flex items-center justify-center gap-2 hover:from-cyan-600 hover:to-cyan-700 hover:shadow-lg hover:shadow-cyan-500/25 disabled:opacity-60 disabled:cursor-not-allowed"
-            >
-              {isLoading ? (
-                <>
-                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                  Verifying...
-                </>
-              ) : (
-                'Next'
-              )}
-            </button>
+            {/* Action Buttons */}
+            <div className="flex flex-col gap-4">
+              {/* Next Button */}
+              <button
+                type="submit"
+                disabled={!isOtpComplete || isLoading}
+                className="w-full bg-gradient-to-r from-cyan-500 to-cyan-600 text-white py-4 rounded-xl font-semibold text-base transition-all duration-300 flex items-center justify-center gap-2 hover:from-cyan-600 hover:to-cyan-700 hover:shadow-lg hover:shadow-cyan-500/25 disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {isLoading ? (
+                  <>
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    Verifying...
+                  </>
+                ) : (
+                  'Next'
+                )}
+              </button>
 
-            {/* Resend Button */}
-            <button
-              onClick={handleResendOTP}
-              disabled={!canResend || isLoading}
-              className={`w-full py-4 rounded-xl font-semibold text-base transition-all duration-300 border ${
-                isDarkMode
-                  ? 'border-cyan-400 text-cyan-400 hover:bg-cyan-400/10'
-                  : 'border-cyan-500 text-cyan-500 hover:bg-cyan-50'
-              } disabled:opacity-60 disabled:cursor-not-allowed`}
-            >
-              Resend
-            </button>
-          </div>
+              {/* Resend Button */}
+              <button
+                type="button"
+                onClick={handleResendOTP}
+                disabled={!canResend || isLoading}
+                className={`w-full py-4 rounded-xl font-semibold text-base transition-all duration-300 border ${
+                  isDarkMode
+                    ? 'border-cyan-400 text-cyan-400 hover:bg-cyan-400/10'
+                    : 'border-cyan-500 text-cyan-500 hover:bg-cyan-50'
+                } disabled:opacity-60 disabled:cursor-not-allowed`}
+              >
+                Resend
+              </button>
+            </div>
+          </form>
         </div>
       </div>
 

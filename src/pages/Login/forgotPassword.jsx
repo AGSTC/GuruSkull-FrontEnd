@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Sun, Moon, ArrowLeft, Mail, Send } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext'; // Add this import
-import logo from '../../assets/images/test.png';
+import logoDark from '../../assets/images/LogoforDark.png';
+import logoLight from '../../assets/images/LogoforLight.png';
 
 const ForgotPasswordPage = () => {
   const navigate = useNavigate();
@@ -196,8 +197,8 @@ const ForgotPasswordPage = () => {
         }`}>
           
           {/* Logo */}
-          <div className="flex items-center justify-center mb-6">
-            <img src={logo} alt="GuruSkull Logo" className='w-64'></img>
+          <div className="flex items-center justify-center mb-0 gap-3 w-100">
+              <img src={isDarkMode ? logoDark : logoLight} alt="GuruSkull Logo" className='w-80'></img>
           </div>
 
           {/* Header */}

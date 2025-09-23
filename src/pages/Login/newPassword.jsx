@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Sun, Moon, ArrowLeft, Lock, CheckCircle } from 'lucide-react';
-import { useTheme } from '../../context/ThemeContext'; // Add this import
-import logo from '../../assets/images/test.png';
+import { useTheme } from '../../context/ThemeContext';
+import logoDark from '../../assets/images/LogoforDark.png';
+import logoLight from '../../assets/images/LogoforLight.png';
 
 const CreateNewPasswordPage = () => {
   const navigate = useNavigate();
-  const { isDarkMode, toggleTheme } = useTheme(); // Use theme context
+  const { isDarkMode, toggleTheme } = useTheme();
   
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -20,6 +21,10 @@ const CreateNewPasswordPage = () => {
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState(1); // 1: Password form, 2: Success
+
+  // Refs for input fields
+  const newPasswordRef = useRef(null);
+  const confirmPasswordRef = useRef(null);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -42,6 +47,21 @@ const CreateNewPasswordPage = () => {
         ...prev,
         passwordMatch: ''
       }));
+    }
+  };
+
+  // Handle keyboard navigation
+  const handleKeyDown = (e, fieldType) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      
+      if (fieldType === 'newPassword') {
+        // Move focus to confirm password field
+        confirmPasswordRef.current?.focus();
+      } else if (fieldType === 'confirmPassword') {
+        // Submit the form
+        handleSubmit(e);
+      }
     }
   };
 
@@ -197,8 +217,8 @@ const CreateNewPasswordPage = () => {
         }`}>
           
           {/* Logo */}
-          <div className="flex items-center justify-center mb-6">
-            <img src={logo} alt="GuruSkull Logo" className='w-64'></img>
+          <div className="flex items-center justify-center mb-0 gap-3 w-100">
+            <img src={isDarkMode ? logoDark : logoLight} alt="GuruSkull Logo" className='w-80'></img>
           </div>
 
           {/* Header */}
@@ -222,14 +242,16 @@ const CreateNewPasswordPage = () => {
           <div className="flex flex-col gap-5">
             
             {step === 1 && (
-              <>
+              <form onSubmit={handleSubmit} className="flex flex-col gap-5">
                 {/* New Password Input */}
                 <div className="relative">
                   <input
+                    ref={newPasswordRef}
                     type={showNewPassword ? 'text' : 'password'}
                     name="newPassword"
                     value={formData.newPassword}
                     onChange={handleInputChange}
+                    onKeyDown={(e) => handleKeyDown(e, 'newPassword')}
                     className={`w-full pl-12 pr-12 py-4 rounded-xl text-base transition-all duration-300 outline-none backdrop-blur-md ${
                       errors.newPassword || errors.passwordMatch
                         ? 'border border-red-400 bg-red-50/10'
@@ -238,6 +260,7 @@ const CreateNewPasswordPage = () => {
                           : 'border border-black/20 bg-white/80 text-black placeholder:text-black/50 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30'
                     }`}
                     placeholder="New Password"
+                    autoComplete="new-password"
                   />
                   <Lock className={`absolute left-4 top-1/2 transform -translate-y-1/2 ${
                     isDarkMode ? 'text-white/50' : 'text-black/50'
@@ -261,10 +284,12 @@ const CreateNewPasswordPage = () => {
                 {/* Confirm Password Input */}
                 <div className="relative">
                   <input
+                    ref={confirmPasswordRef}
                     type={showConfirmPassword ? 'text' : 'password'}
                     name="confirmPassword"
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
+                    onKeyDown={(e) => handleKeyDown(e, 'confirmPassword')}
                     className={`w-full pl-12 pr-12 py-4 rounded-xl text-base transition-all duration-300 outline-none backdrop-blur-md ${
                       errors.confirmPassword || errors.passwordMatch
                         ? 'border border-red-400 bg-red-50/10'
@@ -273,6 +298,7 @@ const CreateNewPasswordPage = () => {
                           : 'border border-black/20 bg-white/80 text-black placeholder:text-black/50 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30'
                     }`}
                     placeholder="Confirm New Password"
+                    autoComplete="new-password"
                   />
                   <Lock className={`absolute left-4 top-1/2 transform -translate-y-1/2 ${
                     isDarkMode ? 'text-white/50' : 'text-black/50'
@@ -301,12 +327,34 @@ const CreateNewPasswordPage = () => {
                 {/* Remember Me Checkbox */}
                 <div className="flex items-center gap-3 mt-2">
                   <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={rememberMe}
-                      onChange={(e) => setRememberMe(e.target.checked)}
-                      className="w-4 h-4 appearance-none bg-white border border-gray-400 rounded checked:bg-cyan-400"
-                    />
+                    <div className="relative">
+                      <input
+                        type="checkbox"
+                        checked={rememberMe}
+                        onChange={(e) => setRememberMe(e.target.checked)}
+                        className="sr-only"
+                      />
+                      <div 
+                        className={`w-4 h-4 border rounded transition-all duration-200 flex items-center justify-center ${
+                          rememberMe 
+                            ? 'bg-cyan-500 border-cyan-500' 
+                            : isDarkMode 
+                              ? 'border-white/40 bg-transparent hover:border-white/60' 
+                              : 'border-gray-400 bg-transparent hover:border-gray-600'
+                        }`}
+                      >
+                        {rememberMe && (
+                          <svg 
+                            className="w-3 h-3 text-white" 
+                            fill="none" 
+                            stroke="currentColor" 
+                            viewBox="0 0 24 24"
+                          >
+                            <polyline points="20,6 9,17 4,12" strokeWidth="2"/>
+                          </svg>
+                        )}
+                      </div>
+                    </div>
                     <span className={`text-sm ${isDarkMode ? 'text-white/80' : 'text-gray-700'}`}>
                       Remember Me
                     </span>
@@ -315,7 +363,7 @@ const CreateNewPasswordPage = () => {
 
                 {/* Submit Button */}
                 <button
-                  onClick={handleSubmit}
+                  type="submit"
                   disabled={isLoading}
                   className="w-full bg-gradient-to-r from-cyan-500 to-cyan-600 text-white py-4 rounded-xl font-semibold text-base transition-all duration-300 flex items-center justify-center gap-2 mt-2 hover:from-cyan-600 hover:to-cyan-700 hover:shadow-lg hover:shadow-cyan-500/25 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
@@ -328,7 +376,7 @@ const CreateNewPasswordPage = () => {
                     'Next'
                   )}
                 </button>
-              </>
+              </form>
             )}
 
             {/* Success State */}

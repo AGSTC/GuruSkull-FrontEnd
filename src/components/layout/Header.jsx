@@ -1,14 +1,15 @@
-// Updated Header.jsx with role-based profile handling
+// Updated Header.jsx with profile photo handling
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext';
 import { Menu, Sun, Moon, Bell, User, Settings, LogOut } from 'lucide-react';
-import logo from '../../assets/images/test.png';
+import logoDark from '../../assets/images/LogoforDark.png';
+import logoLight from '../../assets/images/LogoforLight.png';
 import profile from '../../assets/images/profile.png';
 import teacherProfile from '../../assets/images/teacher-profile.png';
 import studentProfile from '../../assets/images/student-profile.png';
 import parentProfile from '../../assets/images/parent-profile.png';
-
+import { Map } from 'lucide-react';
 const Header = ({ isSidebarExpanded, toggleSidebar }) => {
   const { isDarkMode, toggleTheme } = useTheme();
   const navigate = useNavigate();
@@ -16,10 +17,11 @@ const Header = ({ isSidebarExpanded, toggleSidebar }) => {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [userData, setUserData] = useState(null);
   const [userRole, setUserRole] = useState('tuition_owner');
+  const [profilePhoto, setProfilePhoto] = useState(profile);
   const profileRef = useRef(null);
   const notificationRef = useRef(null);
 
-  // Get user data from localStorage
+  // Get user data from localStorage and profile photo
   useEffect(() => {
     const getUserData = () => {
       const storedUser = localStorage.getItem('user');
@@ -28,40 +30,67 @@ const Header = ({ isSidebarExpanded, toggleSidebar }) => {
           const user = JSON.parse(storedUser);
           setUserData(user);
           setUserRole(user.role);
+          
+          // Set profile photo from localStorage if available
+          if (user.profilePhotoUrl) {
+            setProfilePhoto(user.profilePhotoUrl);
+          } else {
+            // Fallback to role-based profile images
+            setProfilePhoto(getRoleBasedProfileImage(user.role));
+          }
         } catch (error) {
           console.error('Error parsing user data:', error);
-          // Set defaults if parsing fails
           setUserData(null);
           setUserRole('tuition_owner');
+          setProfilePhoto(profile);
         }
       } else {
-        // Set defaults if no user data
         setUserData(null);
         setUserRole('tuition_owner');
+        setProfilePhoto(profile);
       }
     };
 
     // Initial load
     getUserData();
     
-    // Listen for storage changes (in case user switches roles)
+    // Listen for profile photo changes
+    const handleProfilePhotoChange = (event) => {
+      if (event.detail && event.detail.photoUrl) {
+        setProfilePhoto(event.detail.photoUrl);
+      }
+    };
+    
+    // Listen for storage changes
     const handleStorageChange = () => {
       getUserData();
     };
     
     window.addEventListener('storage', handleStorageChange);
-    
-    // Also listen for custom events when localStorage is updated in the same tab
     window.addEventListener('userDataChanged', handleStorageChange);
+    window.addEventListener('profilePhotoChanged', handleProfilePhotoChange);
     
     return () => {
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('userDataChanged', handleStorageChange);
+      window.removeEventListener('profilePhotoChanged', handleProfilePhotoChange);
     };
   }, []);
 
-  // Role-based notifications
-  const getNotifications = () => {
+  // Get role-based profile image
+  const getRoleBasedProfileImage = (role) => {
+    if (role === 'teacher') {
+      return teacherProfile;
+    } else if (role === 'student') {
+      return studentProfile;
+    } else if (role === 'parent') {
+      return parentProfile;
+    }
+    return profile;
+  };
+
+  // Role-based notifications (existing code remains the same)
+   const getNotifications = () => {
     if (userRole === 'teacher') {
       return [
         {
@@ -141,18 +170,6 @@ const Header = ({ isSidebarExpanded, toggleSidebar }) => {
 
   const Notification = getNotifications();
 
-  // Get profile image based on user role
-  const getProfileImage = () => {
-    if (userData && userData.profileImage === 'teacher-profile.png') {
-      return teacherProfile;
-    } else if (userData && userData.profileImage === 'student-profile.png') {
-      return studentProfile;
-    }
-    else if (userData && userData.profileImage === 'parent-profile.png') {
-      return parentProfile;
-    }
-    return profile;
-  };
 
   // Get user title based on role
   const getUserTitle = () => {
@@ -160,13 +177,15 @@ const Header = ({ isSidebarExpanded, toggleSidebar }) => {
       return 'Teacher';
     } else if (userRole === 'student') {
       return 'Student';
+    } else if (userRole === 'parent') {
+      return 'Parent';
     }
     return 'Tuition Owner';
   };
 
   // Handle profile navigation based on role
   const handleProfileNavigation = () => {
-    console.log('Header - Navigating to profile for role:', userRole); // Debug log
+    console.log('Header - Navigating to profile for role:', userRole);
     
     if (userRole === 'teacher') {
       navigate('/TeacherProfile');
@@ -174,15 +193,15 @@ const Header = ({ isSidebarExpanded, toggleSidebar }) => {
       navigate('/StudentProfile');
     } else if (userRole === 'parent') {
       navigate('/ParentSettings');
-    }else {
+    } else {
       navigate('/Profile');
     }
-    setIsProfileOpen(false); // Close the dropdown
+    setIsProfileOpen(false);
   };
 
   // Handle settings navigation based on role
   const handleSettingsNavigation = () => {
-    console.log('Header - Navigating to settings for role:', userRole); // Debug log
+    console.log('Header - Navigating to settings for role:', userRole);
     
     if (userRole === 'teacher') {
       navigate('/TeacherSettings');
@@ -190,30 +209,26 @@ const Header = ({ isSidebarExpanded, toggleSidebar }) => {
       navigate('/StudentSettings');
     } else if (userRole === 'parent') {
       navigate('/ParentSettings');
-    }else {
+    } else {
       navigate('/SettingsManagement');
     }
-    setIsProfileOpen(false); // Close the dropdown
+    setIsProfileOpen(false);
   };
 
   const logouthandle = () => {
-    // Clear any stored authentication data
     localStorage.removeItem('authToken');
     localStorage.removeItem('user');
-    
-    // Navigate to login page
     navigate('/login');
   };
 
-  // Handle notification click
   const handleNotificationClick = (notificationId) => {
     navigate('/Notification');
-    setIsNotificationOpen(false); // Close the dropdown
+    setIsNotificationOpen(false);
   };
 
   return (
     <header className={`fixed top-0 left-0 right-0 z-40 h-20 ${
-      isDarkMode ? 'bg-slate-900 border-b border-slate-700' : 'bg-gray-300 border-b border-gray-300'
+      isDarkMode ? 'bg-slate-900 border-b border-slate-700' : 'bg-white border-b border-gray-300'
     }`}>
       <div className="flex items-center justify-between h-full px-4 md:px-6">
         
@@ -228,19 +243,18 @@ const Header = ({ isSidebarExpanded, toggleSidebar }) => {
             <Menu size={26} />
           </button>
 
-          <div className="flex items-center gap-3">
-            <img src={logo} alt="GuruSkull Logo" className="w-16 h-16" />
-            <span className={`font-bold text-xl ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <div className="flex items-center">
+            <img src={isDarkMode ? logoDark : logoLight} alt="GuruSkull Logo" className="w-28 h-28" />
+            <span className={`font-bold text-2xl ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               GuruSkull
             </span>
           </div>
-      </div>
-  
+        </div>
 
         {/* Right Section */}
         <div className="flex items-center gap-2">
           
-           {/* Theme Toggle Switch */}
+          {/* Theme Toggle Switch */}
           <button
             onClick={toggleTheme}
             className={`relative w-20 h-10 rounded-full border-0 cursor-pointer transition-all duration-500 ease-in-out focus:outline-none focus:ring-0 ${isDarkMode
@@ -294,9 +308,9 @@ const Header = ({ isSidebarExpanded, toggleSidebar }) => {
               }`}
             >
               <Bell size={26} />
-              {Notification.length > 0 && (
+              {Notification > 0 && (
                 <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-                  {Notification.length}
+                  {Notification}
                 </span>
               )}
             </button>
@@ -364,7 +378,7 @@ const Header = ({ isSidebarExpanded, toggleSidebar }) => {
               className="flex items-center gap-2 p-1 rounded-md focus:outline-none focus:ring-0"
             >
               <img
-                src={getProfileImage()}
+                src={profilePhoto}
                 alt="Profile"
                 className="w-12 h-12 rounded-full"
               />
@@ -377,7 +391,7 @@ const Header = ({ isSidebarExpanded, toggleSidebar }) => {
                 <div className={`px-4 py-4 border-b ${isDarkMode ? 'border-slate-600' : 'border-gray-300'}`}>
                   <div className="flex items-center gap-3 text-left">
                     <img
-                      src={getProfileImage()}
+                      src={profilePhoto}
                       alt={userData ? userData.name : 'User'}
                       className="w-12 h-12 rounded-full"
                     />

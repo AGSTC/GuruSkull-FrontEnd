@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTheme } from '../../context/ThemeContext';
 import Header from '../../components/layout/Header';
 import Sidebar from '../../components/layout/Sidebar';
@@ -12,43 +12,263 @@ import {
   ChevronDown,
   Filter,
   Download,
-  MoreHorizontal
+  MoreHorizontal,
+  X,
+  Calendar,
+  BookOpen,
+  GraduationCap
 } from 'lucide-react';
 
 const ReportsAnalytics = () => {
   const { isDarkMode } = useTheme();
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [selectedPeriod, setSelectedPeriod] = useState('monthly');
+  const [filters, setFilters] = useState({
+    dateRange: 'thisMonth',
+    subject: 'all',
+    performance: 'all',
+    attendance: 'all'
+  });
 
   const toggleSidebar = () => {
     setIsSidebarExpanded(!isSidebarExpanded);
   };
 
-  const stats = [
-    {
-      title: 'Total Students',
-      value: '347,850',
-      icon: Users,
-      color: 'blue'
+  const toggleFilter = () => {
+    setIsFilterOpen(!isFilterOpen);
+  };
+
+  const handleFilterChange = (filterType, value) => {
+    setFilters(prev => ({
+      ...prev,
+      [filterType]: value
+    }));
+  };
+
+  const applyFilters = () => {
+    // Filter logic is now handled by useMemo hooks below
+    console.log('Applying filters:', filters);
+    setIsFilterOpen(false);
+  };
+
+  const resetFilters = () => {
+    setFilters({
+      dateRange: 'thisMonth',
+      subject: 'all',
+      performance: 'all',
+      attendance: 'all'
+    });
+  };
+
+  // Base data - this would typically come from your API
+  const baseClassPerformance = [
+    { 
+      class: 'Mathematics Grade 10', 
+      teacher: 'Ms. Sarah Lee', 
+      students: 32, 
+      attendance: 94, 
+      performance: 4.8, 
+      fees: '₹8,500',
+      status: 'Excellent',
+      subject: 'mathematics',
+      dateRange: 'thisMonth'
     },
-    {
-      title: 'Active Students',
-      value: '248',
-      icon: Users,
-      color: 'green'
+    { 
+      class: 'Physics Grade 11', 
+      teacher: 'Dr. John Smith', 
+      students: 28, 
+      attendance: 91, 
+      performance: 4.6, 
+      fees: '₹7,200',
+      status: 'Good',
+      subject: 'physics',
+      dateRange: 'thisMonth'
     },
-    {
-      title: 'Attendance Rate',
-      value: '89.2%',
-      icon: TrendingUp,
-      color: 'orange'
+    { 
+      class: 'Chemistry Grade 10', 
+      teacher: 'Ms. Emily Brown', 
+      students: 35, 
+      attendance: 89, 
+      performance: 4.4, 
+      fees: '₹9,100',
+      status: 'Good',
+      subject: 'chemistry',
+      dateRange: 'thisMonth'
     },
-    {
-      title: 'Average Rating',
-      value: '4.7',
-      icon: Star,
-      color: 'purple'
+    { 
+      class: 'Biology Grade 9', 
+      teacher: 'Mrs. Lisa Chen', 
+      students: 30, 
+      attendance: 87, 
+      performance: 4.2, 
+      fees: '₹6,800',
+      status: 'Fair',
+      subject: 'biology',
+      dateRange: 'thisMonth'
+    },
+    { 
+      class: 'English Writing 1', 
+      teacher: 'Mr. Robert Johnson', 
+      students: 25, 
+      attendance: 85, 
+      performance: 4.0, 
+      fees: '₹5,500',
+      status: 'Fair',
+      subject: 'english',
+      dateRange: 'thisMonth'
+    },
+    { 
+      class: 'Advanced Mathematics', 
+      teacher: 'Dr. Michael Wilson', 
+      students: 20, 
+      attendance: 78, 
+      performance: 3.8, 
+      fees: '₹12,000',
+      status: 'Fair',
+      subject: 'mathematics',
+      dateRange: 'lastMonth'
+    },
+    { 
+      class: 'Organic Chemistry', 
+      teacher: 'Prof. Amanda Davis', 
+      students: 18, 
+      attendance: 96, 
+      performance: 4.9, 
+      fees: '₹15,000',
+      status: 'Excellent',
+      subject: 'chemistry',
+      dateRange: 'lastMonth'
     }
   ];
+
+  const baseSubjectData = [
+    { subject: 'Mathematics', students: 85, color: 'bg-blue-500', category: 'mathematics' },
+    { subject: 'Physics', students: 76, color: 'bg-green-500', category: 'physics' },
+    { subject: 'Chemistry', students: 68, color: 'bg-orange-500', category: 'chemistry' },
+    { subject: 'Biology', students: 45, color: 'bg-purple-500', category: 'biology' },
+    { subject: 'English', students: 25, color: 'bg-red-500', category: 'english' }
+  ];
+
+  // Filter class performance data based on applied filters
+  const filteredClassData = useMemo(() => {
+    return baseClassPerformance.filter(classData => {
+      // Date Range Filter
+      if (filters.dateRange !== 'all' && classData.dateRange !== filters.dateRange) {
+        return false;
+      }
+
+      // Subject Filter
+      if (filters.subject !== 'all' && classData.subject !== filters.subject) {
+        return false;
+      }
+
+      // Performance Filter
+      if (filters.performance !== 'all') {
+        const performance = classData.performance;
+        switch (filters.performance) {
+          case 'excellent':
+            if (performance < 4.5) return false;
+            break;
+          case 'good':
+            if (performance < 4.0 || performance >= 4.5) return false;
+            break;
+          case 'fair':
+            if (performance < 3.5 || performance >= 4.0) return false;
+            break;
+          case 'poor':
+            if (performance >= 3.5) return false;
+            break;
+          default:
+            break;
+        }
+      }
+
+      // Attendance Filter
+      if (filters.attendance !== 'all') {
+        const attendance = classData.attendance;
+        switch (filters.attendance) {
+          case 'high':
+            if (attendance < 90) return false;
+            break;
+          case 'medium':
+            if (attendance < 80 || attendance >= 90) return false;
+            break;
+          case 'low':
+            if (attendance >= 80) return false;
+            break;
+          default:
+            break;
+        }
+      }
+
+      return true;
+    });
+  }, [filters]);
+
+  // Filter subject analysis data based on applied filters
+  const filteredSubjectData = useMemo(() => {
+    if (filters.subject === 'all') {
+      return baseSubjectData;
+    }
+    return baseSubjectData.filter(subject => subject.category === filters.subject);
+  }, [filters.subject]);
+
+  // Calculate filtered statistics
+  const filteredStats = useMemo(() => {
+    const totalStudents = filteredClassData.reduce((sum, classData) => sum + classData.students, 0);
+    const totalClasses = filteredClassData.length;
+    const avgAttendance = totalClasses > 0 
+      ? (filteredClassData.reduce((sum, classData) => sum + classData.attendance, 0) / totalClasses).toFixed(1)
+      : 0;
+    const avgRating = totalClasses > 0 
+      ? (filteredClassData.reduce((sum, classData) => sum + classData.performance, 0) / totalClasses).toFixed(1)
+      : 0;
+
+    return [
+      {
+        title: 'Total Students',
+        value: totalStudents.toLocaleString(),
+        icon: Users,
+        color: 'blue'
+      },
+      {
+        title: 'Active Classes',
+        value: totalClasses.toString(),
+        icon: BookOpen,
+        color: 'green'
+      },
+      {
+        title: 'Avg Attendance',
+        value: `${avgAttendance}%`,
+        icon: TrendingUp,
+        color: 'orange'
+      },
+      {
+        title: 'Avg Rating',
+        value: avgRating,
+        icon: Star,
+        color: 'purple'
+      }
+    ];
+  }, [filteredClassData]);
+
+  // Calculate filtered financial data
+  const filteredFinancialData = useMemo(() => {
+    const totalRevenue = filteredClassData.reduce((sum, classData) => {
+      const fees = parseFloat(classData.fees.replace(/[₹,]/g, ''));
+      return sum + (fees * classData.students);
+    }, 0);
+
+    const estimatedExpenses = totalRevenue * 0.7; // Assuming 70% expense ratio
+    const netProfit = totalRevenue - estimatedExpenses;
+
+    return [
+      { label: 'Gross Revenue', amount: `₹${totalRevenue.toLocaleString()}`, period: 'Current Month' },
+      { label: 'Total Expenses', amount: `₹${estimatedExpenses.toLocaleString()}`, period: 'Current Month' },
+      { label: 'Net Profit', amount: `₹${netProfit.toLocaleString()}`, period: 'Current Month' }
+    ];
+  }, [filteredClassData]);
 
   const getColorClasses = (color) => {
     const colorMap = {
@@ -60,24 +280,27 @@ const ReportsAnalytics = () => {
     return colorMap[color] || colorMap.blue;
   };
 
-  const revenueData = [
-    { month: 'Jan', value: 30 },
-    { month: 'Feb', value: 25 },
-    { month: 'Mar', value: 35 },
-    { month: 'Apr', value: 20 },
-    { month: 'May', value: 30 },
-    { month: 'Jun', value: 45 },
-    { month: 'Jul', value: 55 }
-  ];
+  // Revenue data for different periods (unchanged as it's not directly filtered)
+  const revenueData = {
+    monthly: [
+      { period: 'Jan', value: 30 },
+      { period: 'Feb', value: 25 },
+      { period: 'Mar', value: 35 },
+      { period: 'Apr', value: 20 },
+      { period: 'May', value: 30 },
+      { period: 'Jun', value: 45 },
+      { period: 'Jul', value: 55 }
+    ],
+    quarterly: [
+      { period: 'Q1', value: 90 },
+      { period: 'Q2', value: 95 },
+      { period: 'Q3', value: 110 },
+      { period: 'Q4', value: 125 }
+    ]
+  };
 
-  const maxValue = Math.max(...revenueData.map(d => d.value));
-
-  const subjectAnalysis = [
-    { subject: 'Mathematics', students: 85, color: 'bg-blue-500' },
-    { subject: 'Physics', students: 76, color: 'bg-green-500' },
-    { subject: 'Chemistry', students: 68, color: 'bg-orange-500' },
-    { subject: 'Biology', students: 45, color: 'bg-purple-500' }
-  ];
+  const currentRevenueData = revenueData[selectedPeriod];
+  const maxValue = Math.max(...currentRevenueData.map(d => d.value));
 
   const attendanceAnalysis = [
     { day: 'Monday', percentage: 92, color: 'bg-green-400' },
@@ -102,60 +325,6 @@ const ReportsAnalytics = () => {
     { category: 'Other', amount: '₹4,500' }
   ];
 
-  const financialData = [
-    { label: 'Gross Revenue', amount: '₹99,400', period: 'Current Month' },
-    { label: 'Total Expenses', amount: '₹89,500', period: 'Current Month' },
-    { label: 'Net Profit', amount: '₹9,900', period: 'Current Month' }
-  ];
-
-  const classPerformance = [
-    { 
-      class: 'Mathematics Grade 10', 
-      teacher: 'Ms. Sarah Lee', 
-      students: 32, 
-      attendance: 94, 
-      performance: 4.8, 
-      fees: '₹8,500',
-      status: 'Excellent'
-    },
-    { 
-      class: 'Physics Grade 11', 
-      teacher: 'Dr. John Smith', 
-      students: 28, 
-      attendance: 91, 
-      performance: 4.6, 
-      fees: '₹7,200',
-      status: 'Good'
-    },
-    { 
-      class: 'Chemistry Grade 10', 
-      teacher: 'Ms. Emily Brown', 
-      students: 35, 
-      attendance: 89, 
-      performance: 4.4, 
-      fees: '₹9,100',
-      status: 'Good'
-    },
-    { 
-      class: 'Maths Science Grade 8', 
-      teacher: 'Mrs. Lisa Chen', 
-      students: 30, 
-      attendance: 87, 
-      performance: 4.2, 
-      fees: '₹6,800',
-      status: 'Fair'
-    },
-    { 
-      class: 'English Writing 1', 
-      teacher: 'Mr. Robert Johnson', 
-      students: 25, 
-      attendance: 85, 
-      performance: 4.0, 
-      fees: '₹5,500',
-      status: 'Fair'
-    }
-  ];
-
   const getStatusColor = (status) => {
     switch(status) {
       case 'Excellent': return 'text-green-600 bg-green-100';
@@ -164,6 +333,139 @@ const ReportsAnalytics = () => {
       default: return 'text-gray-600 bg-gray-100';
     }
   };
+
+  const FilterPanel = () => (
+    <div className={`absolute top-full right-0 mt-2 w-80 rounded-lg border shadow-lg z-50 ${
+      isDarkMode 
+        ? 'bg-slate-800 border-slate-700' 
+        : 'bg-white border-gray-300'
+    }`}>
+      <div className="p-4">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            Filter Reports
+          </h3>
+          <button 
+            onClick={toggleFilter}
+            className={`p-1 rounded-lg ${isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-gray-100'}`}
+          >
+            <X size={20} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
+          </button>
+        </div>
+
+        <div className="space-y-4">
+          {/* Date Range Filter */}
+          <div>
+            <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+              Date Range
+            </label>
+            <select 
+              value={filters.dateRange}
+              onChange={(e) => handleFilterChange('dateRange', e.target.value)}
+              className={`w-full p-2 rounded-lg border ${
+                isDarkMode 
+                  ? 'bg-slate-700 border-slate-600 text-white' 
+                  : 'bg-white border-gray-300 text-gray-900'
+              }`}
+            >
+              <option value="all">All Time</option>
+              <option value="today">Today</option>
+              <option value="thisWeek">This Week</option>
+              <option value="thisMonth">This Month</option>
+              <option value="lastMonth">Last Month</option>
+              <option value="thisYear">This Year</option>
+              <option value="custom">Custom Range</option>
+            </select>
+          </div>
+
+          {/* Subject Filter */}
+          <div>
+            <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+              Subject
+            </label>
+            <select 
+              value={filters.subject}
+              onChange={(e) => handleFilterChange('subject', e.target.value)}
+              className={`w-full p-2 rounded-lg border ${
+                isDarkMode 
+                  ? 'bg-slate-700 border-slate-600 text-white' 
+                  : 'bg-white border-gray-300 text-gray-900'
+              }`}
+            >
+              <option value="all">All Subjects</option>
+              <option value="mathematics">Mathematics</option>
+              <option value="physics">Physics</option>
+              <option value="chemistry">Chemistry</option>
+              <option value="biology">Biology</option>
+              <option value="english">English</option>
+            </select>
+          </div>
+
+          {/* Performance Filter */}
+          <div>
+            <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+              Performance Level
+            </label>
+            <select 
+              value={filters.performance}
+              onChange={(e) => handleFilterChange('performance', e.target.value)}
+              className={`w-full p-2 rounded-lg border ${
+                isDarkMode 
+                  ? 'bg-slate-700 border-slate-600 text-white' 
+                  : 'bg-white border-gray-300 text-gray-900'
+              }`}
+            >
+              <option value="all">All Performance Levels</option>
+              <option value="excellent">Excellent (4.5+)</option>
+              <option value="good">Good (4.0-4.4)</option>
+              <option value="fair">Fair (3.5-3.9)</option>
+              <option value="poor">Poor (Below 3.5)</option>
+            </select>
+          </div>
+
+          {/* Attendance Filter */}
+          <div>
+            <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+              Attendance Rate
+            </label>
+            <select 
+              value={filters.attendance}
+              onChange={(e) => handleFilterChange('attendance', e.target.value)}
+              className={`w-full p-2 rounded-lg border ${
+                isDarkMode 
+                  ? 'bg-slate-700 border-slate-600 text-white' 
+                  : 'bg-white border-gray-300 text-gray-900'
+              }`}
+            >
+              <option value="all">All Attendance Rates</option>
+              <option value="high">High (90%+)</option>
+              <option value="medium">Medium (80-89%)</option>
+              <option value="low">Low (Below 80%)</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3 mt-6 pt-4 border-t border-gray-200 dark:border-slate-600">
+          <button 
+            onClick={resetFilters}
+            className={`flex-1 py-2 px-4 rounded-lg border transition-colors ${
+              isDarkMode 
+                ? 'border-slate-600 text-gray-300 hover:bg-slate-700' 
+                : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+            }`}
+          >
+            Reset
+          </button>
+          <button 
+            onClick={applyFilters}
+            className="flex-1 py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Apply Filters
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className={`min-h-screen w-full ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
@@ -188,17 +490,51 @@ const ReportsAnalytics = () => {
               <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
                 Comprehensive insights on your institute's performance
               </p>
+              {/* Filter Status Indicator */}
+              {(filters.dateRange !== 'thisMonth' || filters.subject !== 'all' || filters.performance !== 'all' || filters.attendance !== 'all') && (
+                <div className="flex items-center gap-2 mt-2">
+                  <span className={`text-sm ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>
+                    Filters applied:
+                  </span>
+                  {filters.subject !== 'all' && (
+                    <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
+                      {filters.subject}
+                    </span>
+                  )}
+                  {filters.performance !== 'all' && (
+                    <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">
+                      {filters.performance}
+                    </span>
+                  )}
+                  {filters.attendance !== 'all' && (
+                    <span className="px-2 py-1 bg-orange-100 text-orange-800 rounded-full text-xs">
+                      {filters.attendance} attendance
+                    </span>
+                  )}
+                  {filters.dateRange !== 'thisMonth' && (
+                    <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-xs">
+                      {filters.dateRange}
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
-            <div className="flex items-center gap-3">
-              <button className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors ${
-                isDarkMode 
-                  ? 'bg-slate-800 border-slate-600 text-gray-300 hover:bg-slate-700' 
-                  : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
-              }`}>
-                <Filter size={16} />
-                Filter
-                <ChevronDown size={16} />
-              </button>
+            <div className="flex items-center gap-3 relative">
+              <div className="relative">
+                <button 
+                  onClick={toggleFilter}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors ${
+                    isDarkMode 
+                      ? 'bg-slate-800 border-slate-600 text-gray-300 hover:bg-slate-700' 
+                      : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
+                  } ${isFilterOpen ? 'ring-2 ring-blue-500' : ''}`}
+                >
+                  <Filter size={16} />
+                  Filter
+                  <ChevronDown size={16} className={`transition-transform ${isFilterOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {isFilterOpen && <FilterPanel />}
+              </div>
               <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                 <Download size={16} />
                 Export
@@ -206,9 +542,9 @@ const ReportsAnalytics = () => {
             </div>
           </div>
 
-          {/* Stats Grid */}
+          {/* Stats Grid - Now uses filtered data */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            {stats.map((stat, index) => {
+            {filteredStats.map((stat, index) => {
               const Icon = stat.icon;
               const colorClasses = getColorClasses(stat.color);
               return (
@@ -249,35 +585,59 @@ const ReportsAnalytics = () => {
                   Revenue Trends
                 </h2>
                 <div className="flex items-center gap-2">
-                  <button className={`px-3 py-1 rounded-lg text-sm ${
-                    isDarkMode ? 'bg-blue-600 text-white' : 'bg-blue-100 text-blue-700'
-                  }`}>
+                  <button 
+                    onClick={() => setSelectedPeriod('monthly')}
+                    className={`px-3 py-1 rounded-lg text-sm transition-colors ${
+                      selectedPeriod === 'monthly'
+                        ? isDarkMode 
+                          ? 'bg-blue-600 text-white' 
+                          : 'bg-blue-100 text-blue-700'
+                        : isDarkMode 
+                          ? 'text-gray-400 hover:bg-slate-700' 
+                          : 'text-gray-600 hover:bg-gray-100'
+                    }`}
+                  >
                     Monthly
                   </button>
-                  <button className={`px-3 py-1 rounded-lg text-sm ${
-                    isDarkMode ? 'text-gray-400' : 'text-gray-600'
-                  }`}>
+                  <button 
+                    onClick={() => setSelectedPeriod('quarterly')}
+                    className={`px-3 py-1 rounded-lg text-sm transition-colors ${
+                      selectedPeriod === 'quarterly'
+                        ? isDarkMode 
+                          ? 'bg-blue-600 text-white' 
+                          : 'bg-blue-100 text-blue-700'
+                        : isDarkMode 
+                          ? 'text-gray-400 hover:bg-slate-700' 
+                          : 'text-gray-600 hover:bg-gray-100'
+                    }`}
+                  >
                     Quarterly
                   </button>
                 </div>
               </div>
               
               <div className="h-64 flex items-end justify-between gap-2 mb-4">
-                {revenueData.map((data, index) => (
+                {currentRevenueData.map((data, index) => (
                   <div key={index} className="flex flex-col items-center flex-1">
                     <div 
-                      className="w-full bg-blue-500 rounded-t-lg mb-2 transition-all hover:bg-blue-600"
+                      className="w-full bg-blue-500 rounded-t-lg mb-2 transition-all hover:bg-blue-600 cursor-pointer"
                       style={{ height: `${(data.value / maxValue) * 200}px` }}
+                      title={`${data.period}: ${data.value}k`}
                     />
                     <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                      {data.month}
+                      {data.period}
                     </span>
                   </div>
                 ))}
               </div>
+              <div className="text-center">
+                <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  {selectedPeriod === 'monthly' ? 'Monthly Revenue (in thousands)' : 'Quarterly Revenue (in thousands)'}
+                </p>
+              </div>
             </div>
 
-            {/* Subject Analysis */}
+            {/* Subject Analysis - Now uses filtered data */}
             <div className={`p-6 rounded-2xl border ${
               isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
             }`}>
@@ -286,7 +646,7 @@ const ReportsAnalytics = () => {
               </h2>
               
               <div className="space-y-4">
-                {subjectAnalysis.map((subject, index) => (
+                {filteredSubjectData.length > 0 ? filteredSubjectData.map((subject, index) => (
                   <div key={index} className="space-y-2">
                     <div className="flex items-center justify-between">
                       <span className={`text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
@@ -303,7 +663,13 @@ const ReportsAnalytics = () => {
                       />
                     </div>
                   </div>
-                ))}
+                )) : (
+                  <div className="text-center py-8">
+                    <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      No subjects match the current filters
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -365,7 +731,7 @@ const ReportsAnalytics = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
             
-            {/* Financial Summary */}
+            {/* Financial Summary - Now uses filtered data */}
             <div className={`p-6 rounded-2xl border ${
               isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
             }`}>
@@ -374,7 +740,7 @@ const ReportsAnalytics = () => {
               </h2>
               
               <div className="space-y-4">
-                {financialData.map((item, index) => (
+                {filteredFinancialData.map((item, index) => (
                   <div key={index} className="space-y-1">
                     <div className="flex items-center justify-between">
                       <span className={`text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
@@ -477,94 +843,121 @@ const ReportsAnalytics = () => {
             </div>
           </div>
 
-          {/* Detailed Class Performance */}
+          {/* Detailed Class Performance - Now uses filtered data */}
           <div className={`p-6 rounded-2xl border ${
             isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
           }`}>
             <div className="flex items-center justify-between mb-6">
               <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Detailed Class Performance
+                {filteredClassData.length !== baseClassPerformance.length && (
+                  <span className={`ml-2 text-sm font-normal ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>
+                    ({filteredClassData.length} of {baseClassPerformance.length} classes)
+                  </span>
+                )}
               </h2>
               <button className={`p-2 rounded-lg ${isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-gray-100'}`}>
                 <MoreHorizontal size={20} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
               </button>
             </div>
             
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className={`border-b ${isDarkMode ? 'border-slate-600' : 'border-gray-200'}`}>
-                    <th className={`text-left py-3 px-4 font-semibold text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                      Class Name
-                    </th>
-                    <th className={`text-left py-3 px-4 font-semibold text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                      Teacher
-                    </th>
-                    <th className={`text-left py-3 px-4 font-semibold text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                      Students
-                    </th>
-                    <th className={`text-left py-3 px-4 font-semibold text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                      Attendance
-                    </th>
-                    <th className={`text-left py-3 px-4 font-semibold text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                      Performance
-                    </th>
-                    <th className={`text-left py-3 px-4 font-semibold text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                      Monthly Fees
-                    </th>
-                    <th className={`text-left py-3 px-4 font-semibold text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                      Status
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {classPerformance.map((classData, index) => (
-                    <tr key={index} className={`border-b ${isDarkMode ? 'border-slate-700' : 'border-gray-100'}`}>
-                      <td className={`py-4 px-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                        <div className="font-semibold">{classData.class}</div>
-                      </td>
-                      <td className={`py-4 px-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                        <div className="flex items-center gap-2">
-                          <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                            <span className="text-xs font-semibold text-blue-600">
-                              {classData.teacher.split(' ').map(n => n[0]).join('')}
+            {filteredClassData.length > 0 ? (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className={`border-b ${isDarkMode ? 'border-slate-600' : 'border-gray-200'}`}>
+                      <th className={`text-left py-3 px-4 font-semibold text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                        Class Name
+                      </th>
+                      <th className={`text-left py-3 px-4 font-semibold text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                        Teacher
+                      </th>
+                      <th className={`text-left py-3 px-4 font-semibold text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                        Students
+                      </th>
+                      <th className={`text-left py-3 px-4 font-semibold text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                        Attendance
+                      </th>
+                      <th className={`text-left py-3 px-4 font-semibold text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                        Performance
+                      </th>
+                      <th className={`text-left py-3 px-4 font-semibold text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                        Monthly Fees
+                      </th>
+                      <th className={`text-left py-3 px-4 font-semibold text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                        Status
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredClassData.map((classData, index) => (
+                      <tr key={index} className={`border-b ${isDarkMode ? 'border-slate-700' : 'border-gray-100'}`}>
+                        <td className={`py-4 px-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          <div className="font-semibold">{classData.class}</div>
+                        </td>
+                        <td className={`py-4 px-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                          <div className="flex items-center gap-2">
+                            <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                              <span className="text-xs font-semibold text-blue-600">
+                                {classData.teacher.split(' ').map(n => n[0]).join('')}
+                              </span>
+                            </div>
+                            <span className="text-sm">{classData.teacher}</span>
+                          </div>
+                        </td>
+                        <td className={`py-4 px-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          {classData.students}
+                        </td>
+                        <td className={`py-4 px-4`}>
+                          <div className="flex items-center gap-2">
+                            <div className={`w-16 h-2 rounded-full ${isDarkMode ? 'bg-slate-700' : 'bg-gray-200'}`}>
+                              <div 
+                                className="h-full rounded-full bg-green-500"
+                                style={{ width: `${classData.attendance}%` }}
+                              />
+                            </div>
+                            <span className={`text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                              {classData.attendance}%
                             </span>
                           </div>
-                          <span className="text-sm">{classData.teacher}</span>
-                        </div>
-                      </td>
-                      <td className={`py-4 px-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                        {classData.students}
-                      </td>
-                      <td className={`py-4 px-4`}>
-                        <div className="flex items-center gap-2">
-                          <div className={`w-16 h-2 rounded-full ${isDarkMode ? 'bg-slate-700' : 'bg-gray-200'}`}>
-                            <div 
-                              className="h-full rounded-full bg-green-500"
-                              style={{ width: `${classData.attendance}%` }}
-                            />
-                          </div>
-                          <span className={`text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                            {classData.attendance}%
+                        </td>
+                        <td className={`py-4 px-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          {classData.performance}
+                        </td>
+                        <td className={`py-4 px-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          {classData.fees}
+                        </td>
+                        <td className={`py-4 px-4`}>
+                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(classData.status)}`}>
+                            {classData.status}
                           </span>
-                        </div>
-                      </td>
-                      <td className={`py-4 px-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                        {classData.performance}
-                      </td>
-                      <td className={`py-4 px-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                        {classData.fees}
-                      </td>
-                      <td className={`py-4 px-4`}>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(classData.status)}`}>
-                          {classData.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 ${
+                  isDarkMode ? 'bg-slate-700' : 'bg-gray-100'
+                }`}>
+                  <BookOpen size={32} className={isDarkMode ? 'text-gray-400' : 'text-gray-500'} />
+                </div>
+                <h3 className={`text-lg font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  No classes found
+                </h3>
+                <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  No classes match the current filter criteria. Try adjusting your filters.
+                </p>
+                <button 
+                  onClick={resetFilters}
+                  className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                >
+                  Reset Filters
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </main>

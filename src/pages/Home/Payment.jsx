@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTheme } from '../../context/ThemeContext';
 import Header from '../../components/layout/Header';
 import Sidebar from '../../components/layout/Sidebar';
@@ -18,54 +18,182 @@ import {
   DollarSign,
   Users,
   CreditCard,
-  Calendar
+  Calendar,
+  Mail,
+  RefreshCw,
+  FileText,
+  X
 } from 'lucide-react';
+
+// Models
+class Payments {
+  constructor(id, studentName, amount, status, date, type = 'student') {
+    this.id = id;
+    this.studentName = studentName;
+    this.amount = amount;
+    this.status = status;
+    this.date = date;
+    this.type = type;
+  }
+}
+
+class TeacherPayment {
+  constructor(id, name, position, subjects, salary, bonus, date, status = 'Pending') {
+    this.id = id;
+    this.name = name;
+    this.position = position;
+    this.subjects = subjects;
+    this.salary = salary;
+    this.bonus = bonus;
+    this.date = date;
+    this.status = status;
+  }
+}
+
+class Refund {
+  constructor(id, name, reason, amount, date, status = 'Pending') {
+    this.id = id;
+    this.name = name;
+    this.reason = reason;
+    this.amount = amount;
+    this.date = date;
+    this.status = status;
+  }
+}
+
+class Scholarship {
+  constructor(id, name, percentage, program, amount, status = 'Active') {
+    this.id = id;
+    this.name = name;
+    this.percentage = percentage;
+    this.program = program;
+    this.amount = amount;
+    this.status = status;
+  }
+}
 
 const Payment = () => {
   const { isDarkMode } = useTheme();
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
+  const [activeFilter, setActiveFilter] = useState('all');
+  const [studentPayments, setStudentPayments] = useState([]);
+  const [teacherPayments, setTeacherPayments] = useState([]);
+  const [refunds, setRefunds] = useState([]);
+  const [scholarships, setScholarships] = useState([]);
+  const [showAddPaymentModal, setShowAddPaymentModal] = useState(false);
+  const [newPayment, setNewPayment] = useState({
+    studentName: '',
+    amount: '',
+    date: new Date().toISOString().split('T')[0],
+    status: 'Pending'
+  });
 
   const toggleSidebar = () => {
     setIsSidebarExpanded(!isSidebarExpanded);
   };
 
-  // Stats data
-  const stats = [
-    {
-      title: 'Total Revenue',
-      value: '₹94,500',
-      change: '+12.5%',
-      trend: 'up',
-      bgColor: 'bg-green-50',
-      textColor: 'text-green-600'
-    },
-    {
-      title: 'Pending Payments',
-      value: '₹24,340',
-      change: '+5.2%',
-      trend: 'up',
-      bgColor: 'bg-yellow-50',
-      textColor: 'text-yellow-600'
-    },
-    {
-      title: 'Overdue',
-      value: '₹8,200',
-      change: '-2.1%',
-      trend: 'down',
-      bgColor: 'bg-red-50',
-      textColor: 'text-red-600'
-    },
-    {
-      title: 'Completed',
-      value: '₹180,254',
-      change: '+8.9%',
-      trend: 'up',
-      bgColor: 'bg-blue-50',
-      textColor: 'text-blue-600'
-    }
-  ];
+  // Initialize data
+  useEffect(() => {
+    // Initialize student payments
+    const initialStudentPayments = [
+      new Payments(1, 'Sarah Johnson', '₹5,500', 'Paid', '2024-12-15'),
+      new Payments(2, 'Michael Chen', '₹4,200', 'Pending', '2024-12-10'),
+      new Payments(3, 'Emily Davis', '₹6,800', 'Overdue', '2024-12-05'),
+      new Payments(4, 'David Wilson', '₹3,500', 'Paid', '2024-12-01'),
+      new Payments(5, 'Lisa Brown', '₹7,200', 'Pending', '2024-11-28')
+    ];
 
-  // Chart data (mock data for visualization)
+    // Initialize teacher payments
+    const initialTeacherPayments = [
+      new TeacherPayment(1, 'Dr. Sarah Johnson', 'Senior Math Teacher', 'Mathematics', '₹8,500', '₹1,000', '2024-12-15', 'Paid'),
+      new TeacherPayment(2, 'Prof. Robert Smith', 'Physics Professor', 'Physics', '₹9,200', '₹1,500', '2024-12-15', 'Paid'),
+      new TeacherPayment(3, 'Ms. Maria Garcia', 'Chemistry Teacher', 'Chemistry', '₹7,800', '₹800', '2024-12-15', 'Pending'),
+      new TeacherPayment(4, 'Dr. James Wilson', 'Biology Professor', 'Biology', '₹8,900', '₹1,200', '2024-12-15', 'Paid'),
+      new TeacherPayment(5, 'Mrs. Patricia Lee', 'English Teacher', 'English', '₹7,500', '₹600', '2024-12-15', 'Pending')
+    ];
+
+    // Initialize refunds
+    const initialRefunds = [
+      new Refund(1, 'Saket Shah', 'Course Cancellation', '₹8,500', '2024-12-10', 'Pending'),
+      new Refund(2, 'Priya Patel', 'Duplicate Payment', '₹5,500', '2024-12-08', 'Processing'),
+      new Refund(3, 'Rahul Kumar', 'Course Transfer', '₹3,200', '2024-12-05', 'Completed'),
+      new Refund(4, 'Anita Desai', 'Service Issue', '₹4,800', '2024-12-03', 'Pending')
+    ];
+
+    // Initialize scholarships
+    const initialScholarships = [
+      new Scholarship(1, 'Manu Patel', '50%', 'Merit Scholarship', '₹12,000'),
+      new Scholarship(2, 'Rahul Sharma', '25%', 'Need Scholarship', '₹6,000'),
+      new Scholarship(3, 'Sneha Verma', '75%', 'Merit Scholarship', '₹18,000'),
+      new Scholarship(4, 'Aarav Gupta', '100%', 'Full Scholarship', '₹25,000')
+    ];
+
+    setStudentPayments(initialStudentPayments);
+    setTeacherPayments(initialTeacherPayments);
+    setRefunds(initialRefunds);
+    setScholarships(initialScholarships);
+  }, []);
+
+  // Filter payments based on active filter
+  const filteredPayments = studentPayments.filter(payment => {
+    if (activeFilter === 'all') return true;
+    if (activeFilter === 'due') return payment.status === 'Pending' || payment.status === 'Overdue';
+    return payment.status.toLowerCase() === activeFilter.toLowerCase();
+  });
+
+  // Stats data with dynamic calculations
+  const calculateStats = () => {
+    const paidAmount = studentPayments
+      .filter(p => p.status === 'Paid')
+      .reduce((sum, p) => sum + parseInt(p.amount.replace(/[^0-9]/g, '')), 0);
+    
+    const pendingAmount = studentPayments
+      .filter(p => p.status === 'Pending')
+      .reduce((sum, p) => sum + parseInt(p.amount.replace(/[^0-9]/g, '')), 0);
+    
+    const overdueAmount = studentPayments
+      .filter(p => p.status === 'Overdue')
+      .reduce((sum, p) => sum + parseInt(p.amount.replace(/[^0-9]/g, '')), 0);
+
+    return [
+      {
+        title: 'Total Revenue',
+        value: `₹${paidAmount.toLocaleString('en-IN')}`,
+        change: '+12.5%',
+        trend: 'up',
+        bgColor: 'bg-green-50',
+        textColor: 'text-green-600'
+      },
+      {
+        title: 'Pending Payments',
+        value: `₹${pendingAmount.toLocaleString('en-IN')}`,
+        change: '+5.2%',
+        trend: 'up',
+        bgColor: 'bg-yellow-50',
+        textColor: 'text-yellow-600'
+      },
+      {
+        title: 'Overdue',
+        value: `₹${overdueAmount.toLocaleString('en-IN')}`,
+        change: '-2.1%',
+        trend: 'down',
+        bgColor: 'bg-red-50',
+        textColor: 'text-red-600'
+      },
+      {
+        title: 'Completed',
+        value: `₹${paidAmount.toLocaleString('en-IN')}`,
+        change: '+8.9%',
+        trend: 'up',
+        bgColor: 'bg-blue-50',
+        textColor: 'text-blue-600'
+      }
+    ];
+  };
+
+  const stats = calculateStats();
+
+  // Chart data
   const chartData = [
     { month: 'Jan', income: 65, pending: 28, overdue: 15 },
     { month: 'Feb', income: 45, pending: 25, overdue: 12 },
@@ -74,50 +202,11 @@ const Payment = () => {
     { month: 'May', income: 85, pending: 35, overdue: 20 },
     { month: 'Jun', income: 70, pending: 28, overdue: 15 },
     { month: 'Jul', income: 90, pending: 40, overdue: 22 },
-    { month: 'Aug', value: 60, pending: 25, overdue: 12 },
+    { month: 'Aug', income: 60, pending: 25, overdue: 12 },
     { month: 'Sep', income: 80, pending: 32, overdue: 18 },
     { month: 'Oct', income: 75, pending: 30, overdue: 16 },
     { month: 'Nov', income: 95, pending: 42, overdue: 25 },
     { month: 'Dec', income: 85, pending: 38, overdue: 20 }
-  ];
-
-  // Student payments data
-  const studentPayments = [
-    {
-      name: 'Sarah Johnson',
-      amount: '₹5,500',
-      status: 'Paid',
-      date: '2024-12-15',
-      statusColor: 'bg-green-100 text-green-800'
-    },
-    {
-      name: 'Sarah Johnson',
-      amount: '₹5,500',
-      status: 'Pending',
-      date: '2024-12-10',
-      statusColor: 'bg-yellow-100 text-yellow-800'
-    },
-    {
-      name: 'Sarah Johnson',
-      amount: '₹5,500',
-      status: 'Overdue',
-      date: '2024-12-05',
-      statusColor: 'bg-red-100 text-red-800'
-    },
-    {
-      name: 'Sarah Johnson',
-      amount: '₹5,500',
-      status: 'Paid',
-      date: '2024-12-01',
-      statusColor: 'bg-green-100 text-green-800'
-    },
-    {
-      name: 'Sarah Johnson',
-      amount: '₹5,500',
-      status: 'Pending',
-      date: '2024-11-28',
-      statusColor: 'bg-yellow-100 text-yellow-800'
-    }
   ];
 
   // Payment methods data
@@ -136,19 +225,19 @@ const Payment = () => {
       bgColor: 'bg-red-50'
     },
     {
-      name: 'Alka Rajkagir',
+      name: 'Rohan Mehra',
       amount: '₹4,780',
       daysOverdue: 8,
       bgColor: 'bg-red-50'
     },
     {
-      name: 'Alka Rajkagir',
+      name: 'Priya Singh',
       amount: '₹6,200',
       daysOverdue: 22,
       bgColor: 'bg-red-50'
     },
     {
-      name: 'Alka Rajkagir',
+      name: 'Amit Kumar',
       amount: '₹3,450',
       daysOverdue: 5,
       bgColor: 'bg-red-50'
@@ -164,166 +253,50 @@ const Payment = () => {
       nextDue: '2024-12-20'
     },
     {
-      name: 'Manu Patel',
+      name: 'Sneha Reddy',
       amount: '₹15,000',
       installment: '1 of 3',
       nextDue: '2024-12-25'
     },
     {
-      name: 'Manu Patel',
+      name: 'Rajesh Nair',
       amount: '₹8,500',
       installment: '3 of 4',
       nextDue: '2024-12-30'
     },
     {
-      name: 'Manu Patel',
+      name: 'Anjali Iyer',
       amount: '₹10,000',
       installment: '1 of 2',
       nextDue: '2024-12-18'
     }
   ];
 
-  // Scholarships data
-  const scholarships = [
-    {
-      name: 'Manu Patel',
-      percentage: '50%',
-      program: 'Merit Scholarship',
-      amount: '₹12,000',
-      bgColor: 'bg-purple-100'
-    },
-    {
-      name: 'Rahul Patel',
-      percentage: '25%',
-      program: 'Need Scholarship',
-      amount: '₹6,000',
-      bgColor: 'bg-purple-100'
-    },
-    {
-      name: 'Rahul Patel',
-      percentage: '75%',
-      program: 'Merit Scholarship',
-      amount: '₹18,000',
-      bgColor: 'bg-purple-100'
-    },
-    {
-      name: 'Rahul Patel',
-      percentage: '100%',
-      program: 'Full Scholarship',
-      amount: '₹25,000',
-      bgColor: 'bg-purple-100'
-    }
-  ];
-
-  // Refunds data
-  const refunds = [
-    {
-      name: 'Saket Shah',
-      reason: 'Course Cancellation',
-      amount: '₹8,500',
-      date: '2024-12-10',
-      bgColor: 'bg-orange-50'
-    },
-    {
-      name: 'Saket Shah',
-      reason: 'Duplicate Payment',
-      amount: '₹5,500',
-      date: '2024-12-08',
-      bgColor: 'bg-orange-50'
-    },
-    {
-      name: 'Saket Shah',
-      reason: 'Course Transfer',
-      amount: '₹3,200',
-      date: '2024-12-05',
-      bgColor: 'bg-orange-50'
-    },
-    {
-      name: 'Saket Shah',
-      reason: 'Service Issue',
-      amount: '₹4,800',
-      date: '2024-12-03',
-      bgColor: 'bg-orange-50'
-    }
-  ];
-
   // Banking overview data
   const bankingData = [
     {
-      bank: 'State Bank',
+      bank: 'State Bank of India',
       account: 'Savings Account',
       balance: '₹1,25,000',
       bgColor: 'bg-teal-50'
     },
     {
-      bank: 'State Bank',
+      bank: 'HDFC Bank',
       account: 'Current Account',
       balance: '₹85,000',
       bgColor: 'bg-teal-50'
     },
     {
-      bank: 'State Bank',
+      bank: 'ICICI Bank',
       account: 'Fixed Deposit',
       balance: '₹2,50,000',
       bgColor: 'bg-teal-50'
     },
     {
-      bank: 'State Bank',
+      bank: 'Axis Bank',
       account: 'Business Account',
       balance: '₹95,000',
       bgColor: 'bg-teal-50'
-    }
-  ];
-
-  // Teacher payments data
-  const teacherPayments = [
-    {
-      name: 'Sarah Johnson',
-      position: 'Senior Math Teacher',
-      subjects: 'Mathematics',
-      salary: '₹8,500',
-      bonus: 'Paid',
-      date: '2024-12-15'
-    },
-    {
-      name: 'Sarah Johnson',
-      position: 'Senior Math Teacher',
-      subjects: 'Mathematics',
-      salary: '₹8,500',
-      bonus: 'Paid',
-      date: '2024-12-15'
-    },
-    {
-      name: 'Sarah Johnson',
-      position: 'Senior Math Teacher',
-      subjects: 'Mathematics',
-      salary: '₹8,500',
-      bonus: 'Pending',
-      date: '2024-12-15'
-    },
-    {
-      name: 'Sarah Johnson',
-      position: 'Senior Math Teacher',
-      subjects: 'Mathematics',
-      salary: '₹8,500',
-      bonus: 'Paid',
-      date: '2024-12-15'
-    },
-    {
-      name: 'Sarah Johnson',
-      position: 'Senior Math Teacher',
-      subjects: 'Mathematics',
-      salary: '₹8,500',
-      bonus: 'Paid',
-      date: '2024-12-15'
-    },
-    {
-      name: 'Sarah Johnson',
-      position: 'Senior Math Teacher',
-      subjects: 'Mathematics',
-      salary: '₹8,500',
-      bonus: 'Paid',
-      date: '2024-12-15'
     }
   ];
 
@@ -343,6 +316,136 @@ const Payment = () => {
     { category: 'Net Profit', amount: '₹1,79,500', color: 'text-blue-600' },
     { category: 'Profit Margin', amount: '46.1%', color: 'text-green-600' }
   ];
+
+  // Function handlers
+  const handleExport = () => {
+    const data = JSON.stringify(studentPayments, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'payments-export.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    alert('Payment data exported successfully!');
+  };
+
+  const handleAddPayment = () => {
+    if (!newPayment.studentName || !newPayment.amount) {
+      alert('Please fill in all required fields');
+      return;
+    }
+
+    const newId = studentPayments.length > 0 
+      ? Math.max(...studentPayments.map(p => p.id)) + 1 
+      : 1;
+
+    const newPaymentObj = new Payments(
+      newId,
+      newPayment.studentName,
+      `₹${parseInt(newPayment.amount).toLocaleString('en-IN')}`,
+      newPayment.status,
+      newPayment.date
+    );
+
+    // Add new payment to the beginning of the array
+    setStudentPayments(prevPayments => [newPaymentObj, ...prevPayments]);
+    setShowAddPaymentModal(false);
+    setNewPayment({
+      studentName: '',
+      amount: '',
+      date: new Date().toISOString().split('T')[0],
+      status: 'Pending'
+    });
+    
+    // Reset filter to show all payments including the new one
+    setActiveFilter('all');
+    
+    alert('Payment added successfully!');
+  };
+
+  const handleSendReminder = () => {
+    const overduePayments = studentPayments.filter(p => p.status === 'Overdue');
+    if (overduePayments.length === 0) {
+      alert('No overdue payments to send reminders for.');
+      return;
+    }
+    alert(`Reminders sent to ${overduePayments.length} students with overdue payments.`);
+  };
+
+  const handleProcessRefund = () => {
+    const pendingRefunds = refunds.filter(r => r.status === 'Pending');
+    if (pendingRefunds.length === 0) {
+      alert('No pending refunds to process.');
+      return;
+    }
+
+    const updatedRefunds = refunds.map(refund => 
+      refund.status === 'Pending' ? { ...refund, status: 'Processing' } : refund
+    );
+    setRefunds(updatedRefunds);
+    alert('Refund processing initiated for all pending refunds.');
+  };
+
+  const handleReconcileAccounts = () => {
+    alert('Account reconciliation process started. This may take a few minutes.');
+    // Simulate reconciliation process
+    setTimeout(() => {
+      alert('Account reconciliation completed successfully!');
+    }, 2000);
+  };
+
+  const handlePayAllTeachers = () => {
+    const updatedTeachers = teacherPayments.map(teacher => ({
+      ...teacher,
+      status: 'Paid',
+      date: new Date().toISOString().split('T')[0]
+    }));
+    setTeacherPayments(updatedTeachers);
+    alert('All teacher payments processed successfully!');
+  };
+
+  const handleGeneratePayroll = () => {
+    const payrollData = teacherPayments.map(teacher => ({
+      name: teacher.name,
+      salary: teacher.salary,
+      bonus: teacher.bonus,
+      status: teacher.status,
+      date: teacher.date
+    }));
+
+    const payrollBlob = new Blob([JSON.stringify(payrollData, null, 2)], { 
+      type: 'application/json' 
+    });
+    const url = URL.createObjectURL(payrollBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `payroll-${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    alert('Payroll generated and downloaded successfully!');
+  };
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'Paid': return 'bg-green-100 text-green-800';
+      case 'Pending': return 'bg-yellow-100 text-yellow-800';
+      case 'Overdue': return 'bg-red-100 text-red-800';
+      case 'Processing': return 'bg-blue-100 text-blue-800';
+      case 'Completed': return 'bg-green-100 text-green-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const handleModalClose = () => {
+    setShowAddPaymentModal(false);
+    setNewPayment({
+      studentName: '',
+      amount: '',
+      date: new Date().toISOString().split('T')[0],
+      status: 'Pending'
+    });
+  };
 
   return (
     <div className={`min-h-screen w-full ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
@@ -369,13 +472,19 @@ const Payment = () => {
               </p>
             </div>
             <div className="flex gap-3">
-              <button className={`px-4 py-2 border rounded-lg flex items-center gap-2 ${
-                isDarkMode ? 'border-slate-600 text-white hover:bg-slate-700' : 'border-gray-300 text-gray-700 hover:bg-gray-50'
-              }`}>
+              <button 
+                onClick={handleExport}
+                className={`px-4 py-2 border rounded-lg flex items-center gap-2 ${
+                  isDarkMode ? 'border-slate-600 text-white hover:bg-slate-700' : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                }`}
+              >
                 <Download size={16} />
                 Bulk Export
               </button>
-              <button className="px-4 py-2 bg-blue-500 text-white rounded-lg flex items-center gap-2 hover:bg-blue-600">
+              <button 
+                onClick={() => setShowAddPaymentModal(true)}
+                className="px-4 py-2 bg-blue-500 text-white rounded-lg flex items-center gap-2 hover:bg-blue-600"
+              >
                 <Plus size={16} />
                 Add Payment
               </button>
@@ -470,38 +579,60 @@ const Payment = () => {
                   Student Payment
                 </h2>
                 <div className="flex gap-2">
-                  <button className={`px-3 py-1 text-xs rounded-lg ${
-                    isDarkMode ? 'bg-slate-700 text-white' : 'bg-gray-100 text-gray-700'
-                  }`}>
+                  <button 
+                    onClick={() => setActiveFilter('all')}
+                    className={`px-3 py-1 text-xs rounded-lg ${
+                      activeFilter === 'all' 
+                        ? 'bg-blue-500 text-white' 
+                        : isDarkMode 
+                          ? 'bg-slate-700 text-white' 
+                          : 'bg-gray-100 text-gray-700'
+                    }`}
+                  >
                     All Payment
                   </button>
-                  <button className="px-3 py-1 text-xs bg-blue-500 text-white rounded-lg">
+                  <button 
+                    onClick={() => setActiveFilter('due')}
+                    className={`px-3 py-1 text-xs rounded-lg ${
+                      activeFilter === 'due' 
+                        ? 'bg-blue-500 text-white' 
+                        : isDarkMode 
+                          ? 'bg-slate-700 text-white' 
+                          : 'bg-gray-100 text-gray-700'
+                    }`}
+                  >
                     Due Payment
                   </button>
                 </div>
               </div>
               
-              <div className="space-y-3">
-                {studentPayments.map((payment, index) => (
-                  <div key={index} className="flex justify-between items-center py-2">
-                    <div>
-                      <p className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                        {payment.name}
-                      </p>
-                      <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        {payment.date}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                        {payment.amount}
-                      </p>
-                      <span className={`text-xs px-2 py-1 rounded-full ${payment.statusColor}`}>
-                        {payment.status}
-                      </span>
-                    </div>
+              <div className="space-y-3 max-h-80 overflow-y-auto">
+                {filteredPayments.length === 0 ? (
+                  <div className={`text-center py-8 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                    No payments found
                   </div>
-                ))}
+                ) : (
+                  filteredPayments.map((payment, index) => (
+                    <div key={payment.id} className="flex justify-between items-center py-2 border-b border-gray-200">
+                      <div>
+                        <p className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          {payment.studentName}
+                        </p>
+                        <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                          {payment.date}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          {payment.amount}
+                        </p>
+                        <span className={`text-xs px-2 py-1 rounded-full ${getStatusColor(payment.status)}`}>
+                          {payment.status}
+                        </span>
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
 
@@ -546,7 +677,11 @@ const Payment = () => {
                 <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Payment Reminders
                 </h2>
-                <button className="px-3 py-1 bg-red-500 text-white text-xs rounded-lg">
+                <button 
+                  onClick={handleSendReminder}
+                  className="px-3 py-1 bg-red-500 text-white text-xs rounded-lg flex items-center gap-1 hover:bg-red-600"
+                >
+                  <Mail size={14} />
                   Send Reminder
                 </button>
               </div>
@@ -613,7 +748,7 @@ const Payment = () => {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {scholarships.map((scholarship, index) => (
-                  <div key={index} className={`p-4 rounded-lg ${scholarship.bgColor}`}>
+                  <div key={index} className={`p-4 rounded-lg bg-purple-100`}>
                     <div className="flex justify-between items-start mb-2">
                       <div>
                         <p className="font-medium text-gray-900">{scholarship.name}</p>
@@ -635,20 +770,29 @@ const Payment = () => {
                 <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Refunds & Adjustments
                 </h2>
-                <button className="px-3 py-1 bg-orange-500 text-white text-xs rounded-lg">
+                <button 
+                  onClick={handleProcessRefund}
+                  className="px-3 py-1 bg-orange-500 text-white text-xs rounded-lg flex items-center gap-1 hover:bg-orange-600"
+                >
+                  <RefreshCw size={14} />
                   Process Refund
                 </button>
               </div>
               
               <div className="space-y-3">
                 {refunds.map((refund, index) => (
-                  <div key={index} className={`p-4 rounded-lg ${refund.bgColor}`}>
+                  <div key={index} className={`p-4 rounded-lg bg-orange-50`}>
                     <div className="flex justify-between items-start mb-1">
                       <p className="font-medium text-gray-900">{refund.name}</p>
                       <p className="font-medium text-gray-900">{refund.amount}</p>
                     </div>
                     <p className="text-sm text-gray-600 mb-1">{refund.reason}</p>
-                    <p className="text-xs text-gray-500">{refund.date}</p>
+                    <div className="flex justify-between items-center">
+                      <p className="text-xs text-gray-500">{refund.date}</p>
+                      <span className={`text-xs px-2 py-1 rounded-full ${getStatusColor(refund.status)}`}>
+                        {refund.status}
+                      </span>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -678,7 +822,11 @@ const Payment = () => {
                   </div>
                 ))}
                 
-                <button className="w-full py-3 bg-teal-500 text-white font-medium rounded-lg hover:bg-teal-600 transition-colors">
+                <button 
+                  onClick={handleReconcileAccounts}
+                  className="w-full py-3 bg-teal-500 text-white font-medium rounded-lg hover:bg-teal-600 transition-colors flex items-center justify-center gap-2"
+                >
+                  <RefreshCw size={16} />
                   Reconcile Accounts
                 </button>
               </div>
@@ -694,10 +842,18 @@ const Payment = () => {
                 Teacher Payment
               </h2>
               <div className="flex gap-2">
-                <button className="px-3 py-1 bg-green-500 text-white text-xs rounded-lg">
+                <button 
+                  onClick={handlePayAllTeachers}
+                  className="px-3 py-1 bg-green-500 text-white text-xs rounded-lg flex items-center gap-1 hover:bg-green-600"
+                >
+                  <DollarSign size={14} />
                   Pay All
                 </button>
-                <button className="px-3 py-1 bg-blue-500 text-white text-xs rounded-lg">
+                <button 
+                  onClick={handleGeneratePayroll}
+                  className="px-3 py-1 bg-blue-500 text-white text-xs rounded-lg flex items-center gap-1 hover:bg-blue-600"
+                >
+                  <FileText size={14} />
                   Generate Payroll
                 </button>
               </div>
@@ -726,7 +882,7 @@ const Payment = () => {
                       Date
                     </th>
                     <th className={`text-left py-3 px-4 font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                      Actions
+                      Status
                     </th>
                   </tr>
                 </thead>
@@ -747,24 +903,16 @@ const Payment = () => {
                       <td className={`py-4 px-4 font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                         {teacher.salary}
                       </td>
-                      <td className={`py-4 px-4`}>
-                        <span className={`px-2 py-1 text-xs rounded-full ${
-                          teacher.bonus === 'Paid' 
-                            ? 'bg-green-100 text-green-800' 
-                            : 'bg-yellow-100 text-yellow-800'
-                        }`}>
-                          {teacher.bonus}
-                        </span>
+                      <td className={`py-4 px-4 font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                        {teacher.bonus}
                       </td>
                       <td className={`py-4 px-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                         {teacher.date}
                       </td>
                       <td className="py-4 px-4">
-                        <button className={`p-2 rounded-lg ${
-                          isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-gray-100'
-                        }`}>
-                          <MoreHorizontal size={16} className={isDarkMode ? 'text-gray-400' : 'text-gray-500'} />
-                        </button>
+                        <span className={`px-2 py-1 text-xs rounded-full ${getStatusColor(teacher.status)}`}>
+                          {teacher.status}
+                        </span>
                       </td>
                     </tr>
                   ))}
@@ -834,6 +982,112 @@ const Payment = () => {
           </div>
         </div>
       </main>
+
+      {/* Add Payment Modal */}
+      {showAddPaymentModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className={`p-6 rounded-2xl w-full max-w-md ${
+            isDarkMode ? 'bg-slate-800' : 'bg-white'
+          }`}>
+            <div className="flex justify-between items-center mb-4">
+              <h3 className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                Add New Payment
+              </h3>
+              <button 
+                onClick={handleModalClose}
+                className={`p-1 rounded-full ${isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-gray-100'}`}
+              >
+                <X size={20} className={isDarkMode ? 'text-gray-300' : 'text-gray-600'} />
+              </button>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Student Name *
+                </label>
+                <input
+                  type="text"
+                  value={newPayment.studentName}
+                  onChange={(e) => setNewPayment({...newPayment, studentName: e.target.value})}
+                  className={`w-full p-2 border rounded-lg ${
+                    isDarkMode 
+                      ? 'bg-slate-700 border-slate-600 text-white' 
+                      : 'bg-white border-gray-300 text-gray-900'
+                  }`}
+                  placeholder="Enter student name"
+                />
+              </div>
+              <div>
+                <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Amount *
+                </label>
+                <input
+                  type="number"
+                  value={newPayment.amount}
+                  onChange={(e) => setNewPayment({...newPayment, amount: e.target.value})}
+                  className={`w-full p-2 border rounded-lg ${
+                    isDarkMode 
+                      ? 'bg-slate-700 border-slate-600 text-white' 
+                      : 'bg-white border-gray-300 text-gray-900'
+                  }`}
+                  placeholder="Enter amount"
+                />
+              </div>
+              <div>
+                <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Date
+                </label>
+                <input
+                  type="date"
+                  value={newPayment.date}
+                  onChange={(e) => setNewPayment({...newPayment, date: e.target.value})}
+                  className={`w-full p-2 border rounded-lg ${
+                    isDarkMode 
+                      ? 'bg-slate-700 border-slate-600 text-white' 
+                      : 'bg-white border-gray-300 text-gray-900'
+                  }`}
+                />
+              </div>
+              <div>
+                <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Status
+                </label>
+                <select
+                  value={newPayment.status}
+                  onChange={(e) => setNewPayment({...newPayment, status: e.target.value})}
+                  className={`w-full p-2 border rounded-lg ${
+                    isDarkMode 
+                      ? 'bg-slate-700 border-slate-600 text-white' 
+                      : 'bg-white border-gray-300 text-gray-900'
+                  }`}
+                >
+                  <option value="Pending">Pending</option>
+                  <option value="Paid">Paid</option>
+                  <option value="Overdue">Overdue</option>
+                </select>
+              </div>
+              <div className="flex gap-3 pt-4">
+                <button
+                  onClick={handleModalClose}
+                  className={`flex-1 py-2 border rounded-lg ${
+                    isDarkMode 
+                      ? 'border-slate-600 text-white hover:bg-slate-700' 
+                      : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                  }`}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleAddPayment}
+                  className="flex-1 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                >
+                  Add Payment
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <Footer isSidebarExpanded={isSidebarExpanded} />
     </div>

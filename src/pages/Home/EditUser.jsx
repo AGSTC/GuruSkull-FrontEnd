@@ -5,12 +5,6 @@ import Sidebar from '../../components/layout/Sidebar';
 import Footer from '../../components/layout/Footer';
 
 import { 
-  User,
-  Mail,
-  Phone,
-  Calendar,
-  MapPin,
-  BookOpen,
   Save,
   X
 } from 'lucide-react';
