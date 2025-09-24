@@ -1,46 +1,71 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
+
+{/* Login Folder */}
 import Login from './pages/Login/Login';
 import ForgotPassword from './pages/Login/forgotPassword';
 import ResetPassword from './pages/Login/ResetPassword';
 import NewPassword from './pages/Login/newPassword'
-import Dashboard from './pages/Home/Dashboard';
-import Chat from './pages/Home/Chat';
-import TermsConditions from './pages/Home/TermsConditions';
-import SafetySecurity from './pages/Home/SafetySecurity';
-import PrivacyPolicy from './pages/Home/PrivacyPolicy';
-import Notification from './pages/Home/Notification';
-import Profile from './pages/Home/Profile';
-import Schedule from './pages/Home/Schedule';
-import ReportsAnalytics from './pages/Home/ReportsAnalytics';
-import Payment from './pages/Home/Payment';
-import AttendanceManagement from './pages/Home/AttendanceManagement';
-import UserRoleManagement from './pages/Home/UserRoleManagement';
-import ViewUser from './pages/Home/ViewUser';
-import EditUser from './pages/Home/EditUser';
-import AnnouncementManagement from './pages/Home/AnnouncementManagement';
-import SettingsManagement from './pages/Home/SettingsManagement';
-import TeacherDashboard from './pages/Home/TeacherDashboard';
-import TeacherSchedule from './pages/Home/TeacherSchedule';
-import TeacherAttendanceManagement from './pages/Home/TeacherAttendanceManagement';
-import TeacherAnnouncements from './pages/Home/TeacherAnnouncements';
-import TeacherSettings from './pages/Home/TeacherSettings';
-import TeacherReportsAnalytics from './pages/Home/TeacherReportsAnalytics';
-import TeacherAssignmentsManagement from './pages/Home/TeacherAssignmentsManagement';
-import TeacherProfile from './pages/Home/TeacherProfile';
-import StudentDashboard from './pages/Home/StudentDashboar';
-import StudentSchedule from './pages/Home/StudentSchedule';
-import StudentAttendance from './pages/Home/StudentAttendance';
-import StudentAssignments from './pages/Home/StudentAssignments';
-import StudentSettings from './pages/Home/StudentSettings';
-import StudentProfile from './pages/Home/StudentProfile';
-import ParentDashboard from './pages/Home/ParentDashboard';
-import ParentSchedule from './pages/Home/ParentSchedule';
-import ParentAttendanceManagement from './pages/Home/ParentAttendanceManagement';
-import ParentReportsAnalytics from './pages/Home/ParentReportsAnalytics';
-import ParentAnnouncements from './pages/Home/ParentAnnouncements';
-import ParentSettings from './pages/Home/ParentSettings';
+
+{/* Dashboard Folder */}
+import Dashboard from './pages/Dashboard/Dashboard';
+import TeacherDashboard from './pages/Dashboard/TeacherDashboard';
+import StudentDashboard from './pages/Dashboard/StudentDashboard';
+import ParentDashboard from './pages/Dashboard/ParentDashboard';
+
+{/* General Folder */}
+import Messages from './pages/General/Chat';
+import TermsConditions from './pages/General/TermsConditions';
+import SafetySecurity from './pages/General/SafetySecurity';
+import PrivacyPolicy from './pages/General/PrivacyPolicy';
+import Notification from './pages/General/Notification';
+
+{/* Profile Folder */}
+import Profile from './pages/Profile/Profile';
+import TeacherProfile from './pages/Profile/TeacherProfile';
+import StudentProfile from './pages/Profile/StudentProfile';
+
+{/* Schedule Folder */}
+import Schedule from './pages/Schedule/Schedule';
+import TeacherSchedule from './pages/Schedule/TeacherSchedule';
+import StudentSchedule from './pages/Schedule/StudentSchedule';
+import ParentSchedule from './pages/Schedule/ParentSchedule';
+
+{/* ReportsAnalytics Folder */}
+import ReportsAnalytics from './pages/ReportsAnalytics/ReportsAnalytics';
+import TeacherReportsAnalytics from './pages/ReportsAnalytics/TeacherReportsAnalytics';
+import ParentReportsAnalytics from './pages/ReportsAnalytics/ParentReportsAnalytics';
+
+{/* Payments Folder */}
+import Payment from './pages/Payments/Payment';
+
+{/* AttedanceManagement Folder */}
+import AttendanceManagement from './pages/Attendance/AttendanceManagement';
+import TeacherAttendanceManagement from './pages/Attendance/TeacherAttendanceManagement';
+import StudentAttendance from './pages/Attendance/StudentAttendance';
+import ParentAttendanceManagement from './pages/Attendance/ParentAttendanceManagement';
+
+{/* UserRoleManagements Folder */}
+import UserRoleManagement from './pages/UserRoleManagement/UserRoleManagement';
+import ViewUser from './pages/UserRoleManagement/ViewUser';
+import EditUser from './pages/UserRoleManagement/EditUser';
+
+{/* Annnouncements Folder */}
+import AnnouncementManagement from './pages/Announcements/AnnouncementManagement';
+import TeacherAnnouncements from './pages/Announcements/TeacherAnnouncements';
+import ParentAnnouncements from './pages/Announcements/ParentAnnouncements';
+
+{/* Settings Folder */}
+import SettingsManagement from './pages/Settings/SettingsManagement';
+import TeacherSettings from './pages/Settings/TeacherSettings';
+import StudentSettings from './pages/Settings/StudentSettings';
+import ParentSettings from './pages/Settings/ParentSettings';
+
+{/* Assignments Folder */}
+import TeacherAssignmentsManagement from './pages/Assignments/TeacherAssignmentsManagement';
+import StudentAssignments from './pages/Assignments/StudentAssignments';
+
 
 import './App.css';
 
@@ -64,7 +89,7 @@ function App() {
             <Route path="/TermsConditions" element={<TermsConditions />} />
             <Route path="/SafetySecurity" element={<SafetySecurity />} />
             <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
-            <Route path="/Chat" element={<Chat />} />
+            <Route path="/Messages" element={<Messages />} />
             <Route path="/Notification" element={<Notification />} />
             <Route path="/Profile" element={<Profile />} />
             <Route path="/Schedule" element={<Schedule />} />

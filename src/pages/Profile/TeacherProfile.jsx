@@ -3,7 +3,6 @@ import { useTheme } from '../../context/ThemeContext';
 import Header from '../../components/layout/Header';
 import Sidebar from '../../components/layout/Sidebar';
 import Footer from '../../components/layout/Footer';
-import profile from '../../assets/images/profile.png';
 import teacherProfile from '../../assets/images/teacher-profile.png';
 import { 
   User, 

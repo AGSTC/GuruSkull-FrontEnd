@@ -32,131 +32,70 @@ const AttendanceManagement = () => {
   const [selectedSubject, setSelectedSubject] = useState('All Subjects');
   const [filteredData, setFilteredData] = useState([]);
   const [stats, setStats] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
 
   const toggleSidebar = () => {
     setIsSidebarExpanded(!isSidebarExpanded);
   };
 
-  // Mock data for different dates and view types
+  // Enhanced mock data with more students and teachers
   const generateMockData = () => {
-    const baseStudentData = [
-      {
-        id: 1,
-        name: 'Aarav Sharma',
-        rollNo: 'S001',
-        class: 'Class 10A',
-        subject: 'Mathematics',
-        status: 'Present',
-        checkInTime: '09:15 AM',
-        parentName: 'Rajesh Sharma',
-        parentContact: '+91 9876543210',
-        date: selectedDate
-      },
-      {
-        id: 2,
-        name: 'Priya Patel',
-        rollNo: 'S002',
-        class: 'Class 9A',
-        subject: 'Science',
-        status: 'Absent',
-        checkInTime: '-',
-        parentName: 'Sanjay Patel',
-        parentContact: '+91 9876543211',
-        date: selectedDate
-      },
-      {
-        id: 3,
-        name: 'Rohan Kumar',
-        rollNo: 'S003',
-        class: 'Class 10A',
-        subject: 'Mathematics',
-        status: 'Late',
-        checkInTime: '09:35 AM',
-        parentName: 'Anita Kumar',
-        parentContact: '+91 9876543212',
-        date: selectedDate
-      },
-      {
-        id: 4,
-        name: 'Sneha Gupta',
-        rollNo: 'S004',
-        class: 'Class 9B',
-        subject: 'Science',
-        status: 'Present',
-        checkInTime: '09:12 AM',
-        parentName: 'Vikram Gupta',
-        parentContact: '+91 9876543213',
-        date: selectedDate
-      },
-      {
-        id: 5,
-        name: 'Karan Singh',
-        rollNo: 'S005',
-        class: 'Class 10A',
-        subject: 'Mathematics',
-        status: 'Present',
-        checkInTime: '09:10 AM',
-        parentName: 'Neha Singh',
-        parentContact: '+91 9876543214',
-        date: selectedDate
-      }
+    const studentNames = [
+      'Aarav Sharma', 'Priya Patel', 'Rohan Kumar', 'Sneha Gupta', 'Karan Singh',
+      'Ananya Joshi', 'Vikram Reddy', 'Pooja Agarwal', 'Arjun Mehta', 'Riya Shah',
+      'Siddharth Jain', 'Kavya Nair', 'Aditya Rao', 'Ishita Kapoor', 'Harsh Gupta',
+      'Meera Singh', 'Nikhil Sharma', 'Tanya Malhotra', 'Rahul Verma', 'Sakshi Pandey',
+      'Varun Kumar', 'Deepika Jha', 'Rohit Agrawal', 'Simran Kaur', 'Abhinav Mishra',
+      'Nisha Thakur', 'Kartik Saxena', 'Priyanka Das', 'Akash Bhatt', 'Swati Yadav'
     ];
 
-    const baseTeacherData = [
-      {
-        id: 1,
-        name: 'Dr. Sharma',
-        contact: '+91 9876543210',
-        subject: 'Mathematics',
-        classes: ['Class 9A', 'Class 10A'],
-        status: 'Present',
-        checkInTime: '08:45 AM',
-        checkOutTime: '03:30 PM',
-        totalHours: '6.5 Hours',
-        date: selectedDate
-      },
-      {
-        id: 2,
-        name: 'Prof. Patel',
-        contact: '+91 9876543211',
-        subject: 'Science',
-        classes: ['Class 9B', 'Class 10B'],
-        status: 'Absent',
-        checkInTime: '-',
-        checkOutTime: '-',
-        totalHours: '0 Hours',
-        date: selectedDate
-      },
-      {
-        id: 3,
-        name: 'Ms. Verma',
-        contact: '+91 9876543212',
-        subject: 'English',
-        classes: ['Class 9A', 'Class 10A'],
-        status: 'Present',
-        checkInTime: '08:45 AM',
-        checkOutTime: '03:30 PM',
-        totalHours: '6.5 Hours',
-        date: selectedDate
-      },
-      {
-        id: 4,
-        name: 'Mr. Joshi',
-        contact: '+91 9876543213',
-        subject: 'Mathematics',
-        classes: ['Class 9B'],
-        status: 'Present',
-        checkInTime: '08:45 AM',
-        checkOutTime: '03:30 PM',
-        totalHours: '6.5 Hours',
-        date: selectedDate
-      }
+    const teacherNames = [
+      'Dr. Rajesh Sharma', 'Prof. Meera Patel', 'Ms. Kavita Verma', 'Mr. Suresh Joshi',
+      'Dr. Priya Gupta', 'Prof. Anil Kumar', 'Ms. Sunita Singh', 'Mr. Vinod Agrawal',
+      'Dr. Ravi Mehta', 'Prof. Neha Kapoor', 'Ms. Sushma Rao', 'Mr. Manoj Tiwari',
+      'Dr. Pooja Sharma', 'Prof. Amit Jain', 'Ms. Rekha Pandey'
     ];
+
+    const classes = ['Class 8A', 'Class 8B', 'Class 9A', 'Class 9B', 'Class 10A', 'Class 10B', 'Class 11A', 'Class 11B', 'Class 12A', 'Class 12B'];
+    const subjects = ['Mathematics', 'Science', 'English', 'Social Studies', 'Physics', 'Chemistry', 'Biology', 'Computer Science'];
+    const statuses = ['Present', 'Absent', 'Late'];
+    const parentNames = [
+      'Rajesh Sharma', 'Sanjay Patel', 'Anita Kumar', 'Vikram Gupta', 'Neha Singh',
+      'Deepak Joshi', 'Sunita Reddy', 'Manoj Agarwal', 'Priya Mehta', 'Suresh Shah',
+      'Kavita Jain', 'Ravi Nair', 'Pooja Rao', 'Vinod Kapoor', 'Meera Gupta'
+    ];
+
+    const baseStudentData = studentNames.map((name, index) => ({
+      id: index + 1,
+      name: name,
+      rollNo: `S${(index + 1).toString().padStart(3, '0')}`,
+      class: classes[index % classes.length],
+      subject: subjects[index % subjects.length],
+      status: statuses[Math.floor(Math.random() * statuses.length)],
+      checkInTime: statuses[index % 3] === 'Absent' ? '-' : statuses[index % 3] === 'Late' ? '09:35 AM' : '09:15 AM',
+      parentName: parentNames[index % parentNames.length],
+      parentContact: `+91 98765432${(10 + index).toString().slice(-2)}`,
+      date: selectedDate
+    }));
+
+    const baseTeacherData = teacherNames.map((name, index) => ({
+      id: index + 1,
+      name: name,
+      contact: `+91 98765432${(10 + index).toString().slice(-2)}`,
+      subject: subjects[index % subjects.length],
+      classes: [classes[index % classes.length], classes[(index + 1) % classes.length]].slice(0, Math.ceil(Math.random() * 2)),
+      status: index % 7 === 0 ? 'Absent' : 'Present',
+      checkInTime: index % 7 === 0 ? '-' : '08:45 AM',
+      checkOutTime: index % 7 === 0 ? '-' : '03:30 PM',
+      totalHours: index % 7 === 0 ? '0 Hours' : '6.5 Hours',
+      date: selectedDate
+    }));
 
     // For monthly view, generate data for multiple dates
     if (viewType === 'monthly') {
       const monthlyData = [];
-      for (let i = 0; i < 20; i++) {
+      for (let i = 0; i < 30; i++) {
         const date = new Date();
         date.setDate(date.getDate() - i);
         const dateStr = date.toISOString().split('T')[0];
@@ -165,10 +104,10 @@ const AttendanceManagement = () => {
         baseStudentData.forEach(student => {
           monthlyData.push({
             ...student,
-            id: student.id + i * 10,
+            id: student.id + i * 100,
             date: dateStr,
-            status: i % 5 === 0 ? 'Absent' : i % 7 === 0 ? 'Late' : 'Present',
-            checkInTime: i % 5 === 0 ? '-' : i % 7 === 0 ? '09:35 AM' : '09:15 AM'
+            status: Math.random() > 0.15 ? (Math.random() > 0.9 ? 'Late' : 'Present') : 'Absent',
+            checkInTime: Math.random() > 0.15 ? (Math.random() > 0.9 ? '09:35 AM' : '09:15 AM') : '-'
           });
         });
 
@@ -176,12 +115,12 @@ const AttendanceManagement = () => {
         baseTeacherData.forEach(teacher => {
           monthlyData.push({
             ...teacher,
-            id: teacher.id + i * 100, // Use different multiplier to avoid ID conflicts
+            id: teacher.id + i * 1000, // Use different multiplier to avoid ID conflicts
             date: dateStr,
-            status: i % 10 === 0 ? 'Absent' : 'Present',
-            checkInTime: i % 10 === 0 ? '-' : '08:45 AM',
-            checkOutTime: i % 10 === 0 ? '-' : '03:30 PM',
-            totalHours: i % 10 === 0 ? '0 Hours' : '6.5 Hours'
+            status: Math.random() > 0.05 ? 'Present' : 'Absent',
+            checkInTime: Math.random() > 0.05 ? '08:45 AM' : '-',
+            checkOutTime: Math.random() > 0.05 ? '03:30 PM' : '-',
+            totalHours: Math.random() > 0.05 ? '6.5 Hours' : '0 Hours'
           });
         });
       }
@@ -321,6 +260,7 @@ const AttendanceManagement = () => {
     setSelectedDate(new Date().toISOString().split('T')[0]);
     setSelectedClass('All Classes');
     setSelectedSubject('All Subjects');
+    setCurrentPage(1);
     filterData();
   };
 
@@ -337,6 +277,7 @@ const AttendanceManagement = () => {
           Name: item.name || '',
           'Roll No': item.rollNo || '',
           Class: item.class || '',
+          Subject: item.subject || '',
           Status: item.status || '',
           'Check-in Time': item.checkInTime || '',
           'Parent Name': item.parentName || '',
@@ -381,12 +322,23 @@ const AttendanceManagement = () => {
     try {
       filterData();
       setStats(calculateStats());
+      setCurrentPage(1); // Reset to first page when filters change
     } catch (error) {
       console.error('Error updating data:', error);
       setFilteredData([]);
       setStats([]);
     }
   }, [activeView, viewType, selectedDate, selectedClass, selectedSubject]);
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentData = filteredData.slice(startIndex, endIndex);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
   const getColorClasses = (color) => {
     const colorMap = {
@@ -407,8 +359,8 @@ const AttendanceManagement = () => {
     return statusMap[status] || statusMap.Present;
   };
 
-  const classOptions = ['All Classes', 'Class 9A', 'Class 9B', 'Class 10A', 'Class 10B'];
-  const subjectOptions = ['All Subjects', 'Mathematics', 'Science', 'English', 'Social Studies'];
+  const classOptions = ['All Classes', 'Class 8A', 'Class 8B', 'Class 9A', 'Class 9B', 'Class 10A', 'Class 10B', 'Class 11A', 'Class 11B', 'Class 12A', 'Class 12B'];
+  const subjectOptions = ['All Subjects', 'Mathematics', 'Science', 'English', 'Social Studies', 'Physics', 'Chemistry', 'Biology', 'Computer Science'];
 
   return (
     <div className={`min-h-screen w-full ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
@@ -610,9 +562,6 @@ const AttendanceManagement = () => {
               <table className="w-full">
                 <thead>
                   <tr className={`border-b ${isDarkMode ? 'border-slate-600' : 'border-gray-200'}`}>
-                    <th className="text-left py-3 px-4">
-                      <input type="checkbox" className="rounded" />
-                    </th>
                     {activeView === 'students' ? (
                       <>
                         <th className={`text-left py-3 px-4 text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
@@ -681,12 +630,9 @@ const AttendanceManagement = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {Array.isArray(filteredData) && filteredData.length > 0 ? (
-                    filteredData.map((item, index) => (
+                  {Array.isArray(currentData) && currentData.length > 0 ? (
+                    currentData.map((item, index) => (
                       <tr key={`${item.id}-${index}`} className={`border-b ${isDarkMode ? 'border-slate-700' : 'border-gray-100'}`}>
-                        <td className="py-4 px-4">
-                          <input type="checkbox" className="rounded" />
-                        </td>
                         {activeView === 'students' ? (
                           <>
                             <td className="py-4 px-4">
@@ -700,6 +646,9 @@ const AttendanceManagement = () => {
                                   {item.name || 'N/A'}
                                 </span>
                               </div>
+                            </td>
+                            <td className={`py-4 px-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                              {item.rollNo || 'N/A'}
                             </td>
                             <td className={`py-4 px-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                               {item.class || 'N/A'}
@@ -822,7 +771,7 @@ const AttendanceManagement = () => {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan={activeView === 'students' ? (viewType === 'monthly' ? 10 : 9) : (viewType === 'monthly' ? 10 : 9)} className={`py-8 px-4 text-center ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      <td colSpan={activeView === 'students' ? (viewType === 'monthly' ? 9 : 8) : (viewType === 'monthly' ? 9 : 8)} className={`py-8 px-4 text-center ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                         No data available
                       </td>
                     </tr>
@@ -835,24 +784,68 @@ const AttendanceManagement = () => {
             {filteredData.length > 0 && (
               <div className="flex items-center justify-between mt-6">
                 <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  Showing {filteredData.length} of {filteredData.length} results
+                  Showing {startIndex + 1} to {Math.min(endIndex, filteredData.length)} of {filteredData.length} results
                 </div>
                 <div className="flex items-center gap-2">
-                  <button className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    isDarkMode 
-                      ? 'bg-slate-700 text-gray-300 hover:bg-slate-600'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  }`}>
+                  <button 
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      currentPage === 1
+                        ? isDarkMode 
+                          ? 'bg-slate-800 text-gray-500 cursor-not-allowed'
+                          : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                        : isDarkMode 
+                          ? 'bg-slate-700 text-gray-300 hover:bg-slate-600'
+                          : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                  >
                     Previous
                   </button>
-                  <button className="px-3 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium">
-                    1
-                  </button>
-                  <button className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    isDarkMode 
-                      ? 'bg-slate-700 text-gray-300 hover:bg-slate-600'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  }`}>
+                  
+                  {/* Page Numbers */}
+                  {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+                    let pageNum;
+                    if (totalPages <= 5) {
+                      pageNum = i + 1;
+                    } else if (currentPage <= 3) {
+                      pageNum = i + 1;
+                    } else if (currentPage >= totalPages - 2) {
+                      pageNum = totalPages - 4 + i;
+                    } else {
+                      pageNum = currentPage - 2 + i;
+                    }
+                    
+                    return (
+                      <button
+                        key={pageNum}
+                        onClick={() => handlePageChange(pageNum)}
+                        className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                          currentPage === pageNum
+                            ? 'bg-blue-600 text-white'
+                            : isDarkMode 
+                              ? 'bg-slate-700 text-gray-300 hover:bg-slate-600'
+                              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                        }`}
+                      >
+                        {pageNum}
+                      </button>
+                    );
+                  })}
+                  
+                  <button 
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      currentPage === totalPages
+                        ? isDarkMode 
+                          ? 'bg-slate-800 text-gray-500 cursor-not-allowed'
+                          : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                        : isDarkMode 
+                          ? 'bg-slate-700 text-gray-300 hover:bg-slate-600'
+                          : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                  >
                     Next
                   </button>
                 </div>

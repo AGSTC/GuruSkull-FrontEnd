@@ -1,4 +1,4 @@
-// Complete Login.jsx with role-based authentication
+// Updated Login.jsx with support for dynamically generated credentials
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Sun, Moon } from 'lucide-react';
@@ -23,8 +23,8 @@ const LoginPage = () => {
   const usernameRef = useRef(null);
   const passwordRef = useRef(null);
 
-  // User credentials for different roles
-  const userCredentials = {
+  // Default user credentials for system roles
+  const defaultUserCredentials = {
     'owner': {
       password: 'owner123',
       role: 'tuition_owner',
@@ -52,6 +52,20 @@ const LoginPage = () => {
       name: 'Tony Stark',
       email: 'tony.stark@gmail.com',
       profileImage: 'parent-profile.png'
+    }
+  };
+
+  // Get all available credentials (default + dynamically created)
+  const getAllCredentials = () => {
+    try {
+      const dynamicCredentials = JSON.parse(localStorage.getItem('userCredentials') || '{}');
+      console.log('Dynamic credentials from localStorage:', dynamicCredentials);
+      const combined = { ...defaultUserCredentials, ...dynamicCredentials };
+      console.log('Combined credentials:', combined);
+      return combined;
+    } catch (error) {
+      console.error('Error parsing userCredentials from localStorage:', error);
+      return defaultUserCredentials;
     }
   };
 
@@ -106,15 +120,25 @@ const LoginPage = () => {
 
     setIsLoading(true);
 
+    // Simulate loading delay
     await new Promise(resolve => setTimeout(resolve, 1500));
 
-    // Check if user exists and password matches
-    const user = userCredentials[formData.username.toLowerCase()];
+    // Get all available credentials
+    const allCredentials = getAllCredentials();
+    
+    console.log('All available credentials:', allCredentials); // Debug log
+    console.log('Trying to login with:', formData.username.toLowerCase(), formData.password); // Debug log
+
+    // Check if user exists and password matches - ensure lowercase comparison
+    const usernameKey = formData.username.toLowerCase();
+    const user = allCredentials[usernameKey];
+
+    console.log('Found user:', user); // Debug log
 
     if (user && user.password === formData.password) {
       // Store user data in localStorage
       const userData = {
-        username: formData.username.toLowerCase(),
+        username: usernameKey,
         role: user.role,
         name: user.name,
         email: user.email,
@@ -133,18 +157,28 @@ const LoginPage = () => {
       // Dispatch custom event to notify other components of user data change
       window.dispatchEvent(new Event('userDataChanged'));
 
-      // Navigate to appropriate dashboard
-      if (user.role === 'tuition_owner') {
-        navigate('/Dashboard');
-      } else if (user.role === 'teacher') {
-        navigate('/TeacherDashboard');
-      } else if (user.role === 'student') {
-        navigate('/StudentDashboard');
-      }
-      else if (user.role === 'parent') {
-        navigate('/ParentDashboard');
+      console.log('Login successful, navigating to dashboard for role:', user.role); // Debug log
+
+      // Navigate to appropriate dashboard based on role
+      switch (user.role) {
+        case 'tuition_owner':
+          navigate('/Dashboard');
+          break;
+        case 'teacher':
+          navigate('/TeacherDashboard');
+          break;
+        case 'student':
+          navigate('/StudentDashboard');
+          break;
+        case 'parent':
+          navigate('/ParentDashboard');
+          break;
+        default:
+          navigate('/Dashboard');
+          break;
       }
     } else {
+      console.log('Login failed - Invalid credentials'); // Debug log
       setErrors({
         username: 'Invalid credentials',
         password: 'Invalid credentials'
@@ -426,6 +460,77 @@ const LoginPage = () => {
                   )}
                 </button>
 
+                {/* Debug Section - Remove this in production */}
+                <div className="mt-6 p-4 rounded-lg border border-yellow-400 bg-yellow-50">
+                  <div className="text-sm font-medium text-yellow-800 mb-2">Debug Info (Remove in Production):</div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const allCreds = getAllCredentials();
+                      console.log('=== DEBUG INFO ===');
+                      console.log('All available credentials:', allCreds);
+                      console.log('Raw localStorage userCredentials:', localStorage.getItem('userCredentials'));
+                      console.log('Usernames available:', Object.keys(allCreds));
+                      
+                      // Show in alert for easy viewing
+                      const usernames = Object.keys(allCreds);
+                      const credentialsList = usernames.map(username => {
+                        const user = allCreds[username];
+                        return `${username} / ${user.password} (${user.role})`;
+                      }).join('\n');
+                      
+                      alert(`Available Credentials:\n\n${credentialsList}\n\nCheck console for more details.`);
+                    }}
+                    className="px-3 py-1 bg-yellow-200 text-yellow-800 rounded text-sm"
+                  >
+                    Log All Credentials
+                  </button>
+                  
+                  <button
+                    type="button"
+                    onClick={() => {
+                      localStorage.removeItem('userCredentials');
+                      alert('Cleared all dynamic credentials. Only default credentials remain.');
+                    }}
+                    className="ml-2 px-3 py-1 bg-red-200 text-red-800 rounded text-sm"
+                  >
+                    Clear Dynamic Credentials
+                  </button>
+                </div>
+
+                {/* Demo Credentials Section */}
+                <div className="mt-6">
+                  <div className="relative mb-4">
+                    <div className="absolute inset-0 flex items-center">
+                      <div className={`w-full border-t ${isDarkMode ? 'border-white/20' : 'border-gray-300'}`}></div>
+                    </div>
+                    <div className="relative flex justify-center text-sm">
+                      <span className={`px-4 text-xs ${isDarkMode ? 'bg-black/40 text-white/70' : 'bg-white/80 text-gray-500'}`}>
+                        Demo Credentials
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div className={`p-2 rounded-lg border ${isDarkMode ? 'bg-white/5 border-white/10' : 'bg-gray-50 border-gray-200'}`}>
+                      <div className={`font-medium ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>Owner</div>
+                      <div className={`${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>owner / owner123</div>
+                    </div>
+                    <div className={`p-2 rounded-lg border ${isDarkMode ? 'bg-white/5 border-white/10' : 'bg-gray-50 border-gray-200'}`}>
+                      <div className={`font-medium ${isDarkMode ? 'text-green-400' : 'text-green-600'}`}>Teacher</div>
+                      <div className={`${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>teacher / teacher123</div>
+                    </div>
+                    <div className={`p-2 rounded-lg border ${isDarkMode ? 'bg-white/5 border-white/10' : 'bg-gray-50 border-gray-200'}`}>
+                      <div className={`font-medium ${isDarkMode ? 'text-orange-400' : 'text-orange-600'}`}>Student</div>
+                      <div className={`${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>student / student123</div>
+                    </div>
+                    <div className={`p-2 rounded-lg border ${isDarkMode ? 'bg-white/5 border-white/10' : 'bg-gray-50 border-gray-200'}`}>
+                      <div className={`font-medium ${isDarkMode ? 'text-purple-400' : 'text-purple-600'}`}>Parent</div>
+                      <div className={`${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>parent / parent123</div>
+                    </div>
+                  </div>
+                </div>
+
                 {/* App Store Download Buttons */}
                 <div className="mt-6">
                   <div className="relative mb-4">
@@ -471,16 +576,6 @@ const LoginPage = () => {
                     </button>
                   </div>
                 </div>
-
-                {/* <div className="mt-4 text-center">
-                  <Link
-                    to="/TermsConditions"
-                    className={`transition-colors focus:outline-none focus:ring-0 ${isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'
-                      }`}
-                  >
-                    Terms & Conditions
-                  </Link>
-                </div> */}
 
               </form>
             </div>

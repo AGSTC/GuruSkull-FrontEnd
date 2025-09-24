@@ -120,7 +120,7 @@ const Sidebar = ({ isExpanded, activeItem = 'dashboard' }) => {
     { id: 'attendance', name: 'Attendance', icon: UserCheck, path: '/AttendanceManagement' },
     { id: 'user-roles', name: 'User Roles', icon: Users, path: '/UserRoleManagement' },
     { id: 'announcements', name: 'Announcements', icon: Megaphone, path: '/AnnouncementManagement' },
-    { id: 'messages', name: 'Messages', icon: MessageSquare, path: '/Chat' },
+    { id: 'messages', name: 'Messages', icon: MessageSquare, path: '/Messages' },
     { id: 'settings', name: 'Settings', icon: Settings, path: '/SettingsManagement' }
   ];
 
@@ -130,7 +130,7 @@ const Sidebar = ({ isExpanded, activeItem = 'dashboard' }) => {
     { id: 'attendance', name: 'My Attendance', icon: UserCheck, path: '/StudentAttendance' },
     { id: 'assignments', name: 'Assignments', icon: ClipboardList, path: '/StudentAssignments' },
     { id: 'announcements', name: 'Announcements', icon: Megaphone, path: '/TeacherAnnouncements' },
-    { id: 'messages', name: 'Chat', icon: MessageSquare, path: '/Chat' },
+    { id: 'messages', name: 'Chat', icon: MessageSquare, path: '/Messages' },
     { id: 'settings', name: 'Settings', icon: Settings, path: '/StudentSettings' }
   ];
 
@@ -141,7 +141,7 @@ const Sidebar = ({ isExpanded, activeItem = 'dashboard' }) => {
     { id: 'attendance', name: 'Attendance', icon: UserCheck, path: '/TeacherAttendanceManagement' },
     { id: 'assignments', name: 'Assignments', icon: ClipboardList, path: '/TeacherAssignmentsManagement' },
     { id: 'announcements', name: 'Announcements', icon: Megaphone, path: '/TeacherAnnouncements' },
-    { id: 'messages', name: 'Messages', icon: MessageSquare, path: '/Chat' },
+    { id: 'messages', name: 'Messages', icon: MessageSquare, path: '/Messages' },
     { id: 'settings', name: 'Settings', icon: Settings, path: '/TeacherSettings' }
   ];
 
@@ -151,7 +151,7 @@ const Sidebar = ({ isExpanded, activeItem = 'dashboard' }) => {
     { id: 'analytics', name: 'Analytics', icon: BarChart3, path: '/ParentReportsAnalytics' },
     { id: 'attendance', name: 'Attendance', icon: UserCheck, path: '/ParentAttendanceManagement' },
     { id: 'announcements', name: 'Announcements', icon: Megaphone, path: '/ParentAnnouncements' },
-    { id: 'messages', name: 'Messages', icon: MessageSquare, path: '/Chat' },
+    { id: 'messages', name: 'Messages', icon: MessageSquare, path: '/Messages' },
     { id: 'settings', name: 'Settings', icon: Settings, path: '/ParentSettings'}
   ];
 
