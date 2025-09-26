@@ -437,16 +437,8 @@ const Header = ({ isSidebarExpanded, toggleSidebar }) => {
                   </button>
                 </div>
 
-                <div className={`border-t px-4 py-3 hover:bg-gray-100 ${isDarkMode ? 'border-slate-600' : 'border-gray-300'}`}>
-                  {/* <button 
-                    onClick={logouthandle} 
-                    className={`flex items-center gap-3 px-4 py-2 text-sm text-red-500transition-colors text-left w-full ${
-                      isDarkMode ? 'text-gray-300 hover:bg-slate-700' : 'text-gray-700 hover:bg-gray-100'
-                    }`}
-                  >
-                    <Bell size={16} />
-                    Notification
-                  </button> */}
+                <div className={`border-t px-4 py-3 ${isDarkMode ? 'border-slate-600 hover:bg-slate-700' : 'border-gray-300 hover:bg-gray-100'}`}>
+                 
                   <button 
                     onClick={logouthandle} 
                     className="flex items-center gap-3 text-sm text-red-500 hover:text-red-600  transition-colors text-left w-full" 

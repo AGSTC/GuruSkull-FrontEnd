@@ -461,54 +461,6 @@ const ParentDashboard = () => {
               </div>
             </div>
           </div>
-
-          {/* Recent Activities */}
-          <div className={`p-6 rounded-2xl border ${
-            isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'
-          }`}>
-            <div className="flex items-center justify-between mb-6">
-              <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                Upcoming Events
-              </h2>
-              <button className="text-blue-500 text-sm font-medium hover:text-blue-600 transition-colors">
-                View All
-              </button>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {currentChild.recentActivities.map((activity) => (
-                <div key={activity.id} className={`p-4 rounded-lg border ${
-                  isDarkMode ? 'border-slate-600 bg-slate-700' : 'border-gray-200 bg-gray-50'
-                }`}>
-                  <div className="flex items-start gap-3">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${activity.color}`}>
-                      {activity.icon}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className={`font-medium text-sm mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                        {activity.title}
-                      </h4>
-                      <p className={`text-xs mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        {activity.subject}
-                      </p>
-                      <p className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
-                        {activity.time}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="mt-3">
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      activity.status === 'Completed' ? 'bg-green-100 text-green-700' :
-                      activity.status === 'Pending' ? 'bg-orange-100 text-orange-700' :
-                      'bg-blue-100 text-blue-700'
-                    }`}>
-                      {activity.status}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
       </main>
 

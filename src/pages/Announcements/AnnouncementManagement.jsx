@@ -24,6 +24,396 @@ import {
   Send
 } from 'lucide-react';
 
+// Move categories outside the component to prevent re-renders
+const categories = [
+  'All Categories',
+  'Academic',
+  'Events',
+  'Fees',
+  'Holidays',
+  'Schedule'
+];
+
+// Create separate modal components outside the main component
+const CreateAnnouncementModal = ({ 
+  isOpen, 
+  onClose, 
+  isDarkMode, 
+  newAnnouncement, 
+  onNewAnnouncementChange, 
+  onCreate 
+}) => {
+  const [localAnnouncement, setLocalAnnouncement] = useState(newAnnouncement);
+
+  // Update local state when props change
+  useEffect(() => {
+    setLocalAnnouncement(newAnnouncement);
+  }, [newAnnouncement]);
+
+  const handleChange = (field, value) => {
+    setLocalAnnouncement(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleCreate = () => {
+    onNewAnnouncementChange(localAnnouncement);
+    onCreate();
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className={`p-6 rounded-2xl w-full max-w-md ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>
+        <div className="flex justify-between items-center mb-4">
+          <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            Create New Announcement
+          </h3>
+          <button onClick={onClose} className={`p-1 rounded-full ${isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-700'}`}>
+            <X size={20} />
+          </button>
+        </div>
+        
+        <div className="space-y-4">
+          <div>
+            <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+              Title *
+            </label>
+            <input
+              type="text"
+              value={localAnnouncement.title}
+              onChange={(e) => handleChange('title', e.target.value)}
+              className={`w-full px-3 py-2 rounded-lg border text-sm ${
+                isDarkMode 
+                  ? 'bg-slate-700 border-slate-600 text-white' 
+                  : 'bg-white border-gray-300 text-gray-900'
+              } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              placeholder="Enter announcement title"
+            />
+          </div>
+          
+          <div>
+            <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+              Description *
+            </label>
+            <textarea
+              value={localAnnouncement.description}
+              onChange={(e) => handleChange('description', e.target.value)}
+              rows={3}
+              className={`w-full px-3 py-2 rounded-lg border text-sm ${
+                isDarkMode 
+                  ? 'bg-slate-700 border-slate-600 text-white' 
+                  : 'bg-white border-gray-300 text-gray-900'
+              } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              placeholder="Enter announcement description"
+            />
+          </div>
+          
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                Category
+              </label>
+              <select
+                value={localAnnouncement.category}
+                onChange={(e) => handleChange('category', e.target.value)}
+                className={`w-full px-3 py-2 rounded-lg border text-sm ${
+                  isDarkMode 
+                    ? 'bg-slate-700 border-slate-600 text-white' 
+                    : 'bg-white border-gray-300 text-gray-900'
+                } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              >
+                {categories.filter(cat => cat !== 'All Categories').map(category => (
+                  <option key={category} value={category}>{category}</option>
+                ))}
+              </select>
+            </div>
+            
+            <div>
+              <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                Priority
+              </label>
+              <select
+                value={localAnnouncement.priority}
+                onChange={(e) => handleChange('priority', e.target.value)}
+                className={`w-full px-3 py-2 rounded-lg border text-sm ${
+                  isDarkMode 
+                    ? 'bg-slate-700 border-slate-600 text-white' 
+                    : 'bg-white border-gray-300 text-gray-900'
+                } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              >
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+              </select>
+            </div>
+          </div>
+          
+          <div>
+            <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+              Status
+            </label>
+            <select
+              value={localAnnouncement.status}
+              onChange={(e) => handleChange('status', e.target.value)}
+              className={`w-full px-3 py-2 rounded-lg border text-sm ${
+                isDarkMode 
+                  ? 'bg-slate-700 border-slate-600 text-white' 
+                  : 'bg-white border-gray-300 text-gray-900'
+              } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+            >
+              <option value="Draft">Draft</option>
+              <option value="Scheduled">Scheduled</option>
+              <option value="Active">Active</option>
+            </select>
+          </div>
+        </div>
+        
+        <div className="flex gap-3 mt-6">
+          <button
+            onClick={onClose}
+            className={`flex-1 px-4 py-2 rounded-lg text-sm font-medium ${
+              isDarkMode 
+                ? 'bg-slate-700 text-gray-300 hover:bg-slate-600' 
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleCreate}
+            className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600"
+          >
+            Create
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ViewAnnouncementModal = ({ 
+  isOpen, 
+  onClose, 
+  isDarkMode, 
+  selectedAnnouncement,
+  getCategoryColor,
+  getPriorityColor,
+  getStatusColor 
+}) => {
+  if (!isOpen || !selectedAnnouncement) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className={`p-6 rounded-2xl w-full max-w-md ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>
+        <div className="flex justify-between items-center mb-4">
+          <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            Announcement Details
+          </h3>
+          <button onClick={onClose} className={`p-1 rounded-full ${isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-700'}`}>
+            <X size={20} />
+          </button>
+        </div>
+        
+        <div className="space-y-4">
+          <div className="flex items-center gap-2">
+            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getCategoryColor(selectedAnnouncement.category)}`}>
+              {selectedAnnouncement.category}
+            </span>
+            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(selectedAnnouncement.priority)}`}>
+              {selectedAnnouncement.priority}
+            </span>
+            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(selectedAnnouncement.status)}`}>
+              {selectedAnnouncement.status}
+            </span>
+          </div>
+          
+          <h4 className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            {selectedAnnouncement.title}
+          </h4>
+          
+          <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+            {selectedAnnouncement.description}
+          </p>
+          
+          <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+            <p>Author: {selectedAnnouncement.author}</p>
+            <p>Date: {selectedAnnouncement.date}</p>
+            <p>Views: {selectedAnnouncement.views}</p>
+          </div>
+        </div>
+        
+        <button
+          onClick={onClose}
+          className="w-full mt-6 px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const EditAnnouncementModal = ({ 
+  isOpen, 
+  onClose, 
+  isDarkMode, 
+  selectedAnnouncement, 
+  onAnnouncementChange, 
+  onSave 
+}) => {
+  const [localAnnouncement, setLocalAnnouncement] = useState(selectedAnnouncement);
+
+  // Update local state when props change
+  useEffect(() => {
+    setLocalAnnouncement(selectedAnnouncement);
+  }, [selectedAnnouncement]);
+
+  const handleChange = (field, value) => {
+    setLocalAnnouncement(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleSave = () => {
+    onAnnouncementChange(localAnnouncement);
+    onSave();
+  };
+
+  if (!isOpen || !localAnnouncement) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className={`p-6 rounded-2xl w-full max-w-md ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>
+        <div className="flex justify-between items-center mb-4">
+          <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            Edit Announcement
+          </h3>
+          <button onClick={onClose} className={`p-1 rounded-full ${isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-700'}`}>
+            <X size={20} />
+          </button>
+        </div>
+        
+        <div className="space-y-4">
+          <div>
+            <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+              Title *
+            </label>
+            <input
+              type="text"
+              value={localAnnouncement.title}
+              onChange={(e) => handleChange('title', e.target.value)}
+              className={`w-full px-3 py-2 rounded-lg border text-sm ${
+                isDarkMode 
+                  ? 'bg-slate-700 border-slate-600 text-white' 
+                  : 'bg-white border-gray-300 text-gray-900'
+              } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+            />
+          </div>
+          
+          <div>
+            <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+              Description *
+            </label>
+            <textarea
+              value={localAnnouncement.description}
+              onChange={(e) => handleChange('description', e.target.value)}
+              rows={3}
+              className={`w-full px-3 py-2 rounded-lg border text-sm ${
+                isDarkMode 
+                  ? 'bg-slate-700 border-slate-600 text-white' 
+                  : 'bg-white border-gray-300 text-gray-900'
+              } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+            />
+          </div>
+          
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                Category
+              </label>
+              <select
+                value={localAnnouncement.category}
+                onChange={(e) => handleChange('category', e.target.value)}
+                className={`w-full px-3 py-2 rounded-lg border text-sm ${
+                  isDarkMode 
+                    ? 'bg-slate-700 border-slate-600 text-white' 
+                    : 'bg-white border-gray-300 text-gray-900'
+                } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              >
+                {categories.filter(cat => cat !== 'All Categories').map(category => (
+                  <option key={category} value={category}>{category}</option>
+                ))}
+              </select>
+            </div>
+            
+            <div>
+              <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                Priority
+              </label>
+              <select
+                value={localAnnouncement.priority}
+                onChange={(e) => handleChange('priority', e.target.value)}
+                className={`w-full px-3 py-2 rounded-lg border text-sm ${
+                  isDarkMode 
+                    ? 'bg-slate-700 border-slate-600 text-white' 
+                    : 'bg-white border-gray-300 text-gray-900'
+                } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              >
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+              </select>
+            </div>
+          </div>
+          
+          <div>
+            <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+              Status
+            </label>
+            <select
+              value={localAnnouncement.status}
+              onChange={(e) => handleChange('status', e.target.value)}
+              className={`w-full px-3 py-2 rounded-lg border text-sm ${
+                isDarkMode 
+                  ? 'bg-slate-700 border-slate-600 text-white' 
+                  : 'bg-white border-gray-300 text-gray-900'
+              } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+            >
+              <option value="Draft">Draft</option>
+              <option value="Scheduled">Scheduled</option>
+              <option value="Active">Active</option>
+              <option value="Archived">Archived</option>
+            </select>
+          </div>
+        </div>
+        
+        <div className="flex gap-3 mt-6">
+          <button
+            onClick={onClose}
+            className={`flex-1 px-4 py-2 rounded-lg text-sm font-medium ${
+              isDarkMode 
+                ? 'bg-slate-700 text-gray-300 hover:bg-slate-600' 
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleSave}
+            className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600"
+          >
+            Save Changes
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const AnnouncementManagement = () => {
   const { isDarkMode } = useTheme();
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
@@ -170,17 +560,6 @@ const AnnouncementManagement = () => {
     }
   ];
 
-  // Categories
-  const categories = [
-    'All Categories',
-    'Academic',
-    'Events',
-    'Fees',
-    'Holidays',
-    'Schedule',
-    'Faculty'
-  ];
-
   // Filter announcements based on selected filters and search
   const filteredAnnouncements = announcements.filter(announcement => {
     const matchesCategory = selectedCategory === 'All Categories' || announcement.category === selectedCategory;
@@ -234,6 +613,11 @@ const AnnouncementManagement = () => {
   };
 
   const handleCreateAnnouncement = () => {
+    if (!newAnnouncement.title.trim() || !newAnnouncement.description.trim()) {
+      alert('Please fill in all required fields');
+      return;
+    }
+
     const newAnnouncementObj = {
       id: announcements.length + 1,
       ...newAnnouncement,
@@ -263,13 +647,23 @@ const AnnouncementManagement = () => {
   };
 
   const handleEditAnnouncement = () => {
+    if (!selectedAnnouncement.title.trim() || !selectedAnnouncement.description.trim()) {
+      alert('Please fill in all required fields');
+      return;
+    }
+
     const updatedAnnouncements = announcements.map(announcement => 
       announcement.id === selectedAnnouncement.id 
-        ? { ...selectedAnnouncement }
+        ? { 
+            ...selectedAnnouncement,
+            categoryIcon: getCategoryIcon(selectedAnnouncement.category),
+            categoryColor: getCategoryColor(selectedAnnouncement.category)
+          }
         : announcement
     );
     setAnnouncements(updatedAnnouncements);
     setIsEditModalOpen(false);
+    setSelectedAnnouncement(null);
   };
 
   const handleDeleteAnnouncement = (id) => {
@@ -289,6 +683,16 @@ const AnnouncementManagement = () => {
     });
   };
 
+  const handleEditModalClose = () => {
+    setIsEditModalOpen(false);
+    setSelectedAnnouncement(null);
+  };
+
+  const handleViewModalClose = () => {
+    setIsViewModalOpen(false);
+    setSelectedAnnouncement(null);
+  };
+
   const getCategoryIcon = (category) => {
     switch (category) {
       case 'Academic': return BookOpen;
@@ -296,7 +700,6 @@ const AnnouncementManagement = () => {
       case 'Fees': return DollarSign;
       case 'Holidays': return Calendar;
       case 'Schedule': return Clock;
-      case 'Faculty': return Users;
       default: return BookOpen;
     }
   };
@@ -308,7 +711,6 @@ const AnnouncementManagement = () => {
       case 'Fees': return 'bg-purple-100 text-purple-800';
       case 'Holidays': return 'bg-red-100 text-red-800';
       case 'Schedule': return 'bg-yellow-100 text-yellow-800';
-      case 'Faculty': return 'bg-indigo-100 text-indigo-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
@@ -332,317 +734,15 @@ const AnnouncementManagement = () => {
     }
   };
 
-  // Modals
-  const CreateAnnouncementModal = () => (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className={`p-6 rounded-2xl w-full max-w-md ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>
-        <div className="flex justify-between items-center mb-4">
-          <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            Create New Announcement
-          </h3>
-          <button onClick={handleCreateModalClose} className={`p-1 rounded-full ${isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-700'}`}>
-            <X size={20} />
-          </button>
-        </div>
-        
-        <div className="space-y-4">
-          <div>
-            <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              Title
-            </label>
-            <input
-              type="text"
-              value={newAnnouncement.title}
-              onChange={(e) => setNewAnnouncement({...newAnnouncement, title: e.target.value})}
-              className={`w-full px-3 py-2 rounded-lg border text-sm ${
-                isDarkMode 
-                  ? 'bg-slate-700 border-slate-600 text-white' 
-                  : 'bg-white border-gray-300 text-gray-900'
-              }`}
-              placeholder="Enter announcement title"
-            />
-          </div>
-          
-          <div>
-            <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              Description
-            </label>
-            <textarea
-              value={newAnnouncement.description}
-              onChange={(e) => setNewAnnouncement({...newAnnouncement, description: e.target.value})}
-              rows={3}
-              className={`w-full px-3 py-2 rounded-lg border text-sm ${
-                isDarkMode 
-                  ? 'bg-slate-700 border-slate-600 text-white' 
-                  : 'bg-white border-gray-300 text-gray-900'
-              }`}
-              placeholder="Enter announcement description"
-            />
-          </div>
-          
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Category
-              </label>
-              <select
-                value={newAnnouncement.category}
-                onChange={(e) => setNewAnnouncement({...newAnnouncement, category: e.target.value})}
-                className={`w-full px-3 py-2 rounded-lg border text-sm ${
-                  isDarkMode 
-                    ? 'bg-slate-700 border-slate-600 text-white' 
-                    : 'bg-white border-gray-300 text-gray-900'
-                }`}
-              >
-                {categories.filter(cat => cat !== 'All Categories').map(category => (
-                  <option key={category} value={category}>{category}</option>
-                ))}
-              </select>
-            </div>
-            
-            <div>
-              <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Priority
-              </label>
-              <select
-                value={newAnnouncement.priority}
-                onChange={(e) => setNewAnnouncement({...newAnnouncement, priority: e.target.value})}
-                className={`w-full px-3 py-2 rounded-lg border text-sm ${
-                  isDarkMode 
-                    ? 'bg-slate-700 border-slate-600 text-white' 
-                    : 'bg-white border-gray-300 text-gray-900'
-                }`}
-              >
-                <option value="High">High</option>
-                <option value="Medium">Medium</option>
-                <option value="Low">Low</option>
-              </select>
-            </div>
-          </div>
-          
-          <div>
-            <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              Status
-            </label>
-            <select
-              value={newAnnouncement.status}
-              onChange={(e) => setNewAnnouncement({...newAnnouncement, status: e.target.value})}
-              className={`w-full px-3 py-2 rounded-lg border text-sm ${
-                isDarkMode 
-                  ? 'bg-slate-700 border-slate-600 text-white' 
-                  : 'bg-white border-gray-300 text-gray-900'
-              }`}
-            >
-              <option value="Draft">Draft</option>
-              <option value="Scheduled">Scheduled</option>
-              <option value="Active">Active</option>
-            </select>
-          </div>
-        </div>
-        
-        <div className="flex gap-3 mt-6">
-          <button
-            onClick={handleCreateModalClose}
-            className={`flex-1 px-4 py-2 rounded-lg text-sm font-medium ${
-              isDarkMode 
-                ? 'bg-slate-700 text-gray-300 hover:bg-slate-600' 
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            }`}
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleCreateAnnouncement}
-            className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600"
-          >
-            Create
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+  // Handle input changes for create modal
+  const handleNewAnnouncementChange = (updatedAnnouncement) => {
+    setNewAnnouncement(updatedAnnouncement);
+  };
 
-  const ViewAnnouncementModal = () => (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className={`p-6 rounded-2xl w-full max-w-md ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>
-        <div className="flex justify-between items-center mb-4">
-          <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            Announcement Details
-          </h3>
-          <button onClick={() => setIsViewModalOpen(false)} className={`p-1 rounded-full ${isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-700'}`}>
-            <X size={20} />
-          </button>
-        </div>
-        
-        {selectedAnnouncement && (
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <span className={`px-2 py-1 rounded-full text-xs font-medium ${getCategoryColor(selectedAnnouncement.category)}`}>
-                {selectedAnnouncement.category}
-              </span>
-              <span className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(selectedAnnouncement.priority)}`}>
-                {selectedAnnouncement.priority}
-              </span>
-              <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(selectedAnnouncement.status)}`}>
-                {selectedAnnouncement.status}
-              </span>
-            </div>
-            
-            <h4 className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-              {selectedAnnouncement.title}
-            </h4>
-            
-            <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-              {selectedAnnouncement.description}
-            </p>
-            
-            <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-              <p>Author: {selectedAnnouncement.author}</p>
-              <p>Date: {selectedAnnouncement.date}</p>
-              <p>Views: {selectedAnnouncement.views}</p>
-            </div>
-          </div>
-        )}
-        
-        <button
-          onClick={() => setIsViewModalOpen(false)}
-          className="w-full mt-6 px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600"
-        >
-          Close
-        </button>
-      </div>
-    </div>
-  );
-
-  const EditAnnouncementModal = () => (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className={`p-6 rounded-2xl w-full max-w-md ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>
-        <div className="flex justify-between items-center mb-4">
-          <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            Edit Announcement
-          </h3>
-          <button onClick={() => setIsEditModalOpen(false)} className={`p-1 rounded-full ${isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-700'}`}>
-            <X size={20} />
-          </button>
-        </div>
-        
-        {selectedAnnouncement && (
-          <div className="space-y-4">
-            <div>
-              <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Title
-              </label>
-              <input
-                type="text"
-                value={selectedAnnouncement.title}
-                onChange={(e) => setSelectedAnnouncement({...selectedAnnouncement, title: e.target.value})}
-                className={`w-full px-3 py-2 rounded-lg border text-sm ${
-                  isDarkMode 
-                    ? 'bg-slate-700 border-slate-600 text-white' 
-                    : 'bg-white border-gray-300 text-gray-900'
-                }`}
-              />
-            </div>
-            
-            <div>
-              <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Description
-              </label>
-              <textarea
-                value={selectedAnnouncement.description}
-                onChange={(e) => setSelectedAnnouncement({...selectedAnnouncement, description: e.target.value})}
-                rows={3}
-                className={`w-full px-3 py-2 rounded-lg border text-sm ${
-                  isDarkMode 
-                    ? 'bg-slate-700 border-slate-600 text-white' 
-                    : 'bg-white border-gray-300 text-gray-900'
-                }`}
-              />
-            </div>
-            
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  Category
-                </label>
-                <select
-                  value={selectedAnnouncement.category}
-                  onChange={(e) => setSelectedAnnouncement({...selectedAnnouncement, category: e.target.value})}
-                  className={`w-full px-3 py-2 rounded-lg border text-sm ${
-                    isDarkMode 
-                      ? 'bg-slate-700 border-slate-600 text-white' 
-                      : 'bg-white border-gray-300 text-gray-900'
-                  }`}
-                >
-                  {categories.filter(cat => cat !== 'All Categories').map(category => (
-                    <option key={category} value={category}>{category}</option>
-                  ))}
-                </select>
-              </div>
-              
-              <div>
-                <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  Priority
-                </label>
-                <select
-                  value={selectedAnnouncement.priority}
-                  onChange={(e) => setSelectedAnnouncement({...selectedAnnouncement, priority: e.target.value})}
-                  className={`w-full px-3 py-2 rounded-lg border text-sm ${
-                    isDarkMode 
-                      ? 'bg-slate-700 border-slate-600 text-white' 
-                      : 'bg-white border-gray-300 text-gray-900'
-                  }`}
-                >
-                  <option value="High">High</option>
-                  <option value="Medium">Medium</option>
-                  <option value="Low">Low</option>
-                </select>
-              </div>
-            </div>
-            
-            <div>
-              <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Status
-              </label>
-              <select
-                value={selectedAnnouncement.status}
-                onChange={(e) => setSelectedAnnouncement({...selectedAnnouncement, status: e.target.value})}
-                className={`w-full px-3 py-2 rounded-lg border text-sm ${
-                  isDarkMode 
-                    ? 'bg-slate-700 border-slate-600 text-white' 
-                    : 'bg-white border-gray-300 text-gray-900'
-                }`}
-              >
-                <option value="Draft">Draft</option>
-                <option value="Scheduled">Scheduled</option>
-                <option value="Active">Active</option>
-                <option value="Archived">Archived</option>
-              </select>
-            </div>
-          </div>
-        )}
-        
-        <div className="flex gap-3 mt-6">
-          <button
-            onClick={() => setIsEditModalOpen(false)}
-            className={`flex-1 px-4 py-2 rounded-lg text-sm font-medium ${
-              isDarkMode 
-                ? 'bg-slate-700 text-gray-300 hover:bg-slate-600' 
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            }`}
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleEditAnnouncement}
-            className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600"
-          >
-            Save Changes
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+  // Handle input changes for edit modal
+  const handleSelectedAnnouncementChange = (updatedAnnouncement) => {
+    setSelectedAnnouncement(updatedAnnouncement);
+  };
 
   return (
     <div className={`min-h-screen w-full ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
@@ -938,9 +1038,33 @@ const AnnouncementManagement = () => {
       <Footer isSidebarExpanded={isSidebarExpanded} />
 
       {/* Modals */}
-      {isCreateModalOpen && <CreateAnnouncementModal />}
-      {isViewModalOpen && <ViewAnnouncementModal />}
-      {isEditModalOpen && <EditAnnouncementModal />}
+      <CreateAnnouncementModal 
+        isOpen={isCreateModalOpen}
+        onClose={handleCreateModalClose}
+        isDarkMode={isDarkMode}
+        newAnnouncement={newAnnouncement}
+        onNewAnnouncementChange={handleNewAnnouncementChange}
+        onCreate={handleCreateAnnouncement}
+      />
+      
+      <ViewAnnouncementModal 
+        isOpen={isViewModalOpen}
+        onClose={handleViewModalClose}
+        isDarkMode={isDarkMode}
+        selectedAnnouncement={selectedAnnouncement}
+        getCategoryColor={getCategoryColor}
+        getPriorityColor={getPriorityColor}
+        getStatusColor={getStatusColor}
+      />
+      
+      <EditAnnouncementModal 
+        isOpen={isEditModalOpen}
+        onClose={handleEditModalClose}
+        isDarkMode={isDarkMode}
+        selectedAnnouncement={selectedAnnouncement}
+        onAnnouncementChange={handleSelectedAnnouncementChange}
+        onSave={handleEditAnnouncement}
+      />
     </div>
   );
 };

@@ -1,10 +1,10 @@
-// Updated Sidebar.jsx with profile photo handling
+// Updated Sidebar.jsx with real-time data synchronization
 import React, { useState, useEffect } from 'react';
 import { useTheme } from '../../context/ThemeContext';
 import profile from '../../assets/images/profile.png';
 import teacherProfile from '../../assets/images/teacher-profile.png';
 import studentProfile from '../../assets/images/student-profile.png';
-import parentProfile from '../../assets/images/parent-profile.png'
+import parentProfile from '../../assets/images/parent-profile.png';
 import { useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
@@ -32,7 +32,7 @@ const Sidebar = ({ isExpanded, activeItem = 'dashboard' }) => {
   const [profilePhoto, setProfilePhoto] = useState(profile);
   const navigate = useNavigate();
 
-  // Function to get current user data and profile photo
+  // Function to get current user data
   const getCurrentUserData = () => {
     try {
       const storedUser = localStorage.getItem('user');
@@ -48,7 +48,6 @@ const Sidebar = ({ isExpanded, activeItem = 'dashboard' }) => {
         if (user.profilePhotoUrl) {
           setProfilePhoto(user.profilePhotoUrl);
         } else {
-          // Fallback to role-based profile images
           setProfilePhoto(getRoleBasedProfileImage(user.role || 'tuition_owner'));
         }
       } else {
@@ -77,31 +76,38 @@ const Sidebar = ({ isExpanded, activeItem = 'dashboard' }) => {
     return profile;
   };
 
+  // Load user data and set up event listeners
   useEffect(() => {
     // Initial load
     getCurrentUserData();
     
-    // Listen for profile photo changes
-    const handleProfilePhotoChange = (event) => {
-      if (event.detail && event.detail.photoUrl) {
-        setProfilePhoto(event.detail.photoUrl);
-      }
-    };
-    
-    // Listen for storage changes and custom events
-    const handleDataChange = () => {
-      console.log('Sidebar - Data change detected');
+    // Listen for custom events when user data changes
+    const handleUserDataChange = () => {
+      console.log('Sidebar - User data change detected');
       getCurrentUserData();
     };
     
-    window.addEventListener('storage', handleDataChange);
-    window.addEventListener('userDataChanged', handleDataChange);
+    const handleProfilePhotoChange = (event) => {
+      if (event.detail && event.detail.photoUrl) {
+        setProfilePhoto(event.detail.photoUrl);
+        
+        // Also update user data to keep everything synchronized
+        const updatedUser = JSON.parse(localStorage.getItem('user') || '{}');
+        updatedUser.profilePhotoUrl = event.detail.photoUrl;
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+        setUserData(updatedUser);
+      }
+    };
+    
+    // Set up event listeners
+    window.addEventListener('userDataChanged', handleUserDataChange);
     window.addEventListener('profilePhotoChanged', handleProfilePhotoChange);
+    window.addEventListener('storage', handleUserDataChange);
     
     return () => {
-      window.removeEventListener('storage', handleDataChange);
-      window.removeEventListener('userDataChanged', handleDataChange);
+      window.removeEventListener('userDataChanged', handleUserDataChange);
       window.removeEventListener('profilePhotoChanged', handleProfilePhotoChange);
+      window.removeEventListener('storage', handleUserDataChange);
     };
   }, []);
 
@@ -111,7 +117,7 @@ const Sidebar = ({ isExpanded, activeItem = 'dashboard' }) => {
     getCurrentUserData();
   }, [isExpanded]);
 
-  // Menu items arrays (existing code remains the same)
+  // Menu items arrays
   const ownerMenuItems = [
     { id: 'dashboard', name: 'Dashboard', icon: LayoutDashboard, path: '/Dashboard' },
     { id: 'schedule', name: 'Schedule', icon: Calendar, path: '/Schedule' },
@@ -187,16 +193,22 @@ const Sidebar = ({ isExpanded, activeItem = 'dashboard' }) => {
   const menuItems = getMenuItems();
 
   return (
-    <div className={`fixed left-0 top-0 h-screen z-30 transition-all duration-300 flex flex-col ${isExpanded ? 'w-64' : 'w-16'
-      } ${isDarkMode ? 'bg-slate-800 border-r border-slate-700' : 'bg-white border-r border-gray-300'} pt-20`}>
+    <div className={`fixed left-0 top-0 h-screen z-30 transition-all duration-300 flex flex-col ${
+      isExpanded ? 'w-64' : 'w-16'
+    } ${
+      isDarkMode ? 'bg-slate-800 border-r border-slate-700' : 'bg-white border-r border-gray-300'
+    } pt-20`}>
 
       {/* Profile Section at the top */}
-      <div className={`p-4 border-b ${isDarkMode ? 'border-slate-700' : 'border-gray-300'} flex flex-col items-center text-center`}>
+      <div className={`p-4 border-b ${
+        isDarkMode ? 'border-slate-700' : 'border-gray-300'
+      } flex flex-col items-center text-center`}>
         <img
           src={profilePhoto}
           alt="Profile"
-          className={`rounded-full flex-shrink-0 transition-all duration-300 ${isExpanded ? 'w-20 h-20' : 'w-8 h-8'
-            }`}
+          className={`rounded-full flex-shrink-0 transition-all duration-300 ${
+            isExpanded ? 'w-20 h-20' : 'w-8 h-8'
+          }`}
         />
         {isExpanded && (
           <>
@@ -209,8 +221,9 @@ const Sidebar = ({ isExpanded, activeItem = 'dashboard' }) => {
             <button
               type="button" 
               onClick={handleProfile} 
-              className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm transition ${isDarkMode ? 'bg-slate-700 text-white hover:bg-slate-600' : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
-                }`}
+              className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm transition ${
+                isDarkMode ? 'bg-slate-700 text-white hover:bg-slate-600' : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+              }`}
             >
               <span>✏️</span> Edit your profile
             </button>
@@ -229,12 +242,13 @@ const Sidebar = ({ isExpanded, activeItem = 'dashboard' }) => {
               <li key={item.id}>
                 <a
                   href={item.path}
-                  className={`flex items-center gap-3 px-3 py-3 rounded-lg text-sm transition-colors focus:outline-none focus:ring-0 text-left ${isActive
+                  className={`flex items-center gap-3 px-3 py-3 rounded-lg text-sm transition-colors focus:outline-none focus:ring-0 text-left ${
+                    isActive
                       ? 'bg-blue-600 text-white shadow-lg'
                       : isDarkMode
                         ? 'text-gray-300 hover:bg-slate-700 hover:text-white'
                         : 'text-gray-800 hover:bg-gray-200 hover:text-gray-900'
-                    }`}
+                  }`}
                 >
                   <Icon size={18} className="flex-shrink-0" />
                   {isExpanded && <span className="truncate">{item.name}</span>}
@@ -247,7 +261,9 @@ const Sidebar = ({ isExpanded, activeItem = 'dashboard' }) => {
 
       {/* Role indicator at bottom */}
       {isExpanded && (
-        <div className={`p-4 border-t ${isDarkMode ? 'border-slate-700' : 'border-gray-300'} text-center`}>
+        <div className={`p-4 border-t ${
+          isDarkMode ? 'border-slate-700' : 'border-gray-300'
+        } text-center`}>
           <span className={`text-xs px-2 py-1 rounded-full ${
             userRole === 'teacher' 
               ? 'bg-green-100 text-green-700' 

@@ -10,29 +10,54 @@ import {
   BookOpen,
   ClipboardList,
   Calendar,
+  MessageSquare,
+  Clock,
   TrendingUp,
   ArrowUp,
   ArrowDown,
-  BarChart3,
-  PieChart,
+  ChevronRight,
+  GraduationCap,
+  FileText,
+  Bell,
+  Award,
   Activity,
   CheckCircle,
   AlertCircle,
-  Clock,
-  Award,
-  Target,
+  BarChart3,
+  PieChart,
   Eye,
-  Download
+  Download,
+  X,
+  Filter,
+  SortAsc,
+  FileText as FileTextIcon,
+  Brain,
+  Lightbulb,
+  Target
 } from 'lucide-react';
 
 const TeacherReportsAnalytics = () => {
   const { isDarkMode } = useTheme();
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
+  const [selectedClass, setSelectedClass] = useState('All Classes');
+  const [selectedPeriod, setSelectedPeriod] = useState('This Month');
+  const [studentPerformanceFilter, setStudentPerformanceFilter] = useState('All Students');
+  const [studentSortBy, setStudentSortBy] = useState('Performance Score');
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [selectedSubject, setSelectedSubject] = useState(null);
+  const [selectedAssignment, setSelectedAssignment] = useState(null);
+  const [selectedInsight, setSelectedInsight] = useState(null);
 
   const toggleSidebar = () => {
     setIsSidebarExpanded(!isSidebarExpanded);
   };
+
+  // Filter options
+  const classOptions = ['All Classes', 'Class 10-A', 'Class 10-B', 'Class 10-C', 'Class 11-A', 'Class 11-B'];
+  const periodOptions = ['This Month', 'Last Month', 'This Quarter', 'Last Quarter', 'This Year'];
+  const performanceOptions = ['All Students', 'Excellent (90%+)', 'Good (75-89%)', 'Average (60-74%)', 'Needs Focus (<60%)'];
+  const sortOptions = ['Performance Score', 'Name', 'Attendance', 'Recent Activity'];
 
   const tabs = [
     { id: 'overview', label: 'Overview', icon: BarChart3 },
@@ -43,42 +68,69 @@ const TeacherReportsAnalytics = () => {
     { id: 'trends', label: 'Trends', icon: TrendingUp }
   ];
 
-  // Overview Tab Data
-  const overviewStats = [
-    {
-      title: 'Overall Performance',
-      value: '85.4%',
-      change: '+3.4%',
-      period: 'vs last week',
-      trend: 'up',
-      color: 'blue'
-    },
-    {
-      title: 'Average Attendance',
-      value: '92.8%',
-      change: '-1.4%', 
-      period: 'vs last week',
-      trend: 'down',
-      color: 'green'
-    },
-    {
-      title: 'Assignment Completion',
-      value: '91.2%',
-      change: '+2.1%',
-      period: 'vs last week', 
-      trend: 'up',
-      color: 'orange'
-    },
-    {
-      title: 'Active Students',
-      value: '3',
-      change: '+1',
-      period: 'vs yesterday',
-      trend: 'up',
-      color: 'purple'
-    }
-  ];
+  // Export to PDF function
+  const exportToPDF = () => {
+    const reportData = {
+      title: `Analytics Report - ${selectedClass} - ${selectedPeriod}`,
+      timestamp: new Date().toLocaleString(),
+      tab: activeTab.charAt(0).toUpperCase() + activeTab.slice(1)
+    };
+    
+    console.log('Exporting PDF:', reportData);
+    alert(`PDF report for ${selectedClass} (${selectedPeriod}) is being generated...`);
+    
+    setTimeout(() => {
+      alert('PDF report downloaded successfully!');
+    }, 2000);
+  };
 
+  // Filter data based on selections
+  const filterData = (data, period) => {
+    const periodMultipliers = {
+      'This Month': 1,
+      'Last Month': 0.95,
+      'This Quarter': 1.02,
+      'Last Quarter': 0.98,
+      'This Year': 1.05
+    };
+    
+    const multiplier = periodMultipliers[period] || 1;
+    return data.map(item => ({
+      ...item,
+      value: typeof item.value === 'string' && item.value.includes('%') 
+        ? `${(parseFloat(item.value) * multiplier).toFixed(1)}%`
+        : item.value,
+      change: typeof item.change === 'string' && item.change.includes('%')
+        ? `${(parseFloat(item.change) * multiplier).toFixed(1)}%`
+        : item.change
+    }));
+  };
+
+  // Overview Tab Data - Different data for each period
+  const overviewData = {
+    'This Month': [
+      { title: 'Overall Performance', value: '85.4%', change: '+3.4%', period: 'vs last week', trend: 'up', color: 'blue' },
+      { title: 'Average Attendance', value: '92.8%', change: '-1.4%', period: 'vs last week', trend: 'down', color: 'green' },
+      { title: 'Assignment Completion', value: '91.2%', change: '+2.1%', period: 'vs last week', trend: 'up', color: 'orange' },
+      { title: 'Active Students', value: '28', change: '+1', period: 'vs yesterday', trend: 'up', color: 'purple' }
+    ],
+    'Last Month': [
+      { title: 'Overall Performance', value: '82.1%', change: '+2.8%', period: 'vs previous month', trend: 'up', color: 'blue' },
+      { title: 'Average Attendance', value: '94.2%', change: '+0.8%', period: 'vs previous month', trend: 'up', color: 'green' },
+      { title: 'Assignment Completion', value: '88.7%', change: '+1.5%', period: 'vs previous month', trend: 'up', color: 'orange' },
+      { title: 'Active Students', value: '27', change: '+2', period: 'vs previous month', trend: 'up', color: 'purple' }
+    ],
+    'This Quarter': [
+      { title: 'Overall Performance', value: '87.2%', change: '+5.2%', period: 'vs last quarter', trend: 'up', color: 'blue' },
+      { title: 'Average Attendance', value: '93.5%', change: '+2.1%', period: 'vs last quarter', trend: 'up', color: 'green' },
+      { title: 'Assignment Completion', value: '92.8%', change: '+4.3%', period: 'vs last quarter', trend: 'up', color: 'orange' },
+      { title: 'Active Students', value: '30', change: '+3', period: 'vs last quarter', trend: 'up', color: 'purple' }
+    ]
+  };
+
+  const overviewStats = filterData(overviewData[selectedPeriod] || overviewData['This Month'], selectedPeriod);
+
+  // Original data kept intact
   const topPerformers = [
     { name: 'Arjan Sharma', class: 'G - A, Math/Physics', score: '96.5%', rank: 1 },
     { name: 'Arjan Sharma', class: 'G - A, Math/Physics', score: '96.5%', rank: 2 },
@@ -96,46 +148,88 @@ const TeacherReportsAnalytics = () => {
   // Students Tab Data
   const studentsData = [
     {
+      id: 1,
       name: 'Arjan Sharma',
       class: 'G - A, Roll No: 001',
       overall: '96.5%',
       attendance: '98.5%',
       assignments: '94.0%',
       lastExam: '97%',
-      performance: 'excellent'
+      performance: 'excellent',
+      details: {
+        strengths: ['Mathematics', 'Physics', 'Analytical Skills'],
+        weaknesses: ['Time Management in Exams'],
+        recommendations: ['Participate in advanced math competitions', 'Mentor other students']
+      }
     },
     {
+      id: 2,
       name: 'Priya Patel', 
       class: 'G - A, Roll No: 002',
       overall: '94.8%',
       attendance: '96.5%',
       assignments: '93.0%',
       lastExam: '94%',
-      performance: 'excellent'
+      performance: 'excellent',
+      details: {
+        strengths: ['Chemistry', 'Biology', 'Research Skills'],
+        weaknesses: ['Advanced Physics Concepts'],
+        recommendations: ['Focus on practical applications', 'Join science club']
+      }
     },
     {
+      id: 3,
       name: 'Rahul Kumar',
       class: 'G - B, Roll No: 015',
       overall: '92.5%',
       attendance: '94.0%',
       assignments: '90.0%',
       lastExam: '92%',
-      performance: 'good'
+      performance: 'good',
+      details: {
+        strengths: ['Mathematics', 'Logical Reasoning'],
+        weaknesses: ['English Comprehension', 'Writing Skills'],
+        recommendations: ['Practice essay writing', 'Read more literature']
+      }
     },
     {
+      id: 4,
       name: 'Sneha Singh',
       class: 'G - B, Roll No: 024',
       overall: '45.2%',
       attendance: '67.5%',
       assignments: '45.0%',
       lastExam: '34%',
-      performance: 'needs-improvement'
+      performance: 'needs-improvement',
+      details: {
+        strengths: ['Art', 'Creative Thinking'],
+        weaknesses: ['Mathematics', 'Science', 'Regular Attendance'],
+        recommendations: ['Extra tutoring sessions', 'Parent-teacher meeting', 'Study group']
+      }
     }
   ];
+
+  // Filter and sort students
+  const filteredStudents = studentsData
+    .filter(student => {
+      if (studentPerformanceFilter === 'All Students') return true;
+      if (studentPerformanceFilter === 'Excellent (90%+)') return parseFloat(student.overall) >= 90;
+      if (studentPerformanceFilter === 'Good (75-89%)') return parseFloat(student.overall) >= 75 && parseFloat(student.overall) < 90;
+      if (studentPerformanceFilter === 'Average (60-74%)') return parseFloat(student.overall) >= 60 && parseFloat(student.overall) < 75;
+      if (studentPerformanceFilter === 'Needs Focus (<60%)') return parseFloat(student.overall) < 60;
+      return true;
+    })
+    .sort((a, b) => {
+      if (studentSortBy === 'Performance Score') return parseFloat(b.overall) - parseFloat(a.overall);
+      if (studentSortBy === 'Name') return a.name.localeCompare(b.name);
+      if (studentSortBy === 'Attendance') return parseFloat(b.attendance) - parseFloat(a.attendance);
+      return 0;
+    });
 
   // Subjects Tab Data
   const subjectsData = [
     {
+      id: 1,
       name: 'Mathematics',
       performance: '84.2%',
       trend: 'up',
@@ -146,9 +240,16 @@ const TeacherReportsAnalytics = () => {
         { name: 'Geometry', score: 82.3, status: 'good' },
         { name: 'Trigonometry', score: 78.9, status: 'average' },
         { name: 'Calculus', score: 86.1, status: 'good' }
-      ]
+      ],
+      details: {
+        description: 'Advanced Mathematics covering algebra, geometry, and calculus',
+        teacher: 'Mr. Sharma',
+        schedule: 'Mon, Wed, Fri - 9:00 AM',
+        resources: ['Textbook Chapter 5-8', 'Practice Worksheets', 'Online Quizzes']
+      }
     },
     {
+      id: 2,
       name: 'Chemistry', 
       performance: '81.4%',
       trend: 'up',
@@ -158,9 +259,16 @@ const TeacherReportsAnalytics = () => {
         { name: 'Organic Chemistry', score: 85.2, status: 'excellent' },
         { name: 'Inorganic Chemistry', score: 79.8, status: 'good' },
         { name: 'Physical Chemistry', score: 77.3, status: 'average' }
-      ]
+      ],
+      details: {
+        description: 'Comprehensive chemistry course with lab sessions',
+        teacher: 'Ms. Patel',
+        schedule: 'Tue, Thu - 10:30 AM',
+        resources: ['Lab Manual', 'Chemical Safety Guide', 'Periodic Table']
+      }
     },
     {
+      id: 3,
       name: 'Physics',
       performance: '78.6%', 
       trend: 'down',
@@ -170,83 +278,65 @@ const TeacherReportsAnalytics = () => {
         { name: 'Mechanics', score: 82.1, status: 'good' },
         { name: 'Electricity', score: 76.8, status: 'average' },
         { name: 'Optics', score: 74.2, status: 'average' }
-      ]
+      ],
+      details: {
+        description: 'Physics principles and practical applications',
+        teacher: 'Dr. Kumar',
+        schedule: 'Mon, Wed, Fri - 2:00 PM',
+        resources: ['Physics Lab Kit', 'Simulation Software', 'Reference Books']
+      }
     }
   ];
 
   // Assignments Tab Data
   const assignmentStats = [
-    {
-      title: 'Total Assignments',
-      value: '48',
-      change: '+5',
-      period: 'vs last month'
-    },
-    {
-      title: 'Completion Rate',
-      value: '87.5%',
-      change: '+4.2%',
-      period: 'vs last month'
-    },
-    {
-      title: 'Average Score',
-      value: '79.3%',
-      change: '+1.8%',
-      period: 'vs last month'
-    },
-    {
-      title: 'Late Submissions',
-      value: '12.4%',
-      change: '-2.3%',
-      period: 'vs last month'
-    }
+    { title: 'Total Assignments', value: '48', change: '+5', period: 'vs last month' },
+    { title: 'Completion Rate', value: '87.5%', change: '+4.2%', period: 'vs last month' },
+    { title: 'Average Score', value: '79.3%', change: '+1.8%', period: 'vs last month' },
+    { title: 'Late Submissions', value: '12.4%', change: '-2.3%', period: 'vs last month' }
   ];
 
   const assignmentDetails = [
     {
+      id: 1,
       name: 'Quadratic Equations Practice',
       subject: 'Mathematics',
       dueDate: '19/11/2024',
       completion: '83.0%',
       avgScore: '84.2%',
-      submissionStatus: 'On-time: 24, Late: 5, Pending: 6'
+      submissionStatus: 'On-time: 24, Late: 5, Pending: 6',
+      details: {
+        description: 'Practice problems on quadratic equations and applications',
+        totalMarks: 100,
+        difficulty: 'Medium',
+        topics: ['Quadratic Formulas', 'Factoring', 'Graphing'],
+        resources: ['Worksheet PDF', 'Solution Guide', 'Video Tutorials']
+      }
     },
     {
+      id: 2,
       name: "Newton's Laws Lab Report", 
       subject: 'Physics',
       dueDate: '18/11/2024',
       completion: '75.0%',
       avgScore: '78.5%',
-      submissionStatus: 'On-time: 22, Late: 3, Pending: 10'
+      submissionStatus: 'On-time: 22, Late: 3, Pending: 10',
+      details: {
+        description: 'Laboratory report on Newton laws of motion experiments',
+        totalMarks: 50,
+        difficulty: 'High',
+        topics: ['Motion', 'Forces', 'Acceleration'],
+        resources: ['Lab Template', 'Safety Guidelines', 'Reference Materials']
+      }
     }
   ];
 
   // Attendance Tab Data
   const attendanceStats = [
-    {
-      title: 'Overall Attendance',
-      value: '91.2%',
-      change: '+2.8%',
-      period: 'vs last month'
-    },
-    {
-      title: 'Weekly Attendance',
-      value: '23.5',
-      change: '+1.4',
-      period: 'vs last week'
-    },
-    {
-      title: 'Classes Conducted',
-      value: '8',
-      change: '-1',
-      period: 'vs last week'
-    },
-    {
-      title: 'Student Present',
-      value: '142',
-      change: '-1',
-      period: 'vs yesterday'
-    }
+    { title: 'Overall Attendance', value: '91.2%', change: '+2.8%', period: 'vs last month' },
+    { title: 'Weekly Attendance', value: '23.5', change: '+1.4', period: 'vs last week' },
+    { title: 'Classes Conducted', value: '8', change: '-1', period: 'vs last week' },
+    { title: 'Student Present', value: '142', change: '-1', period: 'vs yesterday' }
   ];
 
   const weeklyAttendance = [
@@ -259,29 +349,64 @@ const TeacherReportsAnalytics = () => {
 
   // Trends Tab Data  
   const trendsStats = [
+    { title: 'Performance Forecast', value: '88.2%', change: '+2.1%', period: 'vs last month' },
+    { title: 'Attendance Prediction', value: '93.1%', change: '+1.2%', period: 'vs last month' },
+    { title: 'Risk Students', value: '5', change: '-2', period: 'vs last month' },
+    { title: 'Completion Rate', value: '94.5%', change: '+3.2%', period: 'vs last month' }
+  ];
+
+  const aiInsights = [
     {
-      title: 'Performance Forecast',
-      value: '88.2%',
-      change: '+2.1%',
-      period: 'vs last month'
+      id: 1,
+      title: 'Mathematics scores trending upward',
+      description: 'Average scores improved by 7.2% over the last 3 months. Current trajectory suggests continued improvement.',
+      confidence: '84% Confidence',
+      type: 'positive',
+      icon: TrendingUp,
+      details: {
+        analysis: 'Strong performance in algebra and calculus sections',
+        factors: ['Improved teaching methods', 'Student engagement', 'Practice materials'],
+        recommendations: ['Continue current strategy', 'Introduce advanced topics', 'Group learning sessions']
+      }
     },
     {
-      title: 'Attendance Prediction',
-      value: '93.1%',
-      change: '+1.2%',
-      period: 'vs last month'
+      id: 2,
+      title: 'Late submission pattern identified',
+      description: 'Students in G-B show 28% late submission rate compared to other classes.',
+      confidence: '92% Confidence',
+      type: 'warning',
+      icon: AlertCircle,
+      details: {
+        analysis: 'Pattern observed in physics and chemistry assignments',
+        factors: ['Complex topics', 'Time management issues', 'Resource accessibility'],
+        recommendations: ['Simplify instructions', 'Extended deadlines', 'Additional support']
+      }
     },
     {
-      title: 'Risk Students',
-      value: '5',
-      change: '-2',
-      period: 'vs last month'
+      id: 3,
+      title: 'Friday attendance needs attention',
+      description: 'Consistent 6% drop in attendance on Fridays compared to other weekdays.',
+      confidence: '88% Confidence',
+      type: 'attention',
+      icon: Calendar,
+      details: {
+        analysis: 'Lower engagement observed in afternoon sessions',
+        factors: ['Weekend anticipation', 'Schedule conflicts', 'Course difficulty'],
+        recommendations: ['Interactive Friday activities', 'Parent communication', 'Flexible scheduling']
+      }
     },
     {
-      title: 'Completion Rate',
-      value: '94.5%',
-      change: '+3.2%',
-      period: 'vs last month'
+      id: 4,
+      title: 'Early intervention needed',
+      description: '5 students showing declining performance across multiple subjects.',
+      confidence: '96% Confidence',
+      type: 'critical',
+      icon: Users,
+      details: {
+        analysis: 'Performance drop in mathematics and science subjects',
+        factors: ['Learning gaps', 'Personal issues', 'Motivation challenges'],
+        recommendations: ['One-on-one counseling', 'Personalized learning plans', 'Parent meetings']
+      }
     }
   ];
 
@@ -299,18 +424,205 @@ const TeacherReportsAnalytics = () => {
 
   const getPerformanceColor = (performance) => {
     switch (performance) {
-      case 'excellent':
-        return 'text-green-600';
-      case 'good':
-        return 'text-blue-600';
-      case 'average':
-        return 'text-orange-600';
-      case 'needs-improvement':
-        return 'text-red-600';
-      default:
-        return 'text-gray-600';
+      case 'excellent': return 'text-green-600';
+      case 'good': return 'text-blue-600';
+      case 'average': return 'text-orange-600';
+      case 'needs-improvement': return 'text-red-600';
+      default: return 'text-gray-600';
     }
   };
+
+  const downloadSubjectReport = (subject) => {
+    const report = {
+      title: `${subject.name} Analysis Report`,
+      performance: subject.performance,
+      avgScore: subject.avgScore,
+      students: subject.students,
+      topics: subject.topics,
+      timestamp: new Date().toLocaleString()
+    };
+    console.log('Downloading subject report:', report);
+    alert(`Downloading ${subject.name} report as PDF...`);
+  };
+
+  const downloadAssignmentReport = (assignment) => {
+    const report = {
+      title: `${assignment.name} Assignment Report`,
+      subject: assignment.subject,
+      completion: assignment.completion,
+      avgScore: assignment.avgScore,
+      timestamp: new Date().toLocaleString()
+    };
+    console.log('Downloading assignment report:', report);
+    alert(`Downloading ${assignment.name} report as PDF...`);
+  };
+
+  // Modal Components
+  const StudentReportModal = () => (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className={`rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto ${
+        isDarkMode ? 'bg-slate-800' : 'bg-white'
+      }`}>
+        <div className={`flex items-center justify-between p-6 border-b ${
+          isDarkMode ? 'border-slate-700' : 'border-gray-200'
+        }`}>
+          <h3 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            Student Performance Report - {selectedStudent?.name}
+          </h3>
+          <button onClick={() => setSelectedStudent(null)} className="p-2 hover:bg-gray-100 rounded-lg">
+            <X size={20} />
+          </button>
+        </div>
+        <div className="p-6 space-y-6">
+          <div className="grid grid-cols-2 gap-4">
+            <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-slate-700' : 'bg-gray-50'}`}>
+              <div className="text-sm text-gray-500">Overall Performance</div>
+              <div className="text-2xl font-bold text-green-600">{selectedStudent?.overall}</div>
+            </div>
+            <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-slate-700' : 'bg-gray-50'}`}>
+              <div className="text-sm text-gray-500">Attendance</div>
+              <div className="text-2xl font-bold text-blue-600">{selectedStudent?.attendance}</div>
+            </div>
+          </div>
+          
+          <div>
+            <h4 className={`font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Strengths</h4>
+            <div className="flex flex-wrap gap-2">
+              {selectedStudent?.details.strengths.map((strength, index) => (
+                <span key={index} className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm">
+                  {strength}
+                </span>
+              ))}
+            </div>
+          </div>
+          
+          <div>
+            <h4 className={`font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Recommendations</h4>
+            <ul className="space-y-2">
+              {selectedStudent?.details.recommendations.map((rec, index) => (
+                <li key={index} className="flex items-center gap-2">
+                  <CheckCircle size={16} className="text-green-500" />
+                  <span className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>{rec}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const SubjectDetailModal = () => (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className={`rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto ${
+        isDarkMode ? 'bg-slate-800' : 'bg-white'
+      }`}>
+        <div className={`flex items-center justify-between p-6 border-b ${
+          isDarkMode ? 'border-slate-700' : 'border-gray-200'
+        }`}>
+          <h3 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            {selectedSubject?.name} - Detailed Analysis
+          </h3>
+          <button onClick={() => setSelectedSubject(null)} className="p-2 hover:bg-gray-100 rounded-lg">
+            <X size={20} />
+          </button>
+        </div>
+        <div className="p-6 space-y-6">
+          <div className="grid grid-cols-3 gap-4">
+            <div className={`p-4 rounded-lg text-center ${isDarkMode ? 'bg-slate-700' : 'bg-blue-50'}`}>
+              <div className="text-2xl font-bold text-blue-600">{selectedSubject?.performance}</div>
+              <div className="text-sm text-gray-500">Performance</div>
+            </div>
+            <div className={`p-4 rounded-lg text-center ${isDarkMode ? 'bg-slate-700' : 'bg-green-50'}`}>
+              <div className="text-2xl font-bold text-green-600">{selectedSubject?.students}</div>
+              <div className="text-sm text-gray-500">Students</div>
+            </div>
+            <div className={`p-4 rounded-lg text-center ${isDarkMode ? 'bg-slate-700' : 'bg-purple-50'}`}>
+              <div className="text-2xl font-bold text-purple-600">{selectedSubject?.avgScore}%</div>
+              <div className="text-sm text-gray-500">Avg Score</div>
+            </div>
+          </div>
+          
+          <div>
+            <h4 className={`font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Topic Performance</h4>
+            <div className="space-y-3">
+              {selectedSubject?.topics.map((topic, index) => (
+                <div key={index} className="flex items-center justify-between">
+                  <span className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>{topic.name}</span>
+                  <div className="flex items-center gap-3">
+                    <div className="w-24 h-2 bg-gray-200 rounded-full">
+                      <div 
+                        className="h-2 rounded-full bg-green-500"
+                        style={{ width: `${topic.score}%` }}
+                      ></div>
+                    </div>
+                    <span className="font-medium">{topic.score}%</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const InsightDetailModal = () => (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className={`rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto ${
+        isDarkMode ? 'bg-slate-800' : 'bg-white'
+      }`}>
+        <div className={`flex items-center justify-between p-6 border-b ${
+          isDarkMode ? 'border-slate-700' : 'border-gray-200'
+        }`}>
+          <h3 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            AI Insight Details
+          </h3>
+          <button onClick={() => setSelectedInsight(null)} className="p-2 hover:bg-gray-100 rounded-lg">
+            <X size={20} />
+          </button>
+        </div>
+        <div className="p-6 space-y-6">
+          <div className={`p-4 rounded-lg ${
+            selectedInsight?.type === 'positive' ? 'bg-green-50 border-l-4 border-green-500' :
+            selectedInsight?.type === 'warning' ? 'bg-orange-50 border-l-4 border-orange-500' :
+            selectedInsight?.type === 'attention' ? 'bg-yellow-50 border-l-4 border-yellow-500' :
+            'bg-red-50 border-l-4 border-red-500'
+          }`}>
+            <h4 className={`text-lg font-semibold mb-2 ${
+              selectedInsight?.type === 'positive' ? 'text-green-700' :
+              selectedInsight?.type === 'warning' ? 'text-orange-700' :
+              selectedInsight?.type === 'attention' ? 'text-yellow-700' :
+              'text-red-700'
+            }`}>
+              {selectedInsight?.title}
+            </h4>
+            <p className="text-gray-700">{selectedInsight?.description}</p>
+            <div className="mt-2 text-sm text-gray-500">{selectedInsight?.confidence}</div>
+          </div>
+          
+          <div>
+            <h4 className={`font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Detailed Analysis</h4>
+            <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>
+              {selectedInsight?.details.analysis}
+            </p>
+          </div>
+          
+          <div>
+            <h4 className={`font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Recommendations</h4>
+            <ul className="space-y-2">
+              {selectedInsight?.details.recommendations.map((rec, index) => (
+                <li key={index} className="flex items-center gap-2">
+                  <Lightbulb size={16} className="text-yellow-500" />
+                  <span className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>{rec}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
   const renderOverview = () => (
     <div className="space-y-6">
@@ -446,28 +758,32 @@ const TeacherReportsAnalytics = () => {
           <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
             Filter By Performance
           </label>
-          <select className={`w-full px-4 py-2 rounded-lg border ${
-            isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-white border-gray-300 text-gray-900'
-          }`}>
-            <option>All Students</option>
-            <option>Excellent (90%+)</option>
-            <option>Good (75-89%)</option>
-            <option>Average (60-74%)</option>
-            <option>Needs Focus (&lt;60%)</option>
+          <select 
+            value={studentPerformanceFilter}
+            onChange={(e) => setStudentPerformanceFilter(e.target.value)}
+            className={`w-full px-4 py-2 rounded-lg border ${
+              isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-white border-gray-300 text-gray-900'
+            }`}
+          >
+            {performanceOptions.map(option => (
+              <option key={option} value={option}>{option}</option>
+            ))}
           </select>
         </div>
         <div>
           <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
             Sort By
           </label>
-          <select className={`w-full px-4 py-2 rounded-lg border ${
-            isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-white border-gray-300 text-gray-900'
-          }`}>
-            <option>All Students</option>
-            <option>Performance Score</option>
-            <option>Name</option>
-            <option>Attendance</option>
-            <option>Recent Activity</option>
+          <select 
+            value={studentSortBy}
+            onChange={(e) => setStudentSortBy(e.target.value)}
+            className={`w-full px-4 py-2 rounded-lg border ${
+              isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-white border-gray-300 text-gray-900'
+            }`}
+          >
+            {sortOptions.map(option => (
+              <option key={option} value={option}>{option}</option>
+            ))}
           </select>
         </div>
       </div>
@@ -479,8 +795,8 @@ const TeacherReportsAnalytics = () => {
             Student Performance Details
           </h2>
           <div className="space-y-4">
-            {studentsData.map((student, index) => (
-              <div key={index} className={`p-4 rounded-lg border ${
+            {filteredStudents.map((student, index) => (
+              <div key={student.id} className={`p-4 rounded-lg border ${
                 isDarkMode ? 'border-slate-600 bg-slate-700' : 'border-gray-200 bg-gray-50'
               }`}>
                 <div className="flex items-center justify-between mb-4">
@@ -503,7 +819,10 @@ const TeacherReportsAnalytics = () => {
                     <span className={`text-2xl font-bold ${getPerformanceColor(student.performance)}`}>
                       {student.overall}
                     </span>
-                    <button className="px-3 py-1 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600">
+                    <button 
+                      onClick={() => setSelectedStudent(student)}
+                      className="px-3 py-1 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600"
+                    >
                       View Report
                     </button>
                   </div>
@@ -548,7 +867,7 @@ const TeacherReportsAnalytics = () => {
       {/* Subjects Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {subjectsData.map((subject, index) => (
-          <div key={index} className={`p-6 rounded-2xl border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'}`}>
+          <div key={subject.id} className={`p-6 rounded-2xl border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'}`}>
             <div className="flex items-center justify-between mb-4">
               <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 {subject.name}
@@ -701,7 +1020,7 @@ const TeacherReportsAnalytics = () => {
               </thead>
               <tbody>
                 {subjectsData.map((subject, index) => (
-                  <tr key={index} className={`border-b ${isDarkMode ? 'border-slate-700' : 'border-gray-100'}`}>
+                  <tr key={subject.id} className={`border-b ${isDarkMode ? 'border-slate-700' : 'border-gray-100'}`}>
                     <td className={`py-4 font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                       {subject.name}
                     </td>
@@ -739,10 +1058,16 @@ const TeacherReportsAnalytics = () => {
                     </td>
                     <td className="py-4">
                       <div className="flex gap-2">
-                        <button className="p-1 text-blue-500 hover:bg-blue-50 rounded">
+                        <button 
+                          onClick={() => setSelectedSubject(subject)}
+                          className="p-1 text-blue-500 hover:bg-blue-50 rounded"
+                        >
                           <Eye size={16} />
                         </button>
-                        <button className="p-1 text-gray-500 hover:bg-gray-50 rounded">
+                        <button 
+                          onClick={() => downloadSubjectReport(subject)}
+                          className="p-1 text-green-500 hover:bg-green-50 rounded"
+                        >
                           <Download size={16} />
                         </button>
                       </div>
@@ -867,7 +1192,7 @@ const TeacherReportsAnalytics = () => {
             </thead>
             <tbody>
               {assignmentDetails.map((assignment, index) => (
-                <tr key={index} className={`border-b ${isDarkMode ? 'border-slate-700' : 'border-gray-100'}`}>
+                <tr key={assignment.id} className={`border-b ${isDarkMode ? 'border-slate-700' : 'border-gray-100'}`}>
                   <td className={`py-4 font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     {assignment.name}
                     <div className={`text-xs mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
@@ -901,10 +1226,16 @@ const TeacherReportsAnalytics = () => {
                   </td>
                   <td className="py-4">
                     <div className="flex gap-2">
-                      <button className="p-1 text-blue-500 hover:bg-blue-50 rounded">
+                      <button 
+                        onClick={() => setSelectedAssignment(assignment)}
+                        className="p-1 text-blue-500 hover:bg-blue-50 rounded"
+                      >
                         <Eye size={16} />
                       </button>
-                      <button className="p-1 text-green-500 hover:bg-green-50 rounded">
+                      <button 
+                        onClick={() => downloadAssignmentReport(assignment)}
+                        className="p-1 text-green-500 hover:bg-green-50 rounded"
+                      >
                         <Download size={16} />
                       </button>
                     </div>
@@ -1045,7 +1376,7 @@ const TeacherReportsAnalytics = () => {
         </h2>
         <div className="h-64 flex items-end justify-center gap-12">
           {['Mathematics', 'Physics', 'Chemistry'].map((subject, index) => {
-            const values = [94.2, 92.1, 95.8]; // Daily vs Weekly Average
+            const values = [94.2, 92.1, 95.8];
             return (
               <div key={index} className="text-center">
                 <div className="flex gap-3 mb-4">
@@ -1210,7 +1541,10 @@ const TeacherReportsAnalytics = () => {
                   </p>
                   <div className="flex items-center gap-4 text-xs">
                     <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>📈 84% Confidence</span>
-                    <button className="text-blue-600 font-medium hover:text-blue-700">
+                    <button 
+                      onClick={() => setSelectedInsight(aiInsights[0])}
+                      className="text-blue-600 font-medium hover:text-blue-700"
+                    >
                       View Details →
                     </button>
                   </div>
@@ -1232,7 +1566,10 @@ const TeacherReportsAnalytics = () => {
                   </p>
                   <div className="flex items-center gap-4 text-xs">
                     <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>⚠️ 92% Confidence</span>
-                    <button className="text-orange-600 font-medium hover:text-orange-700">
+                    <button 
+                      onClick={() => setSelectedInsight(aiInsights[1])}
+                      className="text-orange-600 font-medium hover:text-orange-700"
+                    >
                       View Details →
                     </button>
                   </div>
@@ -1266,7 +1603,10 @@ const TeacherReportsAnalytics = () => {
                   </div>
                   <div className="flex items-center gap-4 text-xs">
                     <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>📊 88% Confidence</span>
-                    <button className="text-green-600 font-medium hover:text-green-700">
+                    <button 
+                      onClick={() => setSelectedInsight(aiInsights[2])}
+                      className="text-green-600 font-medium hover:text-green-700"
+                    >
                       View Details →
                     </button>
                   </div>
@@ -1297,7 +1637,10 @@ const TeacherReportsAnalytics = () => {
                   </div>
                   <div className="flex items-center gap-4 text-xs">
                     <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>🚨 96% Confidence</span>
-                    <button className="text-red-600 font-medium hover:text-red-700">
+                    <button 
+                      onClick={() => setSelectedInsight(aiInsights[3])}
+                      className="text-red-600 font-medium hover:text-red-700"
+                    >
                       View Details →
                     </button>
                   </div>
@@ -1353,17 +1696,29 @@ const TeacherReportsAnalytics = () => {
               </p>
             </div>
             <div className="flex gap-3">
-              <button className={`px-4 py-2 rounded-lg border ${
-                isDarkMode ? 'border-slate-600 text-white hover:bg-slate-700' : 'border-gray-300 text-gray-700 hover:bg-gray-50'
-              }`}>
-                All Classes
-              </button>
-              <button className={`px-4 py-2 rounded-lg border ${
-                isDarkMode ? 'border-slate-600 text-white hover:bg-slate-700' : 'border-gray-300 text-gray-700 hover:bg-gray-50'
-              }`}>
-                This Month
-              </button>
-              <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+              <select 
+                value={selectedClass}
+                onChange={(e) => setSelectedClass(e.target.value)}
+                className={`px-4 py-2 rounded-lg border ${
+                  isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-white border-gray-300 text-gray-900'
+                }`}
+              >
+                {classOptions.map(option => (
+                  <option key={option} value={option}>{option}</option>
+                ))}
+              </select>
+              <select 
+                value={selectedPeriod}
+                onChange={(e) => setSelectedPeriod(e.target.value)}
+                className={`px-4 py-2 rounded-lg border ${
+                  isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-white border-gray-300 text-gray-900'
+                }`}
+              >
+                {periodOptions.map(option => (
+                  <option key={option} value={option}>{option}</option>
+                ))}
+              </select>
+              <button onClick={exportToPDF} className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
                 Export Report
               </button>
             </div>
@@ -1400,6 +1755,11 @@ const TeacherReportsAnalytics = () => {
       </main>
 
       <Footer isSidebarExpanded={isSidebarExpanded} />
+
+      {/* Modals */}
+      {selectedStudent && <StudentReportModal />}
+      {selectedSubject && <SubjectDetailModal />}
+      {selectedInsight && <InsightDetailModal />}
     </div>
   );
 };

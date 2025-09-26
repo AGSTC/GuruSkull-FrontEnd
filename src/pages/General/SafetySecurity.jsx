@@ -16,7 +16,8 @@ import {
   Phone,
   Mail,
   MapPin,
-  Clock
+  Clock,
+  Download
 } from 'lucide-react';
 
 const SafetySecurity = () => {
@@ -25,6 +26,47 @@ const SafetySecurity = () => {
 
   const toggleSidebar = () => {
     setIsSidebarExpanded(!isSidebarExpanded);
+  };
+
+  // Function to handle PDF download
+  const handleDownloadPDF = () => {
+    const pdfContent = `
+      GURUSHIKSHA SAFETY & SECURITY POLICY
+      
+      Last Updated: January 15, 2024
+      
+      1. PHYSICAL SAFETY MEASURES
+      - Access Control: Controlled entry with ID verification
+      - Surveillance: 24/7 CCTV monitoring system
+      - Security Personnel: Trained staff on premises
+      
+      2. CHILD PROTECTION POLICIES
+      - Background Checks: Thorough verification of all staff
+      - Supervision Standards: Appropriate student-teacher ratios
+      - Emergency Protocols: Comprehensive response procedures
+      
+      3. DIGITAL SECURITY
+      - Data Encryption: Industry-standard encryption protocols
+      - Secure Storage: Protected databases with regular audits
+      - Access Control: Multi-factor authentication
+      
+      4. EMERGENCY CONTACTS
+      - Emergency Response: (040) 123-4567 (24/7)
+      - Security Office: (040) 890-1234 (Office Hours)
+      - Medical Emergency: (040) 567-8901 (24/7)
+      
+      Contact: security@gurushikri.com | Emergency: Available 24/7
+    `;
+
+    const blob = new Blob([pdfContent], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'GuruShiksha_Safety_Security_Policy.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   const safetyCommitments = [
@@ -67,9 +109,18 @@ const SafetySecurity = () => {
             <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
               Comprehensive safety protocols and security measures ensuring a secure learning environment.
             </p>
-            <button className="mt-4 px-4 py-2 bg-red-500 text-white text-sm font-medium rounded-lg hover:bg-red-600 transition-colors">
-              Emergency
-            </button>
+            <div className="flex gap-4 mt-4">
+              <button className="px-4 py-2 bg-red-500 text-white text-sm font-medium rounded-lg hover:bg-red-600 transition-colors">
+                Emergency
+              </button>
+              <button 
+                onClick={handleDownloadPDF}
+                className="px-4 py-2 bg-green-500 text-white text-sm font-medium rounded-lg hover:bg-green-600 transition-colors flex items-center gap-2"
+              >
+                <Download size={16} />
+                Download PDF
+              </button>
+            </div>
           </div>
 
           {/* Main Content */}

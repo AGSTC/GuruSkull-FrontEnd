@@ -1,5 +1,6 @@
 // StudentDashboard.jsx
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext';
 import Header from '../../components/layout/Header';
 import Sidebar from '../../components/layout/Sidebar';
@@ -28,7 +29,7 @@ import {
 const StudentDashboard = () => {
   const { isDarkMode } = useTheme();
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
-
+  const navigate = useNavigate();
   const toggleSidebar = () => {
     setIsSidebarExpanded(!isSidebarExpanded);
   };
@@ -304,7 +305,8 @@ const StudentDashboard = () => {
                 <h2 className={`text-xl font-semibold text-left ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Recent Announcement
                 </h2>
-                <button className="text-blue-500 text-sm font-medium hover:text-blue-600 transition-colors">
+                <button className="text-blue-500 text-sm font-medium hover:text-blue-600 transition-colors"
+                onClick={() => navigate('/TeacherAnnouncements')}>
                   View All
                 </button>
               </div>
@@ -388,7 +390,8 @@ const StudentDashboard = () => {
               <h2 className={`text-xl font-semibold text-left ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Pending Assignments
               </h2>
-              <button className="text-blue-500 text-sm font-medium hover:text-blue-600 transition-colors">
+              <button className="text-blue-500 text-sm font-medium hover:text-blue-600 transition-colors"
+              onClick={() => navigate('/StudentAssignments')}>
                 View All
               </button>
             </div>

@@ -5,7 +5,7 @@ import Sidebar from '../../components/layout/Sidebar';
 import Footer from '../../components/layout/Footer';
 import boyChild from '../../assets/images/student-profile.png';
 import girlChild from '../../assets/images/girl.png';
-import { ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Calendar, X, Star, FileText, User, Calendar as CalendarIcon } from 'lucide-react';
 
 const ParentAttendanceManagement = () => {
   const { isDarkMode } = useTheme();
@@ -13,9 +13,21 @@ const ParentAttendanceManagement = () => {
   const [selectedChild, setSelectedChild] = useState(0);
   const [currentMonth, setCurrentMonth] = useState(8); // September = 8
   const [currentYear, setCurrentYear] = useState(2025);
+  const [selectedReport, setSelectedReport] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const toggleSidebar = () => {
     setIsSidebarExpanded(!isSidebarExpanded);
+  };
+
+  const openReportDetails = (report) => {
+    setSelectedReport(report);
+    setIsModalOpen(true);
+  };
+
+  const closeReportDetails = () => {
+    setSelectedReport(null);
+    setIsModalOpen(false);
   };
 
   // Children data with attendance
@@ -79,7 +91,31 @@ const ParentAttendanceManagement = () => {
           teacher: 'Mrs. Smith',
           date: '20th Sep, 24',
           status: 'Good',
-          comments: 'Aarav has shown excellent improvement in Mathematics and Science. Keep up the good work and focus more on English writing skills.'
+          statusColor: 'bg-blue-100 text-blue-700',
+          comments: 'Aarav has shown excellent improvement in Mathematics and Science. Keep up the good work and focus more on English writing skills.',
+          detailedComments: [
+            {
+              subject: 'Mathematics',
+              grade: 'A',
+              comment: 'Excellent problem-solving skills and consistent performance in algebra and geometry.',
+              improvement: 'Work on time management during exams'
+            },
+            {
+              subject: 'Science',
+              grade: 'B+',
+              comment: 'Good understanding of scientific concepts and active participation in lab sessions.',
+              improvement: 'Improve report writing skills'
+            },
+            {
+              subject: 'English',
+              grade: 'B',
+              comment: 'Good reading comprehension but needs improvement in creative writing.',
+              improvement: 'Practice essay writing regularly'
+            }
+          ],
+          overallPerformance: 'Shows consistent improvement across all subjects',
+          recommendations: 'Encourage participation in science club and reading groups',
+          nextReviewDate: '15th Oct, 2024'
         },
         {
           id: 2,
@@ -87,7 +123,25 @@ const ParentAttendanceManagement = () => {
           teacher: 'Ms. Johnson',
           date: '15th Jan, 24',
           status: 'Excellent',
-          comments: 'Outstanding performance in all subjects. Aarav demonstrates strong analytical skills and consistent effort.'
+          statusColor: 'bg-green-100 text-green-700',
+          comments: 'Outstanding performance in all subjects. Aarav demonstrates strong analytical skills and consistent effort.',
+          detailedComments: [
+            {
+              subject: 'Mathematics',
+              grade: 'A+',
+              comment: 'Perfect score in advanced calculus and exceptional logical reasoning.',
+              improvement: 'Maintain current performance level'
+            },
+            {
+              subject: 'Physics',
+              grade: 'A',
+              comment: 'Excellent practical skills and theoretical understanding.',
+              improvement: 'Continue exploring advanced topics'
+            }
+          ],
+          overallPerformance: 'Exceptional performance with perfect attendance',
+          recommendations: 'Consider advanced placement courses for next semester',
+          nextReviewDate: '15th Feb, 2024'
         },
         {
           id: 3,
@@ -95,7 +149,19 @@ const ParentAttendanceManagement = () => {
           teacher: 'Dr. Wilson',
           date: '8th Dec, 23',
           status: 'Good',
-          comments: 'Good understanding of lab procedures. Needs to improve documentation and report writing skills.'
+          statusColor: 'bg-blue-100 text-blue-700',
+          comments: 'Good understanding of lab procedures. Needs to improve documentation and report writing skills.',
+          detailedComments: [
+            {
+              subject: 'Physics Lab',
+              grade: 'B+',
+              comment: 'Accurate experimental setup and data collection.',
+              improvement: 'Improve lab report documentation'
+            }
+          ],
+          overallPerformance: 'Good practical skills but needs better documentation',
+          recommendations: 'Practice writing detailed lab reports',
+          nextReviewDate: '15th Jan, 2024'
         },
         {
           id: 4,
@@ -103,7 +169,19 @@ const ParentAttendanceManagement = () => {
           teacher: 'Mrs. Davis',
           date: '22nd Nov, 23',
           status: 'Excellent',
-          comments: 'Exceptional work in Chemistry practicals. Shows great curiosity and engagement in experiments.'
+          statusColor: 'bg-green-100 text-green-700',
+          comments: 'Exceptional work in Chemistry practicals. Shows great curiosity and engagement in experiments.',
+          detailedComments: [
+            {
+              subject: 'Chemistry',
+              grade: 'A+',
+              comment: 'Outstanding performance in practical exams and theoretical knowledge.',
+              improvement: 'None - maintain excellent work'
+            }
+          ],
+          overallPerformance: 'Excellent performance with perfect scores',
+          recommendations: 'Encourage participation in science olympiad',
+          nextReviewDate: '15th Dec, 2023'
         }
       ]
     },
@@ -166,7 +244,25 @@ const ParentAttendanceManagement = () => {
           teacher: 'Mr. Patel',
           date: '18th Sep, 24',
           status: 'Excellent',
-          comments: 'Priya shows exceptional dedication and consistent performance across all subjects. Her participation in class discussions is commendable.'
+          statusColor: 'bg-green-100 text-green-700',
+          comments: 'Priya shows exceptional dedication and consistent performance across all subjects. Her participation in class discussions is commendable.',
+          detailedComments: [
+            {
+              subject: 'Mathematics',
+              grade: 'A',
+              comment: 'Excellent problem-solving skills and quick grasp of new concepts.',
+              improvement: 'Work on advanced problems'
+            },
+            {
+              subject: 'Science',
+              grade: 'A+',
+              comment: 'Outstanding performance in both theory and practicals.',
+              improvement: 'Participate in science fairs'
+            }
+          ],
+          overallPerformance: 'Consistently excellent performance in all areas',
+          recommendations: 'Encourage leadership roles in group activities',
+          nextReviewDate: '18th Oct, 2024'
         },
         {
           id: 2,
@@ -174,7 +270,19 @@ const ParentAttendanceManagement = () => {
           teacher: 'Ms. Kumar',
           date: '10th Aug, 24',
           status: 'Good',
-          comments: 'Creative approach to the science project. Shows good understanding of scientific concepts and methodology.'
+          statusColor: 'bg-blue-100 text-blue-700',
+          comments: 'Creative approach to the science project. Shows good understanding of scientific concepts and methodology.',
+          detailedComments: [
+            {
+              subject: 'Science Project',
+              grade: 'A-',
+              comment: 'Innovative project idea with good research methodology.',
+              improvement: 'Improve presentation skills'
+            }
+          ],
+          overallPerformance: 'Good project execution with creative thinking',
+          recommendations: 'Continue exploring scientific research methods',
+          nextReviewDate: '10th Sep, 2024'
         }
       ]
     }
@@ -262,6 +370,185 @@ const ParentAttendanceManagement = () => {
     }
 
     return days;
+  };
+
+  // Report Detail Modal Component
+  const ReportDetailModal = () => {
+    if (!selectedReport) return null;
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className={`rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto ${
+          isDarkMode ? 'bg-slate-800' : 'bg-white'
+        }`}>
+          {/* Modal Header */}
+          <div className={`p-6 border-b ${
+            isDarkMode ? 'border-slate-700' : 'border-gray-200'
+          }`}>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                {selectedReport.title}
+              </h2>
+              <button
+                onClick={closeReportDetails}
+                className={`p-2 rounded-lg hover:bg-opacity-20 ${
+                  isDarkMode ? 'hover:bg-white text-white' : 'hover:bg-gray-200 text-gray-600'
+                }`}
+              >
+                <X size={24} />
+              </button>
+            </div>
+            
+            <div className="flex flex-wrap gap-4 text-sm">
+              <div className="flex items-center gap-2">
+                <User size={16} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
+                <span className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>
+                  Teacher: <strong>{selectedReport.teacher}</strong>
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CalendarIcon size={16} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
+                <span className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>
+                  Date: <strong>{selectedReport.date}</strong>
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Star size={16} className={isDarkMode ? 'text-yellow-400' : 'text-yellow-500'} />
+                <span className={`px-3 py-1 rounded-full text-sm font-medium ${selectedReport.statusColor}`}>
+                  {selectedReport.status}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Modal Body */}
+          <div className="p-6">
+            {/* Overall Comments */}
+            <div className="mb-6">
+              <h3 className={`text-lg font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                Overall Comments
+              </h3>
+              <div className={`p-4 rounded-lg ${
+                isDarkMode ? 'bg-slate-700' : 'bg-blue-50'
+              }`}>
+                <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>
+                  {selectedReport.comments}
+                </p>
+              </div>
+            </div>
+
+            {/* Subject-wise Performance */}
+            <div className="mb-6">
+              <h3 className={`text-lg font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                Subject-wise Performance
+              </h3>
+              <div className="space-y-4">
+                {selectedReport.detailedComments.map((subject, index) => (
+                  <div key={index} className={`p-4 rounded-lg border ${
+                    isDarkMode ? 'border-slate-600 bg-slate-700' : 'border-gray-200 bg-gray-50'
+                  }`}>
+                    <div className="flex items-center justify-between mb-2">
+                      <h4 className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                        {subject.subject}
+                      </h4>
+                      <span className={`px-2 py-1 rounded text-sm font-medium ${
+                        subject.grade.includes('A') ? 'bg-green-100 text-green-700' :
+                        subject.grade.includes('B') ? 'bg-blue-100 text-blue-700' :
+                        'bg-yellow-100 text-yellow-700'
+                      }`}>
+                        Grade: {subject.grade}
+                      </span>
+                    </div>
+                    <div className="space-y-2">
+                      <div>
+                        <span className={`text-sm font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                          Strengths: 
+                        </span>
+                        <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>
+                          {subject.comment}
+                        </p>
+                      </div>
+                      <div>
+                        <span className={`text-sm font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                          Areas for Improvement: 
+                        </span>
+                        <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>
+                          {subject.improvement}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Overall Performance & Recommendations */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h3 className={`text-lg font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  Overall Performance
+                </h3>
+                <div className={`p-4 rounded-lg ${
+                  isDarkMode ? 'bg-slate-700' : 'bg-green-50'
+                }`}>
+                  <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>
+                    {selectedReport.overallPerformance}
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <h3 className={`text-lg font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  Recommendations
+                </h3>
+                <div className={`p-4 rounded-lg ${
+                  isDarkMode ? 'bg-slate-700' : 'bg-purple-50'
+                }`}>
+                  <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>
+                    {selectedReport.recommendations}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Next Review Date */}
+            <div className={`mt-6 p-4 rounded-lg ${
+              isDarkMode ? 'bg-slate-700' : 'bg-orange-50'
+            }`}>
+              <div className="flex items-center gap-2">
+                <CalendarIcon size={18} className={isDarkMode ? 'text-orange-400' : 'text-orange-500'} />
+                <span className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  Next Review Date: {selectedReport.nextReviewDate}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Modal Footer */}
+          <div className={`p-6 border-t ${
+            isDarkMode ? 'border-slate-700' : 'border-gray-200'
+          }`}>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={closeReportDetails}
+                className={`px-6 py-2 rounded-lg font-medium transition-colors ${
+                  isDarkMode 
+                    ? 'bg-slate-700 text-white hover:bg-slate-600' 
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                Close
+              </button>
+              <button
+                className="px-6 py-2 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 transition-colors"
+              >
+                Download Report
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -634,9 +921,6 @@ const ParentAttendanceManagement = () => {
               <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Progress Reports & Feedback
               </h2>
-              <button className="text-blue-500 text-sm font-medium hover:text-blue-600 transition-colors">
-                View All
-              </button>
             </div>
             
             <div className="space-y-4">
@@ -655,11 +939,7 @@ const ParentAttendanceManagement = () => {
                     </div>
                     <div className="text-right">
                       <div className="text-sm font-medium text-blue-500">{report.date}</div>
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        report.status === 'Excellent' ? 'bg-green-100 text-green-700' :
-                        report.status === 'Good' ? 'bg-blue-100 text-blue-700' :
-                        'bg-yellow-100 text-yellow-700'
-                      }`}>
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${report.statusColor}`}>
                         {report.status}
                       </span>
                     </div>
@@ -671,7 +951,10 @@ const ParentAttendanceManagement = () => {
                     <span className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
                       By: {report.teacher}
                     </span>
-                    <button className="text-xs text-blue-500 hover:text-blue-600">
+                    <button 
+                      onClick={() => openReportDetails(report)}
+                      className="text-xs text-blue-500 hover:text-blue-600 font-medium transition-colors"
+                    >
                       View Details →
                     </button>
                   </div>
@@ -683,6 +966,9 @@ const ParentAttendanceManagement = () => {
       </main>
 
       <Footer isSidebarExpanded={isSidebarExpanded} />
+
+      {/* Report Detail Modal */}
+      {isModalOpen && <ReportDetailModal />}
     </div>
   );
 };

@@ -14,24 +14,33 @@ import {
   CheckCircle,
   AlertCircle,
   Filter,
-  Search
+  Search,
+  User,
+  BookOpen,
+  Award
 } from 'lucide-react';
 
 const StudentAssignments = () => {
   const { isDarkMode } = useTheme();
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const [showSubmitModal, setShowSubmitModal] = useState(false);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [selectedAssignment, setSelectedAssignment] = useState(null);
   const [assignmentResponse, setAssignmentResponse] = useState('');
   const [attachedFiles, setAttachedFiles] = useState([]);
   const [dragActive, setDragActive] = useState(false);
+  
+  // Filter states
+  const [selectedSubject, setSelectedSubject] = useState('All Subjects');
+  const [selectedStatus, setSelectedStatus] = useState('All Status');
+  const [selectedDueDate, setSelectedDueDate] = useState('All Dates');
 
   const toggleSidebar = () => {
     setIsSidebarExpanded(!isSidebarExpanded);
   };
 
   // Sample assignments data
-  const assignments = [
+  const [assignments, setAssignments] = useState([
     {
       id: 1,
       title: 'Calculus Problem Set - Chapter 3',
@@ -42,7 +51,10 @@ const StudentAssignments = () => {
       status: 'overdue',
       description: 'Solve problems 1-15 from Chapter 3: Integration by Parts. Show all working steps and provide detailed explanations for each solution.',
       points: 100,
-      type: 'Problem Set'
+      type: 'Problem Set',
+      instructions: 'Complete all 15 problems from Chapter 3. Show detailed working for each problem. You may use calculator for numerical computations but show the integration steps clearly.',
+      submissionFormat: 'PDF document with handwritten solutions or typed LaTeX document',
+      resources: ['Textbook Chapter 3', 'Online Integration Calculator', 'Class Notes from Week 5']
     },
     {
       id: 2,
@@ -54,7 +66,10 @@ const StudentAssignments = () => {
       status: 'overdue',
       description: 'Complete lab report on the synthesis of aspirin experiment conducted on January 10th. Include hypothesis, methodology, results, and conclusion.',
       points: 75,
-      type: 'Lab Report'
+      type: 'Lab Report',
+      instructions: 'Write a comprehensive lab report following the standard format. Include all observations, calculations, and analysis of results.',
+      submissionFormat: 'Word document or PDF, minimum 1000 words',
+      resources: ['Lab Manual Section 4', 'Aspirin Synthesis Reference Paper', 'Lab Safety Guidelines']
     },
     {
       id: 3,
@@ -66,7 +81,10 @@ const StudentAssignments = () => {
       status: 'pending',
       description: 'Theoretical problems and problems on Wave Mechanics, Electromagnetic waves and Wave Optics.',
       points: 50,
-      type: 'Assignment'
+      type: 'Assignment',
+      instructions: 'Solve all theoretical problems. For wave optics, include diagrams where necessary. Show all mathematical derivations.',
+      submissionFormat: 'Handwritten or typed solutions',
+      resources: ['Physics Textbook Chapter 15-17', 'Wave Simulation Software', 'Previous Year Solutions']
     },
     {
       id: 4,
@@ -78,7 +96,10 @@ const StudentAssignments = () => {
       status: 'overdue',
       description: 'Write a 1500-word essay on the role of mitochondria in cellular respiration, referencing recent research and peer-reviewed sources.',
       points: 100,
-      type: 'Assignment'
+      type: 'Assignment',
+      instructions: 'Essay should be well-structured with introduction, body, and conclusion. Use APA citation format. Minimum 10 references required.',
+      submissionFormat: 'Word document, double-spaced, 12pt Times New Roman',
+      resources: ['Biology Textbook Chapter 9', 'PubMed Database', 'Sample Research Papers']
     },
     {
       id: 5,
@@ -90,15 +111,74 @@ const StudentAssignments = () => {
       status: 'submitted',
       description: 'Critical analysis of themes in Shakespeare\'s Hamlet, focusing on revenge and mortality.',
       points: 85,
-      type: 'Assignment'
+      type: 'Assignment',
+      instructions: 'Analyze the themes using specific quotes from the text. Compare with other works if relevant. Follow MLA citation format.',
+      submissionFormat: 'Essay format, 1200-1500 words',
+      resources: ['Hamlet Text', 'Literary Criticism Database', 'MLA Style Guide']
     }
-  ];
+  ]);
 
+  // Get unique subjects for filter dropdown
+  const subjects = ['All Subjects', ...new Set(assignments.map(a => a.subject))];
+  const statuses = ['All Status', 'pending', 'overdue', 'submitted'];
+  const dueDateOptions = ['All Dates', 'This Week', 'Next Week', 'Overdue'];
+
+  // Filter assignments based on selected filters
+  const filteredAssignments = assignments.filter(assignment => {
+    const subjectMatch = selectedSubject === 'All Subjects' || assignment.subject === selectedSubject;
+    const statusMatch = selectedStatus === 'All Status' || assignment.status === selectedStatus;
+    
+    let dueDateMatch = true;
+    if (selectedDueDate !== 'All Dates') {
+      const today = new Date();
+      const dueDate = new Date(assignment.dueDate);
+      const daysDiff = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
+      
+      switch (selectedDueDate) {
+        case 'This Week':
+          dueDateMatch = daysDiff <= 7 && daysDiff >= 0;
+          break;
+        case 'Next Week':
+          dueDateMatch = daysDiff > 7 && daysDiff <= 14;
+          break;
+        case 'Overdue':
+          dueDateMatch = assignment.status === 'overdue';
+          break;
+        default:
+          dueDateMatch = true;
+      }
+    }
+    
+    return subjectMatch && statusMatch && dueDateMatch;
+  });
+
+  // Calculate quick stats based on filtered assignments
   const quickStats = [
-    { label: 'Due This Week', value: '3', color: 'orange' },
-    { label: 'Overdue', value: '2', color: 'red' },
-    { label: 'Completed', value: '1', color: 'green' },
-    { label: 'Average Score', value: '85%', color: 'blue' }
+    { 
+      label: 'Due This Week', 
+      value: assignments.filter(a => {
+        const today = new Date();
+        const dueDate = new Date(a.dueDate);
+        const daysDiff = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
+        return daysDiff <= 7 && daysDiff >= 0;
+      }).length.toString(), 
+      color: 'orange' 
+    },
+    { 
+      label: 'Overdue', 
+      value: assignments.filter(a => a.status === 'overdue').length.toString(), 
+      color: 'red' 
+    },
+    { 
+      label: 'Completed', 
+      value: assignments.filter(a => a.status === 'submitted').length.toString(), 
+      color: 'green' 
+    },
+    { 
+      label: 'Average Score', 
+      value: '85%', 
+      color: 'blue' 
+    }
   ];
 
   const getStatusColor = (status) => {
@@ -134,8 +214,14 @@ const StudentAssignments = () => {
     }
   };
 
+  const handleDetailsClick = (assignment) => {
+    setSelectedAssignment(assignment);
+    setShowDetailsModal(true);
+  };
+
   const handleCloseModal = () => {
     setShowSubmitModal(false);
+    setShowDetailsModal(false);
     setSelectedAssignment(null);
     setAssignmentResponse('');
     setAttachedFiles([]);
@@ -194,18 +280,20 @@ const StudentAssignments = () => {
   const canSubmit = assignmentResponse.trim().length > 0 || attachedFiles.length > 0;
 
   const handleSubmitAssignment = () => {
-    if (canSubmit) {
-      // Here you would normally send the data to your backend
-      console.log('Submitting assignment:', {
-        assignmentId: selectedAssignment.id,
-        response: assignmentResponse,
-        files: attachedFiles
-      });
+    if (canSubmit && selectedAssignment) {
+      // Update the assignment status to 'submitted'
+      setAssignments(prevAssignments =>
+        prevAssignments.map(assignment =>
+          assignment.id === selectedAssignment.id
+            ? { ...assignment, status: 'submitted' }
+            : assignment
+        )
+      );
       
       // Close modal and reset state
       handleCloseModal();
       
-      // You might want to update the assignment status in your state/backend
+      // Show success message
       alert('Assignment submitted successfully!');
     }
   };
@@ -239,13 +327,13 @@ const StudentAssignments = () => {
                 Due This Week: 
               </span>
               <span className="bg-orange-100 text-orange-700 px-2 py-1 rounded-full text-sm font-medium">
-                3
+                {quickStats[0].value}
               </span>
               <span className={`text-sm ml-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Completed: 
               </span>
               <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-sm font-medium">
-                2
+                {quickStats[2].value}
               </span>
             </div>
           </div>
@@ -266,17 +354,18 @@ const StudentAssignments = () => {
                     <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                       Subject
                     </label>
-                    <select className={`w-full px-3 py-2 rounded-lg border text-sm ${
-                      isDarkMode 
-                        ? 'bg-slate-700 border-slate-600 text-white' 
-                        : 'bg-white border-gray-300 text-gray-900'
-                    }`}>
-                      <option>All Subjects</option>
-                      <option>Mathematics</option>
-                      <option>Physics</option>
-                      <option>Chemistry</option>
-                      <option>Biology</option>
-                      <option>English</option>
+                    <select 
+                      value={selectedSubject}
+                      onChange={(e) => setSelectedSubject(e.target.value)}
+                      className={`w-full px-3 py-2 rounded-lg border text-sm ${
+                        isDarkMode 
+                          ? 'bg-slate-700 border-slate-600 text-white' 
+                          : 'bg-white border-gray-300 text-gray-900'
+                      }`}
+                    >
+                      {subjects.map(subject => (
+                        <option key={subject} value={subject}>{subject}</option>
+                      ))}
                     </select>
                   </div>
 
@@ -284,15 +373,20 @@ const StudentAssignments = () => {
                     <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                       Status
                     </label>
-                    <select className={`w-full px-3 py-2 rounded-lg border text-sm ${
-                      isDarkMode 
-                        ? 'bg-slate-700 border-slate-600 text-white' 
-                        : 'bg-white border-gray-300 text-gray-900'
-                    }`}>
-                      <option>All Status</option>
-                      <option>Pending</option>
-                      <option>Overdue</option>
-                      <option>Submitted</option>
+                    <select 
+                      value={selectedStatus}
+                      onChange={(e) => setSelectedStatus(e.target.value)}
+                      className={`w-full px-3 py-2 rounded-lg border text-sm ${
+                        isDarkMode 
+                          ? 'bg-slate-700 border-slate-600 text-white' 
+                          : 'bg-white border-gray-300 text-gray-900'
+                      }`}
+                    >
+                      {statuses.map(status => (
+                        <option key={status} value={status}>
+                          {status === 'All Status' ? status : status.charAt(0).toUpperCase() + status.slice(1)}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
@@ -300,15 +394,18 @@ const StudentAssignments = () => {
                     <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                       Due Date
                     </label>
-                    <select className={`w-full px-3 py-2 rounded-lg border text-sm ${
-                      isDarkMode 
-                        ? 'bg-slate-700 border-slate-600 text-white' 
-                        : 'bg-white border-gray-300 text-gray-900'
-                    }`}>
-                      <option>All Dates</option>
-                      <option>This Week</option>
-                      <option>Next Week</option>
-                      <option>Overdue</option>
+                    <select 
+                      value={selectedDueDate}
+                      onChange={(e) => setSelectedDueDate(e.target.value)}
+                      className={`w-full px-3 py-2 rounded-lg border text-sm ${
+                        isDarkMode 
+                          ? 'bg-slate-700 border-slate-600 text-white' 
+                          : 'bg-white border-gray-300 text-gray-900'
+                      }`}
+                    >
+                      {dueDateOptions.map(option => (
+                        <option key={option} value={option}>{option}</option>
+                      ))}
                     </select>
                   </div>
                 </div>
@@ -344,87 +441,98 @@ const StudentAssignments = () => {
             {/* Assignments List */}
             <div className="xl:col-span-3">
               <div className="space-y-4">
-                {assignments.map((assignment) => (
-                  <div key={assignment.id} className={`p-6 rounded-2xl border ${
-                    isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'
-                  }`}>
-                    
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                            {assignment.title}
-                          </h3>
-                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(assignment.status)}`}>
-                            {assignment.status}
-                          </span>
-                        </div>
-                        
-                        <div className="flex items-center gap-6 text-sm mb-3">
-                          <div className="flex items-center gap-2">
-                            <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                              {assignment.subject}
-                            </span>
-                            <span className={`${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>•</span>
-                            <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                              {assignment.teacher}
+                {filteredAssignments.length > 0 ? (
+                  filteredAssignments.map((assignment) => (
+                    <div key={assignment.id} className={`p-6 rounded-2xl border ${
+                      isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'
+                    }`}>
+                      
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 mb-2">
+                            <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                              {assignment.title}
+                            </h3>
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(assignment.status)}`}>
+                              {assignment.status}
                             </span>
                           </div>
-                        </div>
+                          
+                          <div className="flex items-center gap-6 text-sm mb-3">
+                            <div className="flex items-center gap-2">
+                              <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                                {assignment.subject}
+                              </span>
+                              <span className={`${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>•</span>
+                              <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                                {assignment.teacher}
+                              </span>
+                            </div>
+                          </div>
 
-                        <p className={`text-sm mb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                          {assignment.description}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-6 text-sm">
-                        <div className="flex items-center gap-2">
-                          <Calendar size={16} className={isDarkMode ? 'text-gray-400' : 'text-gray-500'} />
-                          <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                            Assigned: {assignment.assignedDate}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Clock size={16} className={isDarkMode ? 'text-gray-400' : 'text-gray-500'} />
-                          <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                            Due: {assignment.dueDate}
-                          </span>
-                        </div>
-                        <div className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                          {assignment.type}
+                          <p className={`text-sm mb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                            {assignment.description}
+                          </p>
                         </div>
                       </div>
-                      
-                      <div className="flex items-center gap-3">
-                        {assignment.status === 'submitted' ? (
-                          <button
-                            disabled
-                            className="px-4 py-2 bg-green-100 text-green-700 rounded-lg font-medium text-sm cursor-not-allowed"
-                          >
-                            ✓ Submitted
-                          </button>
-                        ) : (
-                          <button
-                            onClick={() => handleSubmitClick(assignment)}
-                            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium text-sm"
-                          >
-                            Submit Assignment
-                          </button>
-                        )}
+
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-6 text-sm">
+                          <div className="flex items-center gap-2">
+                            <Calendar size={16} className={isDarkMode ? 'text-gray-400' : 'text-gray-500'} />
+                            <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                              Assigned: {assignment.assignedDate}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Clock size={16} className={isDarkMode ? 'text-gray-400' : 'text-gray-500'} />
+                            <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                              Due: {assignment.dueDate}
+                            </span>
+                          </div>
+                          <div className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                            {assignment.type}
+                          </div>
+                        </div>
                         
-                        <button className={`p-2 rounded-lg border ${
-                          isDarkMode 
-                            ? 'border-slate-600 text-gray-400 hover:bg-slate-700' 
-                            : 'border-gray-300 text-gray-600 hover:bg-gray-50'
-                        }`}>
-                          View Details
-                        </button>
+                        <div className="flex items-center gap-3">
+                          {assignment.status === 'submitted' ? (
+                            <button
+                              disabled
+                              className="px-4 py-2 bg-green-100 text-green-700 rounded-lg font-medium text-sm cursor-not-allowed"
+                            >
+                              ✓ Submitted
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => handleSubmitClick(assignment)}
+                              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium text-sm"
+                            >
+                              Submit Assignment
+                            </button>
+                          )}
+                          
+                          <button 
+                            onClick={() => handleDetailsClick(assignment)}
+                            className={`p-2 rounded-lg border ${
+                              isDarkMode 
+                                ? 'border-slate-600 text-gray-400 hover:bg-slate-700' 
+                                : 'border-gray-300 text-gray-600 hover:bg-gray-50'
+                            }`}
+                          >
+                            View Details
+                          </button>
+                        </div>
                       </div>
                     </div>
+                  ))
+                ) : (
+                  <div className={`text-center py-12 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                    <FileText size={48} className="mx-auto mb-4 opacity-50" />
+                    <p className="text-lg font-medium mb-2">No assignments found</p>
+                    <p className="text-sm">Try adjusting your filter criteria</p>
                   </div>
-                ))}
+                )}
               </div>
             </div>
           </div>
@@ -432,6 +540,188 @@ const StudentAssignments = () => {
       </main>
 
       <Footer isSidebarExpanded={isSidebarExpanded} />
+
+      {/* Assignment Details Modal */}
+      {showDetailsModal && selectedAssignment && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className={`max-w-3xl w-full max-h-[90vh] overflow-y-auto rounded-2xl ${
+            isDarkMode ? 'bg-slate-800' : 'bg-white'
+          }`}>
+            
+            {/* Modal Header */}
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <div>
+                <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  Assignment Details
+                </h2>
+                <div className="flex items-center gap-2 mt-2">
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(selectedAssignment.status)}`}>
+                    {selectedAssignment.status}
+                  </span>
+                  <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                    {selectedAssignment.points} Points
+                  </span>
+                </div>
+              </div>
+              <button
+                onClick={handleCloseModal}
+                className={`p-2 rounded-lg hover:bg-gray-100 ${isDarkMode ? 'text-gray-400 hover:bg-slate-700' : 'text-gray-600'}`}
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-6 space-y-6">
+              
+              {/* Basic Information */}
+              <div>
+                <h3 className={`text-lg font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  {selectedAssignment.title}
+                </h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <div className="flex items-center gap-3">
+                    <BookOpen size={20} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
+                    <div>
+                      <p className={`text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                        Subject
+                      </p>
+                      <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                        {selectedAssignment.subject}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-3">
+                    <User size={20} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
+                    <div>
+                      <p className={`text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                        Teacher
+                      </p>
+                      <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                        {selectedAssignment.teacher}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-3">
+                    <Calendar size={20} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
+                    <div>
+                      <p className={`text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                        Assigned Date
+                      </p>
+                      <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                        {selectedAssignment.assignedDate}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-3">
+                    <Clock size={20} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
+                    <div>
+                      <p className={`text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                        Due Date
+                      </p>
+                      <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                        {selectedAssignment.dueDate}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Description */}
+              <div>
+                <h4 className={`text-md font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  Description
+                </h4>
+                <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  {selectedAssignment.description}
+                </p>
+              </div>
+
+              {/* Instructions */}
+              <div>
+                <h4 className={`text-md font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  Instructions
+                </h4>
+                <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  {selectedAssignment.instructions}
+                </p>
+              </div>
+
+              {/* Submission Format */}
+              <div>
+                <h4 className={`text-md font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  Submission Format
+                </h4>
+                <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  {selectedAssignment.submissionFormat}
+                </p>
+              </div>
+
+              {/* Resources */}
+              <div>
+                <h4 className={`text-md font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  Resources
+                </h4>
+                <div className="space-y-2">
+                  {selectedAssignment.resources?.map((resource, index) => (
+                    <div key={index} className={`flex items-center gap-2 text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                      {resource}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Assignment Type and Points */}
+              <div className="flex items-center justify-between pt-4 border-t border-gray-200">
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <FileText size={20} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
+                    <span className={`text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      Type: {selectedAssignment.type}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Award size={20} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
+                    <span className={`text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      Points: {selectedAssignment.points}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Actions */}
+            <div className="flex items-center justify-end gap-3 p-6 border-t border-gray-200">
+              <button
+                onClick={handleCloseModal}
+                className={`px-4 py-2 rounded-lg font-medium ${
+                  isDarkMode 
+                    ? 'text-gray-300 hover:bg-slate-700' 
+                    : 'text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                Close
+              </button>
+              {selectedAssignment.status !== 'submitted' && (
+                <button
+                  onClick={() => {
+                    setShowDetailsModal(false);
+                    handleSubmitClick(selectedAssignment);
+                  }}
+                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
+                >
+                  Submit Assignment
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Submit Assignment Modal */}
       {showSubmitModal && selectedAssignment && (

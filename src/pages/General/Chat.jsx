@@ -30,7 +30,9 @@ import {
   PlayCircle,
   Filter,
   Download,
-  Eye
+  Eye,
+  Check,
+  CheckCheck
 } from 'lucide-react';
 
 const Messages = () => {
@@ -258,7 +260,8 @@ const Messages = () => {
               id: 1, 
               type: 'received', 
               content: `Hello! I'm ${incomingUser.name}. How can I help you?`, 
-              time: getCurrentTime() 
+              time: getCurrentTime(),
+              status: 'read' // Received messages are automatically read
             }
           ]
         }));
@@ -279,43 +282,43 @@ const Messages = () => {
   const initializeMessages = () => {
     const defaultMessages = {
       1: [
-        { id: 1, type: 'received', content: 'Hello! How are you doing today?', time: '02:30 PM' },
-        { id: 2, type: 'sent', content: 'Hi there! I\'m doing great, thanks for asking. How about you?', time: '02:30 PM' },
-        { id: 3, type: 'received', content: 'I\'m good too! I wanted to discuss about the upcoming exam schedule.', time: '02:30 PM' },
-        { id: 4, type: 'sent', content: 'Sure, I\'d be happy to discuss that. What would you like to know?', time: '02:30 PM' },
-        { id: 5, type: 'file', fileName: 'exam-checklist.pdf', fileSize: '2.46 MB', fileType: 'pdf', time: '02:30 PM' },
-        { id: 6, type: 'received', content: 'Thanks for sharing the checklist. This will be very helpful for the students.', time: '02:30 PM' }
+        { id: 1, type: 'received', content: 'Hello! How are you doing today?', time: '02:30 PM', status: 'read' },
+        { id: 2, type: 'sent', content: 'Hi there! I\'m doing great, thanks for asking. How about you?', time: '02:30 PM', status: 'read' },
+        { id: 3, type: 'received', content: 'I\'m good too! I wanted to discuss about the upcoming exam schedule.', time: '02:30 PM', status: 'read' },
+        { id: 4, type: 'sent', content: 'Sure, I\'d be happy to discuss that. What would you like to know?', time: '02:30 PM', status: 'read' },
+        { id: 5, type: 'file', fileName: 'exam-checklist.pdf', fileSize: '2.46 MB', fileType: 'pdf', time: '02:30 PM', status: 'read' },
+        { id: 6, type: 'received', content: 'Thanks for sharing the checklist. This will be very helpful for the students.', time: '02:30 PM', status: 'read' }
       ],
       2: [
-        { id: 1, type: 'received', content: 'Sir, I have a doubt in the physics assignment. Can you help me?', time: '01:45 PM' },
-        { id: 2, type: 'sent', content: 'Of course! What specific topic are you having trouble with?', time: '01:46 PM' },
-        { id: 3, type: 'image', fileName: 'diagram.png', fileSize: '1.2 MB', fileType: 'image', time: '01:47 PM' }
+        { id: 1, type: 'received', content: 'Sir, I have a doubt in the physics assignment. Can you help me?', time: '01:45 PM', status: 'read' },
+        { id: 2, type: 'sent', content: 'Of course! What specific topic are you having trouble with?', time: '01:46 PM', status: 'read' },
+        { id: 3, type: 'image', fileName: 'diagram.png', fileSize: '1.2 MB', fileType: 'image', time: '01:47 PM', status: 'read' }
       ],
       3: [
-        { id: 1, type: 'received', content: 'Thank you for the progress report. My daughter is doing well.', time: '11:30 AM' },
-        { id: 2, type: 'sent', content: 'You\'re welcome! She\'s been very dedicated to her studies.', time: '11:32 AM' },
-        { id: 3, type: 'image', fileName: 'progress-chart.jpg', fileSize: '890 KB', fileType: 'image', time: '11:33 AM' }
+        { id: 1, type: 'received', content: 'Thank you for the progress report. My daughter is doing well.', time: '11:30 AM', status: 'read' },
+        { id: 2, type: 'sent', content: 'You\'re welcome! She\'s been very dedicated to her studies.', time: '11:32 AM', status: 'read' },
+        { id: 3, type: 'image', fileName: 'progress-chart.jpg', fileSize: '890 KB', fileType: 'image', time: '11:33 AM', status: 'read' }
       ],
       4: [
-        { id: 1, type: 'received', content: 'The laboratory equipment has arrived. We can schedule the practical sessions now.', time: '10:15 AM' },
-        { id: 2, type: 'sent', content: 'Excellent! Let\'s discuss the timetable for the practical sessions.', time: '10:20 AM' }
+        { id: 1, type: 'received', content: 'The laboratory equipment has arrived. We can schedule the practical sessions now.', time: '10:15 AM', status: 'read' },
+        { id: 2, type: 'sent', content: 'Excellent! Let\'s discuss the timetable for the practical sessions.', time: '10:20 AM', status: 'read' }
       ],
       5: [
-        { id: 1, type: 'received', content: 'Ma\'am, when will the exam schedule be released?', time: '09:30 AM' },
-        { id: 2, type: 'sent', content: 'The schedule will be released next week. Stay tuned!', time: '09:35 AM' }
+        { id: 1, type: 'received', content: 'Ma\'am, when will the exam schedule be released?', time: '09:30 AM', status: 'read' },
+        { id: 2, type: 'sent', content: 'The schedule will be released next week. Stay tuned!', time: '09:35 AM', status: 'read' }
       ],
       6: [
-        { id: 1, type: 'received', content: 'The fee collection report for this month is ready for your review.', time: '08:15 AM' },
-        { id: 2, type: 'sent', content: 'Thanks! I\'ll review it today.', time: '08:20 AM' },
-        { id: 3, type: 'file', fileName: 'fee-report.xlsx', fileSize: '3.15 MB', fileType: 'document', time: '08:21 AM' }
+        { id: 1, type: 'received', content: 'The fee collection report for this month is ready for your review.', time: '08:15 AM', status: 'read' },
+        { id: 2, type: 'sent', content: 'Thanks! I\'ll review it today.', time: '08:20 AM', status: 'read' },
+        { id: 3, type: 'file', fileName: 'fee-report.xlsx', fileSize: '3.15 MB', fileType: 'document', time: '08:21 AM', status: 'read' }
       ],
       7: [
-        { id: 1, type: 'received', content: 'I\'ve uploaded the new study materials in the portal.', time: 'Yesterday' },
-        { id: 2, type: 'sent', content: 'Great! I\'ll check them out.', time: 'Yesterday' }
+        { id: 1, type: 'received', content: 'I\'ve uploaded the new study materials in the portal.', time: 'Yesterday', status: 'read' },
+        { id: 2, type: 'sent', content: 'Great! I\'ll check them out.', time: 'Yesterday', status: 'read' }
       ],
       8: [
-        { id: 1, type: 'received', content: 'Can we reschedule tomorrow\'s extra class?', time: 'Yesterday' },
-        { id: 2, type: 'sent', content: 'Sure, what time works for you?', time: 'Yesterday' }
+        { id: 1, type: 'received', content: 'Can we reschedule tomorrow\'s extra class?', time: 'Yesterday', status: 'read' },
+        { id: 2, type: 'sent', content: 'Sure, what time works for you?', time: 'Yesterday', status: 'read' }
       ]
     };
     setMessages(defaultMessages);
@@ -336,40 +339,83 @@ const Messages = () => {
     });
   };
 
+  // Update message status (sent -> delivered -> read)
+  const updateMessageStatus = (conversationId, messageId, newStatus) => {
+    setMessages(prev => ({
+      ...prev,
+      [conversationId]: prev[conversationId].map(msg =>
+        msg.id === messageId ? { ...msg, status: newStatus } : msg
+      )
+    }));
+  };
+
+  // Simulate message delivery and reading
+  const simulateMessageStatusUpdate = (conversationId, messageId) => {
+    // If recipient is online, simulate quick delivery and reading
+    const conversation = conversations.find(conv => conv.id === conversationId);
+    if (conversation && conversation.online) {
+      // Message delivered after 1 second
+      setTimeout(() => {
+        updateMessageStatus(conversationId, messageId, 'delivered');
+      }, 1000);
+
+      // Message read after 3 seconds
+      setTimeout(() => {
+        updateMessageStatus(conversationId, messageId, 'read');
+      }, 3000);
+    } else {
+      // If recipient is offline, only mark as delivered
+      setTimeout(() => {
+        updateMessageStatus(conversationId, messageId, 'delivered');
+      }, 2000);
+    }
+  };
+
   const handleSendMessage = () => {
     if ((messageInput.trim() || attachedFiles[selectedConversation.id]) && selectedConversation) {
       const newMessages = [];
+      const conversationId = selectedConversation.id;
 
       // Add text message if exists
       if (messageInput.trim()) {
-        newMessages.push({
+        const textMessage = {
           id: Date.now(),
           type: 'sent',
           content: messageInput.trim(),
-          time: getCurrentTime()
-        });
+          time: getCurrentTime(),
+          status: 'sent' // Initial status when message is sent
+        };
+        newMessages.push(textMessage);
+
+        // Simulate status update for text message
+        simulateMessageStatusUpdate(conversationId, textMessage.id);
       }
 
       // Add attached files if exist
       if (attachedFiles[selectedConversation.id]) {
         attachedFiles[selectedConversation.id].forEach(file => {
-          newMessages.push({
+          const fileMessage = {
             id: Date.now() + Math.random(),
             type: file.fileType === 'image' ? 'image' : 'file',
             fileName: file.fileName,
             fileSize: file.fileSize,
             fileType: file.fileType,
             fileUrl: file.fileUrl,
-            time: getCurrentTime()
-          });
+            time: getCurrentTime(),
+            status: 'sent' // Initial status when file is sent
+          };
+          newMessages.push(fileMessage);
+
+          // Simulate status update for file message
+          simulateMessageStatusUpdate(conversationId, fileMessage.id);
         });
       }
 
       // Add messages to the conversation
       setMessages(prev => ({
         ...prev,
-        [selectedConversation.id]: [
-          ...(prev[selectedConversation.id] || []),
+        [conversationId]: [
+          ...(prev[conversationId] || []),
           ...newMessages
         ]
       }));
@@ -597,6 +643,24 @@ const Messages = () => {
       link.href = message.fileUrl;
       link.download = message.fileName;
       link.click();
+    }
+  };
+
+  // Render message status icon
+  const renderMessageStatus = (message) => {
+    if (message.type !== 'sent' && message.type !== 'file' && message.type !== 'image') {
+      return null;
+    }
+
+    switch (message.status) {
+      case 'sent':
+        return <Check size={14} className="text-gray-400" />;
+      case 'delivered':
+        return <CheckCheck size={14} className="text-gray-400" />;
+      case 'read':
+        return <CheckCheck size={14} className="text-white" />;
+      default:
+        return <Check size={14} className="text-gray-400" />;
     }
   };
 
@@ -935,8 +999,15 @@ const Messages = () => {
                                 Download
                               </button>
                             </div>
-                            <div className={`text-xs mt-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                              {message.time}
+                            <div className={`flex items-center justify-between mt-2`}>
+                              <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                {message.time}
+                              </span>
+                              {message.type === 'sent' && (
+                                <div className="flex items-center ml-2">
+                                  {renderMessageStatus(message)}
+                                </div>
+                              )}
                             </div>
                           </div>
                         ) : message.type === 'image' ? (
@@ -968,8 +1039,15 @@ const Messages = () => {
                                 <Download size={14} />
                               </button>
                             </div>
-                            <div className={`text-xs mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                              {message.time}
+                            <div className={`flex items-center justify-between mt-1`}>
+                              <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                {message.time}
+                              </span>
+                              {message.type === 'sent' && (
+                                <div className="flex items-center ml-2">
+                                  {renderMessageStatus(message)}
+                                </div>
+                              )}
                             </div>
                           </div>
                         ) : (
@@ -979,12 +1057,21 @@ const Messages = () => {
                               : isDarkMode ? 'bg-slate-800 text-white' : 'bg-white text-gray-900'
                           }`}>
                             <p className="text-sm">{message.content}</p>
-                            <div className={`text-xs mt-1 ${
-                              message.type === 'sent' 
-                                ? 'text-blue-100' 
-                                : isDarkMode ? 'text-gray-400' : 'text-gray-500'
+                            <div className={`flex items-center justify-end gap-1 mt-1 ${
+                              message.type === 'sent' ? 'justify-end' : 'justify-start'
                             }`}>
-                              {message.time}
+                              <span className={`text-xs ${
+                                message.type === 'sent' 
+                                  ? 'text-blue-100' 
+                                  : isDarkMode ? 'text-gray-400' : 'text-gray-500'
+                              }`}>
+                                {message.time}
+                              </span>
+                              {message.type === 'sent' && (
+                                <div className="flex items-center ml-1">
+                                  {renderMessageStatus(message)}
+                                </div>
+                              )}
                             </div>
                           </div>
                         )}
@@ -1068,8 +1155,8 @@ const Messages = () => {
                     >
                       <button
                         onClick={() => handleFileAttachment('file')}
-                        className={`w-full flex items-center gap-3 p-3 rounded-lg text-left hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors ${
-                          isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                        className={`w-full flex items-center gap-3 p-3 rounded-lg text-left  transition-colors ${
+                          isDarkMode ? 'text-gray-300 hover:bg-slate-700' : 'text-gray-700 hover:bg-gray-100'
                         }`}
                       >
                         <FileText size={20} />
@@ -1077,8 +1164,8 @@ const Messages = () => {
                       </button>
                       <button
                         onClick={() => handleFileAttachment('image')}
-                        className={`w-full flex items-center gap-3 p-3 rounded-lg text-left hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors ${
-                          isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                        className={`w-full flex items-center gap-3 p-3 rounded-lg text-left transition-colors ${
+                          isDarkMode ? 'text-gray-300 hover:bg-slate-700' : 'text-gray-700 hover:bg-gray-100'
                         }`}
                       >
                         <Image size={20} />

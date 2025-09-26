@@ -13,7 +13,8 @@ import {
   AlertCircle,
   Shield,
   MessageCircle,
-  Phone
+  Phone,
+  Download
 } from 'lucide-react';
 
 const TermsConditions = () => {
@@ -22,6 +23,51 @@ const TermsConditions = () => {
 
   const toggleSidebar = () => {
     setIsSidebarExpanded(!isSidebarExpanded);
+  };
+
+  // Function to handle PDF download
+  const handleDownloadPDF = () => {
+    const pdfContent = `
+      GURUSHIKSHA TERMS & CONDITIONS
+      
+      Last Updated: January 15, 2024
+      
+      1. ACCEPTANCE OF TERMS
+      - By enrolling, you agree to be bound by these Terms and Conditions
+      - Terms may be modified; continued use constitutes acceptance
+      
+      2. EDUCATIONAL SERVICES
+      - Structured instruction in various academic subjects
+      - Class schedules determined by tuition center
+      - Study materials remain intellectual property of center
+      
+      3. FEES AND PAYMENT TERMS
+      - Monthly fees payable in advance by 5th of each month
+      - Late payment fees may apply
+      - Refunds processed according to policy
+      
+      4. STUDENT CONDUCT
+      - Punctual attendance and respectful behavior required
+      - Academic integrity must be maintained
+      - Disruptive behavior may result in termination
+      
+      5. ATTENDANCE POLICY
+      - Minimum 80% attendance required
+      - Medical certificates needed for extended absences
+      - Prior notice required for planned absences
+      
+      Contact: support@gurushikri.com | +91 (910) 456-7890
+    `;
+
+    const blob = new Blob([pdfContent], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'GuruShiksha_Terms_Conditions.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -49,6 +95,13 @@ const TermsConditions = () => {
             <p className={`text-sm mt-2 ${isDarkMode ? 'text-gray-500' : 'text-gray-600'}`}>
               Please read these terms carefully before using our tuition management services.
             </p>
+            <button 
+              onClick={handleDownloadPDF}
+              className="mt-4 px-4 py-2 bg-green-500 text-white text-sm font-medium rounded-lg hover:bg-green-600 transition-colors flex items-center gap-2"
+            >
+              <Download size={16} />
+              Download PDF
+            </button>
           </div>
 
           {/* Main Content */}

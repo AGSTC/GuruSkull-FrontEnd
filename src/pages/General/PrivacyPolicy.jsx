@@ -29,6 +29,54 @@ const PrivacyPolicy = () => {
     setIsSidebarExpanded(!isSidebarExpanded);
   };
 
+  // Function to handle PDF download
+  const handleDownloadPDF = () => {
+    // Create a PDF content (in a real app, this would be fetched from the server)
+    const pdfContent = `
+      GURUSHIKSHA PRIVACY POLICY
+      
+      Last Updated: January 15, 2024
+      
+      1. INFORMATION WE COLLECT
+      - Personal Information: Full name, contact details, date of birth
+      - Academic Information: Records, performance data, attendance
+      - Technical Information: Device info, IP address, usage patterns
+      
+      2. HOW WE USE YOUR INFORMATION
+      - Educational Services: Personalized learning, progress tracking
+      - Communication: Updates, notifications, support
+      - Administration: Enrollment management, billing
+      - Service Improvement: Analytics, feature development
+      
+      3. DATA SECURITY MEASURES
+      - Encryption: End-to-end encryption for sensitive data
+      - Access Control: Role-based permissions
+      - Regular Audits: Continuous security assessments
+      
+      4. YOUR PRIVACY RIGHTS
+      - Access, update, or delete your personal information
+      - Data portability and communication preferences
+      - Lodge complaints with supervisory authorities
+      
+      5. DATA RETENTION
+      - Student Records: 7 years for academic records
+      - Financial Records: 7 years for payment records
+      
+      Contact: privacy@gurushikri.com | www.gurushikri.com/privacy
+    `;
+
+    // Create a blob and download link
+    const blob = new Blob([pdfContent], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'GuruShiksha_Privacy_Policy.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   const privacyCommitments = [
     { title: 'Data Protection', icon: Shield, description: 'Your personal information is encrypted and secure' },
     { title: 'Transparency', icon: Eye, description: 'Clear information about data collection and usage' },
@@ -66,7 +114,11 @@ const PrivacyPolicy = () => {
             <p className={`text-sm mt-2 ${isDarkMode ? 'text-gray-500' : 'text-gray-600'}`}>
               This Privacy Policy explains how we collect, use, and protect your information.
             </p>
-            <button className="mt-4 px-4 py-2 bg-green-500 text-white text-sm font-medium rounded-lg hover:bg-green-600 transition-colors">
+            <button 
+              onClick={handleDownloadPDF}
+              className="mt-4 px-4 py-2 bg-green-500 text-white text-sm font-medium rounded-lg hover:bg-green-600 transition-colors flex items-center gap-2"
+            >
+              <Download size={16} />
               Download PDF
             </button>
           </div>

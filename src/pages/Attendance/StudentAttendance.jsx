@@ -22,41 +22,152 @@ import {
 const StudentAttendance = () => {
   const { isDarkMode } = useTheme();
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
-  const [currentMonth, setCurrentMonth] = useState('September 2025');
+  const [currentDate, setCurrentDate] = useState(new Date(2025, 8, 1)); // September 2025
 
   const toggleSidebar = () => {
     setIsSidebarExpanded(!isSidebarExpanded);
   };
 
-  // Attendance stats
+  // Function to get month name
+  const getMonthName = (date) => {
+    return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  };
+
+  // Function to navigate months
+  const navigateMonth = (direction) => {
+    setCurrentDate(prevDate => {
+      const newDate = new Date(prevDate);
+      newDate.setMonth(newDate.getMonth() + direction);
+      return newDate;
+    });
+  };
+
+  // Function to get calendar data for current month
+  const getCalendarData = (date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    
+    // Get first day of month and number of days
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const numDays = lastDay.getDate();
+    const startingDayOfWeek = firstDay.getDay(); // 0 = Sunday
+    
+    // Create calendar grid
+    const calendar = [];
+    let week = [];
+    
+    // Add empty cells for days before month starts
+    for (let i = 0; i < startingDayOfWeek; i++) {
+      week.push(null);
+    }
+    
+    // Add all days of the month
+    for (let day = 1; day <= numDays; day++) {
+      week.push(day);
+      
+      // If week is complete (7 days) or it's the last day, push week and start new one
+      if (week.length === 7 || day === numDays) {
+        // Fill remaining cells with null if needed
+        while (week.length < 7) {
+          week.push(null);
+        }
+        calendar.push([...week]);
+        week = [];
+      }
+    }
+    
+    return calendar;
+  };
+
+  // Function to get attendance data for current month
+  const getMonthAttendanceData = (date) => {
+    const monthKey = `${date.getFullYear()}-${date.getMonth()}`;
+    
+    // Sample attendance data for different months
+    const attendanceData = {
+      '2025-8': { // September 2025
+        1: 'present', 2: 'present', 3: 'present', 4: 'present', 5: 'present', 
+        7: 'present', 8: 'present', 9: 'present', 10: 'present', 11: 'present', 12: 'present',
+        14: 'present', 15: 'absent', 16: 'present', 17: 'present', 18: 'present', 19: 'present', 20: 'present',
+        21: 'present', 22: 'present', 23: 'present', 24: 'late', 25: 'present', 26: 'present', 27: 'present',
+        28: 'present', 29: 'present', 30: 'present'
+      },
+      '2025-7': { // August 2025
+        1: 'present', 2: 'present', 3: 'holiday', 4: 'holiday', 5: 'present',
+        6: 'present', 7: 'present', 8: 'present', 9: 'present', 10: 'holiday',
+        12: 'present', 13: 'present', 14: 'present', 15: 'holiday', 16: 'present',
+        17: 'holiday', 18: 'holiday', 19: 'present', 20: 'present', 21: 'present',
+        22: 'present', 23: 'present', 24: 'holiday', 25: 'holiday', 26: 'absent',
+        27: 'present', 28: 'present', 29: 'present', 30: 'present', 31: 'holiday'
+      },
+      '2025-9': { // October 2025
+        1: 'present', 2: 'holiday', 3: 'present', 4: 'holiday', 5: 'holiday',
+        6: 'present', 7: 'present', 8: 'present', 9: 'present', 10: 'present',
+        11: 'holiday', 12: 'holiday', 13: 'present', 14: 'present', 15: 'present',
+        16: 'present', 17: 'present', 18: 'holiday', 19: 'holiday', 20: 'present',
+        21: 'present', 22: 'present', 23: 'present', 24: 'present', 25: 'holiday',
+        26: 'holiday', 27: 'present', 28: 'present', 29: 'present', 30: 'present', 31: 'present'
+      }
+    };
+
+    return attendanceData[monthKey] || {};
+  };
+
+  // Function to get monthly stats based on current month
+  const getMonthlyStats = (date) => {
+    const attendanceData = getMonthAttendanceData(date);
+    const totalDays = Object.keys(attendanceData).length;
+    const presentDays = Object.values(attendanceData).filter(status => status === 'present').length;
+    const lateDays = Object.values(attendanceData).filter(status => status === 'late').length;
+    const absentDays = Object.values(attendanceData).filter(status => status === 'absent').length;
+    
+    const attendanceRate = totalDays > 0 ? Math.round(((presentDays + lateDays) / totalDays) * 100) : 0;
+    const classesAttended = presentDays + lateDays;
+    
+    return {
+      attendanceRate,
+      classesAttended,
+      presentDays,
+      absentDays,
+      totalDays
+    };
+  };
+
+  // Get current month data
+  const calendarData = getCalendarData(currentDate);
+  const attendanceStatus = getMonthAttendanceData(currentDate);
+  const monthlyStats = getMonthlyStats(currentDate);
+
+  // Update attendance stats with current month data
   const attendanceStats = [
     {
-      title: 'Overall Attendance',
-      value: '92%',
+      title: 'Monthly Attendance',
+      value: `${monthlyStats.attendanceRate}%`,
       icon: UserCheck,
       color: 'blue'
     },
     {
       title: 'Classes Attended',
-      value: '144',
+      value: monthlyStats.classesAttended.toString(),
       icon: CheckCircle,
       color: 'green'
     },
     {
       title: 'Days Present',
-      value: '12',
+      value: monthlyStats.presentDays.toString(),
       icon: Calendar,
       color: 'purple'
     },
     {
-      title: 'Attendance Rate',
-      value: '92%',
-      icon: TrendingUp,
-      color: 'cyan'
+      title: 'Days Absent',
+      value: monthlyStats.absentDays.toString(),
+      icon: XCircle,
+      color: 'red'
     }
   ];
 
-  // Subject-wise attendance
+  // Subject-wise attendance (can be updated per month if needed)
   const subjectAttendance = [
     {
       id: 1,
@@ -126,29 +237,6 @@ const StudentAttendance = () => {
     }
   ];
 
-  // Calendar data for September 2025
-  const calendarData = [
-    // Week 1
-    [null, 1, 2, 3, 4, 5, 6],
-    // Week 2  
-    [7, 8, 9, 10, 11, 12, 13],
-    // Week 3
-    [14, 15, 16, 17, 18, 19, 20],
-    // Week 4
-    [21, 22, 23, 24, 25, 26, 27],
-    // Week 5
-    [28, 29, 30, null, null, null, null]
-  ];
-
-  // Attendance status for each day
-  const attendanceStatus = {
-    1: 'present', 2: 'present', 3: 'present', 4: 'present', 5: 'present', 
-    7: 'present', 8: 'present', 9: 'present', 10: 'present', 11: 'present', 12: 'present',
-    14: 'present', 15: 'absent', 16: 'present', 17: 'present', 18: 'present', 19: 'present', 20: 'present',
-    21: 'present', 22: 'present', 23: 'present', 24: 'late', 25: 'present', 26: 'present', 27: 'present',
-    28: 'present', 29: 'present', 30: 'present'
-  };
-
   const getStatusColor = (status) => {
     switch (status) {
       case 'present':
@@ -181,7 +269,8 @@ const StudentAttendance = () => {
       blue: { iconBg: 'bg-blue-100', iconColor: 'text-blue-600' },
       green: { iconBg: 'bg-green-100', iconColor: 'text-green-600' },
       purple: { iconBg: 'bg-purple-100', iconColor: 'text-purple-600' },
-      cyan: { iconBg: 'bg-cyan-100', iconColor: 'text-cyan-600' }
+      cyan: { iconBg: 'bg-cyan-100', iconColor: 'text-cyan-600' },
+      red: { iconBg: 'bg-red-100', iconColor: 'text-red-600' }
     };
     return colorMap[color] || colorMap.blue;
   };
@@ -269,7 +358,7 @@ const StudentAttendance = () => {
                 <div className={`text-center ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   <TrendingUp size={48} className="mx-auto mb-2" />
                   <p>Attendance trend chart would go here</p>
-                  <p className="text-sm mt-1">Showing consistent 90%+ attendance</p>
+                  <p className="text-sm mt-1">Showing {monthlyStats.attendanceRate}% attendance for {getMonthName(currentDate)}</p>
                 </div>
               </div>
             </div>
@@ -340,18 +429,24 @@ const StudentAttendance = () => {
                 Attendance Calendar
               </h2>
               <div className="flex items-center gap-4">
-                <button className={`p-2 rounded-lg ${
-                  isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-gray-100'
-                }`}>
-                  <ChevronLeft size={20} className={isDarkMode ? 'text-white' : 'text-gray-600'} />
+                <button 
+                  onClick={() => navigateMonth(-1)}
+                  className={`p-2 rounded-lg transition-colors ${
+                    isDarkMode ? 'hover:bg-slate-700 text-white' : 'hover:bg-gray-100 text-gray-600'
+                  }`}
+                >
+                  <ChevronLeft size={20} />
                 </button>
-                <span className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  {currentMonth}
+                <span className={`text-lg font-semibold min-w-[180px] text-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  {getMonthName(currentDate)}
                 </span>
-                <button className={`p-2 rounded-lg ${
-                  isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-gray-100'
-                }`}>
-                  <ChevronRight size={20} className={isDarkMode ? 'text-white' : 'text-gray-600'} />
+                <button 
+                  onClick={() => navigateMonth(1)}
+                  className={`p-2 rounded-lg transition-colors ${
+                    isDarkMode ? 'hover:bg-slate-700 text-white' : 'hover:bg-gray-100 text-gray-600'
+                  }`}
+                >
+                  <ChevronRight size={20} />
                 </button>
               </div>
             </div>

@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useTheme } from '../../context/ThemeContext';
 import Header from '../../components/layout/Header';
 import Sidebar from '../../components/layout/Sidebar';
 import Footer from '../../components/layout/Footer';
+import studentProfile from '../../assets/images/student-profile.png';
 
 import { 
   User,
@@ -25,7 +26,10 @@ import {
   Trophy,
   Activity,
   BarChart3,
-  X
+  X,
+  Save,
+  Upload,
+  Trash2
 } from 'lucide-react';
 
 const StudentProfile = () => {
@@ -33,6 +37,9 @@ const StudentProfile = () => {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
   const [isEditing, setIsEditing] = useState(false);
+  const [profilePhoto, setProfilePhoto] = useState(studentProfile);
+  const [showPhotoModal, setShowPhotoModal] = useState(false);
+  const fileInputRef = useRef(null);
 
   const toggleSidebar = () => {
     setIsSidebarExpanded(!isSidebarExpanded);
@@ -59,6 +66,136 @@ const StudentProfile = () => {
   // Temporary state for editing
   const [editData, setEditData] = useState({ ...studentInfo });
 
+  // Load profile data from localStorage on component mount
+  useEffect(() => {
+    const loadProfileData = () => {
+      try {
+        const userData = JSON.parse(localStorage.getItem('user') || '{}');
+        const profileData = JSON.parse(localStorage.getItem('userProfile') || '{}');
+        
+        // Load profile photo
+        if (profileData.profilePhotoUrl) {
+          setProfilePhoto(profileData.profilePhotoUrl);
+        } else if (userData.profilePhotoUrl) {
+          setProfilePhoto(userData.profilePhotoUrl);
+        }
+        
+        // Update student info from stored data
+        if (userData.name || profileData.name) {
+          const name = profileData.name || userData.name;
+          setStudentInfo(prev => ({ ...prev, name }));
+          setEditData(prev => ({ ...prev, name }));
+        }
+        
+        if (userData.email || profileData.email) {
+          const email = profileData.email || userData.email;
+          setStudentInfo(prev => ({ ...prev, email }));
+          setEditData(prev => ({ ...prev, email }));
+        }
+        
+        if (userData.phone || profileData.phone) {
+          const phone = profileData.phone || userData.phone;
+          setStudentInfo(prev => ({ ...prev, phone }));
+          setEditData(prev => ({ ...prev, phone }));
+        }
+
+        // Load other profile data if available
+        Object.keys(profileData).forEach(key => {
+          if (studentInfo.hasOwnProperty(key)) {
+            setStudentInfo(prev => ({ ...prev, [key]: profileData[key] }));
+            setEditData(prev => ({ ...prev, [key]: profileData[key] }));
+          }
+        });
+
+      } catch (error) {
+        console.error('Error loading profile data:', error);
+      }
+    };
+
+    loadProfileData();
+  }, []);
+
+  // Save profile data to localStorage and dispatch events
+  const saveProfileData = (data) => {
+    try {
+      const existingProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+      const updatedProfile = { ...existingProfile, ...data };
+      localStorage.setItem('userProfile', JSON.stringify(updatedProfile));
+      
+      // Also update user data for immediate sync
+      const userData = JSON.parse(localStorage.getItem('user') || '{}');
+      const updatedUserData = { ...userData, ...data };
+      localStorage.setItem('user', JSON.stringify(updatedUserData));
+      
+      return updatedProfile;
+    } catch (error) {
+      console.error('Error saving profile data:', error);
+      return null;
+    }
+  };
+
+  // Update user data everywhere (Header, Sidebar, etc.)
+  const updateUserDataEverywhere = (newData) => {
+    const savedData = saveProfileData(newData);
+    if (savedData) {
+      // Dispatch events to notify Header and Sidebar
+      window.dispatchEvent(new CustomEvent('userDataChanged', {
+        detail: savedData
+      }));
+      
+      window.dispatchEvent(new CustomEvent('profileDataChanged', {
+        detail: savedData
+      }));
+    }
+  };
+
+  // Handle profile photo upload
+  const handlePhotoUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const newPhotoUrl = e.target.result;
+        setProfilePhoto(newPhotoUrl);
+        updateProfilePhotoEverywhere(newPhotoUrl);
+        setShowPhotoModal(false);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Update profile photo everywhere
+  const updateProfilePhotoEverywhere = (photoUrl) => {
+    const profileData = saveProfileData({ profilePhotoUrl: photoUrl });
+    
+    if (profileData) {
+      // Dispatch events to update Header and Sidebar
+      window.dispatchEvent(new CustomEvent('profilePhotoChanged', {
+        detail: { photoUrl }
+      }));
+
+      window.dispatchEvent(new CustomEvent('userDataChanged', {
+        detail: profileData
+      }));
+
+      window.dispatchEvent(new CustomEvent('profileDataChanged', {
+        detail: profileData
+      }));
+    }
+  };
+
+  // Handle photo removal
+  const handleRemovePhoto = () => {
+    setProfilePhoto(studentProfile);
+    updateProfilePhotoEverywhere(studentProfile);
+    setShowPhotoModal(false);
+  };
+
+  // Trigger file input
+  const triggerFileInput = () => {
+    fileInputRef.current?.click();
+  };
+
   // Handle edit functions
   const handleEditToggle = () => {
     if (isEditing) {
@@ -71,6 +208,21 @@ const StudentProfile = () => {
   const handleSaveChanges = () => {
     // Save changes
     setStudentInfo({ ...editData });
+    
+    // Update localStorage and notify other components
+    const updatedData = {
+      name: editData.name,
+      email: editData.email,
+      phone: editData.phone,
+      dateOfBirth: editData.dateOfBirth,
+      address: editData.address,
+      parentName: editData.parentName,
+      parentPhone: editData.parentPhone,
+      bloodGroup: editData.bloodGroup,
+      nationality: editData.nationality
+    };
+    
+    updateUserDataEverywhere(updatedData);
     setIsEditing(false);
   };
 
@@ -248,6 +400,59 @@ const StudentProfile = () => {
     { id: 'activities', label: 'Activities' }
   ];
 
+  // Photo Modal Component
+  const PhotoModal = () => (
+    showPhotoModal && (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className={`p-6 rounded-lg max-w-md w-full mx-4 ${isDarkMode ? 'bg-slate-800 text-white' : 'bg-white text-gray-900'}`}>
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold">Change Profile Photo</h3>
+            <button
+              onClick={() => setShowPhotoModal(false)}
+              className={`p-1 rounded ${isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-gray-100'}`}
+            >
+              <X size={20} />
+            </button>
+          </div>
+
+          <div className="text-center mb-6">
+            <img
+              src={profilePhoto}
+              alt="Current profile"
+              className="w-32 h-32 rounded-full mx-auto mb-4"
+            />
+          </div>
+
+          <div className="space-y-3">
+            <button
+              onClick={triggerFileInput}
+              className="w-full flex items-center justify-center gap-2 p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            >
+              <Upload size={18} />
+              Upload New Photo
+            </button>
+
+            <button
+              onClick={handleRemovePhoto}
+              className={`w-full flex items-center justify-center gap-2 p-3 rounded-lg border ${isDarkMode ? 'border-slate-600 hover:bg-slate-700' : 'border-gray-300 hover:bg-gray-50'}`}
+            >
+              <Trash2 size={18} />
+              Remove Photo
+            </button>
+          </div>
+
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handlePhotoUpload}
+            className="hidden"
+          />
+        </div>
+      </div>
+    )
+  );
+
   return (
     <div className={`min-h-screen w-full ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
       <Header 
@@ -273,12 +478,6 @@ const StudentProfile = () => {
               </p>
             </div>
             <div className="flex items-center gap-3">
-              <button className={`px-4 py-2 rounded-lg border ${
-                isDarkMode ? 'border-slate-600 text-white hover:bg-slate-700' : 'border-gray-300 text-gray-700 hover:bg-gray-50'
-              }`}>
-                <Download size={16} className="inline mr-2" />
-                Download Profile
-              </button>
               {isEditing ? (
                 <div className="flex items-center gap-2">
                   <button
@@ -316,10 +515,15 @@ const StudentProfile = () => {
           }`}>
             <div className="flex items-start gap-6">
               <div className="relative">
-                <div className="w-24 h-24 bg-blue-500 rounded-full flex items-center justify-center text-white text-3xl font-bold">
-                  A
-                </div>
-                <button className="absolute -bottom-2 -right-2 w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center hover:bg-blue-600">
+                <img
+                  src={profilePhoto}
+                  alt="Profile"
+                  className="w-24 h-24 rounded-full object-cover"
+                />
+                <button 
+                  onClick={() => setShowPhotoModal(true)}
+                  className="absolute -bottom-2 -right-2 w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors"
+                >
                   <Camera size={14} />
                 </button>
               </div>
@@ -343,7 +547,7 @@ const StudentProfile = () => {
                   </span>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="flex items-center gap-4 mb-4">
                   <div className="flex items-center gap-2">
                     <Mail size={16} className={isDarkMode ? 'text-gray-400' : 'text-gray-500'} />
                     <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
@@ -361,6 +565,135 @@ const StudentProfile = () => {
                     <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                       Born: {studentInfo.dateOfBirth}
                     </span>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      Nationality
+                    </label>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        value={editData.nationality}
+                        onChange={(e) => handleInputChange('nationality', e.target.value)}
+                        className={`w-full px-3 py-2 rounded-lg border ${
+                          isDarkMode 
+                            ? 'bg-slate-700 border-slate-600 text-white' 
+                            : 'bg-white border-gray-300 text-gray-900'
+                        }`}
+                      />
+                    ) : (
+                      <p className={`py-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                        {studentInfo.nationality}
+                      </p>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      Admission Date
+                    </label>
+                    <p className={`py-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      {studentInfo.admissionDate} (Read Only)
+                    </p>
+                  </div>
+                  
+                  <div className="md:col-span-3">
+                    <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      Address
+                    </label>
+                    {isEditing ? (
+                      <textarea
+                        value={editData.address}
+                        onChange={(e) => handleInputChange('address', e.target.value)}
+                        rows={2}
+                        className={`w-full px-3 py-2 rounded-lg border resize-none ${
+                          isDarkMode 
+                            ? 'bg-slate-700 border-slate-600 text-white' 
+                            : 'bg-white border-gray-300 text-gray-900'
+                        }`}
+                      />
+                    ) : (
+                      <p className={`py-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                        {studentInfo.address}
+                      </p>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      Parent/Guardian
+                    </label>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        value={editData.parentName}
+                        onChange={(e) => handleInputChange('parentName', e.target.value)}
+                        className={`w-full px-3 py-2 rounded-lg border ${
+                          isDarkMode 
+                            ? 'bg-slate-700 border-slate-600 text-white' 
+                            : 'bg-white border-gray-300 text-gray-900'
+                        }`}
+                      />
+                    ) : (
+                      <p className={`py-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                        {studentInfo.parentName}
+                      </p>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      Parent Contact
+                    </label>
+                    {isEditing ? (
+                      <input
+                        type="tel"
+                        value={editData.parentPhone}
+                        onChange={(e) => handleInputChange('parentPhone', e.target.value)}
+                        className={`w-full px-3 py-2 rounded-lg border ${
+                          isDarkMode 
+                            ? 'bg-slate-700 border-slate-600 text-white' 
+                            : 'bg-white border-gray-300 text-gray-900'
+                        }`}
+                      />
+                    ) : (
+                      <p className={`py-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                        {studentInfo.parentPhone}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      Blood Group
+                    </label>
+                    {isEditing ? (
+                      <select
+                        value={editData.bloodGroup}
+                        onChange={(e) => handleInputChange('bloodGroup', e.target.value)}
+                        className={`w-full px-3 py-2 rounded-lg border ${
+                          isDarkMode 
+                            ? 'bg-slate-700 border-slate-600 text-white' 
+                            : 'bg-white border-gray-300 text-gray-900'
+                        }`}
+                      >
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                      </select>
+                    ) : (
+                      <p className={`py-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                        {studentInfo.bloodGroup}
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -512,7 +845,7 @@ const StudentProfile = () => {
                     </label>
                     {isEditing ? (
                       <input
-                        type="date"
+                        type="text"
                         value={editData.dateOfBirth}
                         onChange={(e) => handleInputChange('dateOfBirth', e.target.value)}
                         className={`w-full px-3 py-2 rounded-lg border ${
@@ -542,115 +875,18 @@ const StudentProfile = () => {
                             : 'bg-white border-gray-300 text-gray-900'
                         }`}
                       >
-                        <option>A+</option>
-                        <option>A-</option>
-                        <option>B+</option>
-                        <option>B-</option>
-                        <option>AB+</option>
-                        <option>AB-</option>
-                        <option>O+</option>
-                        <option>O-</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
                       </select>
                     ) : (
                       <p className={`py-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                         {studentInfo.bloodGroup}
-                      </p>
-                    )}
-                  </div>
-                  
-                  <div>
-                    <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                      Nationality
-                    </label>
-                    {isEditing ? (
-                      <input
-                        type="text"
-                        value={editData.nationality}
-                        onChange={(e) => handleInputChange('nationality', e.target.value)}
-                        className={`w-full px-3 py-2 rounded-lg border ${
-                          isDarkMode 
-                            ? 'bg-slate-700 border-slate-600 text-white' 
-                            : 'bg-white border-gray-300 text-gray-900'
-                        }`}
-                      />
-                    ) : (
-                      <p className={`py-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                        {studentInfo.nationality}
-                      </p>
-                    )}
-                  </div>
-                  
-                  <div>
-                    <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                      Admission Date
-                    </label>
-                    <p className={`py-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                      {studentInfo.admissionDate} (Read Only)
-                    </p>
-                  </div>
-                  
-                  <div className="md:col-span-2">
-                    <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                      Address
-                    </label>
-                    {isEditing ? (
-                      <textarea
-                        value={editData.address}
-                        onChange={(e) => handleInputChange('address', e.target.value)}
-                        rows={2}
-                        className={`w-full px-3 py-2 rounded-lg border resize-none ${
-                          isDarkMode 
-                            ? 'bg-slate-700 border-slate-600 text-white' 
-                            : 'bg-white border-gray-300 text-gray-900'
-                        }`}
-                      />
-                    ) : (
-                      <p className={`py-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                        {studentInfo.address}
-                      </p>
-                    )}
-                  </div>
-                  
-                  <div>
-                    <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                      Parent/Guardian
-                    </label>
-                    {isEditing ? (
-                      <input
-                        type="text"
-                        value={editData.parentName}
-                        onChange={(e) => handleInputChange('parentName', e.target.value)}
-                        className={`w-full px-3 py-2 rounded-lg border ${
-                          isDarkMode 
-                            ? 'bg-slate-700 border-slate-600 text-white' 
-                            : 'bg-white border-gray-300 text-gray-900'
-                        }`}
-                      />
-                    ) : (
-                      <p className={`py-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                        {studentInfo.parentName}
-                      </p>
-                    )}
-                  </div>
-                  
-                  <div>
-                    <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                      Parent Contact
-                    </label>
-                    {isEditing ? (
-                      <input
-                        type="tel"
-                        value={editData.parentPhone}
-                        onChange={(e) => handleInputChange('parentPhone', e.target.value)}
-                        className={`w-full px-3 py-2 rounded-lg border ${
-                          isDarkMode 
-                            ? 'bg-slate-700 border-slate-600 text-white' 
-                            : 'bg-white border-gray-300 text-gray-900'
-                        }`}
-                      />
-                    ) : (
-                      <p className={`py-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                        {studentInfo.parentPhone}
                       </p>
                     )}
                   </div>
@@ -827,6 +1063,7 @@ const StudentProfile = () => {
       </main>
 
       <Footer isSidebarExpanded={isSidebarExpanded} />
+      <PhotoModal />
     </div>
   );
 };

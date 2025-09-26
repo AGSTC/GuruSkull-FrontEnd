@@ -470,54 +470,6 @@ const ParentReportsAnalytics = () => {
               </div>
             </div>
           </div>
-
-          {/* Progress Reports & Feedback */}
-          <div className={`p-6 rounded-2xl border ${
-            isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'
-          }`}>
-            <div className="flex items-center justify-between mb-6">
-              <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                Progress Reports & Feedback
-              </h2>
-              <button className="bg-purple-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-600 transition-colors">
-                Generate
-              </button>
-            </div>
-            
-            <div className="space-y-4">
-              {attendanceData.progressReports.map((report) => (
-                <div key={report.id} className={`p-4 rounded-lg border ${
-                  isDarkMode ? 'border-slate-600 bg-slate-700' : 'border-gray-200 bg-gray-50'
-                }`}>
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="flex-1">
-                      <h3 className={`font-medium mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                        {report.title}
-                      </h3>
-                      <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        {report.subject} • {report.date}
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        report.status === 'Generated' 
-                          ? 'bg-green-100 text-green-700' 
-                          : 'bg-orange-100 text-orange-700'
-                      }`}>
-                        {report.status}
-                      </span>
-                      <button className="text-blue-500 hover:text-blue-600 transition-colors">
-                        <Download className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                  <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                    <span className="font-medium">Teacher's Comment:</span> {report.comments}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
       </main>
 

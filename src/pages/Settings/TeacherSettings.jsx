@@ -1,45 +1,141 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTheme } from '../../context/ThemeContext';
 import Header from '../../components/layout/Header';
 import Sidebar from '../../components/layout/Sidebar';
 import Footer from '../../components/layout/Footer';
-import { Save, RotateCcw } from 'lucide-react';
+import { Save, RotateCcw, Check } from 'lucide-react';
 
 const TeacherSettings = () => {
-  const { isDarkMode } = useTheme();
+  const { isDarkMode, toggleTheme } = useTheme();
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
+  const [showSaveSuccess, setShowSaveSuccess] = useState(false);
   
+  // Default settings
+  const defaultSettings = {
+    language: 'English',
+    timezone: 'Asia/Kolkata (IST)',
+    theme: 'Light',
+    scheduleView: 'Week View',
+    autoSaveAssignments: true,
+    showStudentPhotos: true
+  };
+
   // Settings state
-  const [language, setLanguage] = useState('English');
-  const [timezone, setTimezone] = useState('Asia/Kolkata (IST)');
-  const [theme, setTheme] = useState('Light');
-  const [scheduleView, setScheduleView] = useState('Week View');
-  const [autoSaveAssignments, setAutoSaveAssignments] = useState(true);
-  const [showStudentPhotos, setShowStudentPhotos] = useState(true);
+  const [language, setLanguage] = useState(defaultSettings.language);
+  const [timezone, setTimezone] = useState(defaultSettings.timezone);
+  const [theme, setTheme] = useState(defaultSettings.theme);
+  const [scheduleView, setScheduleView] = useState(defaultSettings.scheduleView);
+  const [autoSaveAssignments, setAutoSaveAssignments] = useState(defaultSettings.autoSaveAssignments);
+  const [showStudentPhotos, setShowStudentPhotos] = useState(defaultSettings.showStudentPhotos);
+
+  // Load saved settings on component mount
+  useEffect(() => {
+    const savedSettings = localStorage.getItem('teacherSettings');
+    if (savedSettings) {
+      try {
+        const parsed = JSON.parse(savedSettings);
+        setLanguage(parsed.language || defaultSettings.language);
+        setTimezone(parsed.timezone || defaultSettings.timezone);
+        setTheme(parsed.theme || defaultSettings.theme);
+        setScheduleView(parsed.scheduleView || defaultSettings.scheduleView);
+        setAutoSaveAssignments(parsed.autoSaveAssignments !== undefined ? parsed.autoSaveAssignments : defaultSettings.autoSaveAssignments);
+        setShowStudentPhotos(parsed.showStudentPhotos !== undefined ? parsed.showStudentPhotos : defaultSettings.showStudentPhotos);
+      } catch (error) {
+        console.error('Error loading saved settings:', error);
+      }
+    }
+    
+    // Set initial theme based on current context
+    setTheme(isDarkMode ? 'Dark' : 'Light');
+  }, []);
+
+  // Sync theme with context when theme state changes
+  useEffect(() => {
+    if (theme === 'Dark' && !isDarkMode) {
+      toggleTheme();
+    } else if (theme === 'Light' && isDarkMode) {
+      toggleTheme();
+    }
+    // Auto theme would require additional logic based on system preference
+    if (theme === 'Auto') {
+      const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (systemDark && !isDarkMode) {
+        toggleTheme();
+      } else if (!systemDark && isDarkMode) {
+        toggleTheme();
+      }
+    }
+  }, [theme]);
 
   const toggleSidebar = () => {
     setIsSidebarExpanded(!isSidebarExpanded);
   };
 
   const handleSavePreferences = () => {
-    // Handle save logic here
-    console.log('Preferences saved:', {
+    const settings = {
       language,
       timezone,
       theme,
       scheduleView,
       autoSaveAssignments,
-      showStudentPhotos
-    });
+      showStudentPhotos,
+      savedAt: new Date().toISOString()
+    };
+
+    // Save to localStorage
+    localStorage.setItem('teacherSettings', JSON.stringify(settings));
+    
+    // Show success message
+    setShowSaveSuccess(true);
+    setTimeout(() => setShowSaveSuccess(false), 3000);
+
+    console.log('Preferences saved:', settings);
   };
 
   const handleResetToDefault = () => {
-    setLanguage('English');
-    setTimezone('Asia/Kolkata (IST)');
-    setTheme('Light');
-    setScheduleView('Week View');
-    setAutoSaveAssignments(true);
-    setShowStudentPhotos(true);
+    setLanguage(defaultSettings.language);
+    setTimezone(defaultSettings.timezone);
+    setTheme(defaultSettings.theme);
+    setScheduleView(defaultSettings.scheduleView);
+    setAutoSaveAssignments(defaultSettings.autoSaveAssignments);
+    setShowStudentPhotos(defaultSettings.showStudentPhotos);
+    
+    // Clear saved settings
+    localStorage.removeItem('teacherSettings');
+    
+    // Reset theme to light mode
+    if (isDarkMode) {
+      toggleTheme();
+    }
+  };
+
+  const handleLanguageChange = (newLanguage) => {
+    setLanguage(newLanguage);
+    // Here you would typically integrate with i18n library
+    console.log('Language changed to:', newLanguage);
+    
+    // Simulate language change effect
+    document.documentElement.lang = newLanguage.toLowerCase().substring(0, 2);
+  };
+
+  const handleTimezoneChange = (newTimezone) => {
+    setTimezone(newTimezone);
+    console.log('Timezone changed to:', newTimezone);
+    
+    // Here you would update the application's timezone context
+    // For now, we'll just update the state
+  };
+
+  const handleThemeChange = (newTheme) => {
+    setTheme(newTheme);
+    console.log('Theme changed to:', newTheme);
+  };
+
+  const handleScheduleViewChange = (newView) => {
+    setScheduleView(newView);
+    console.log('Default schedule view changed to:', newView);
+    
+    // Here you would update the schedule component's default view
   };
 
   const ToggleSwitch = ({ enabled, onChange, label, description }) => (
@@ -91,6 +187,16 @@ const TeacherSettings = () => {
             </p>
           </div>
 
+          {/* Success Message */}
+          {showSaveSuccess && (
+            <div className={`mb-6 p-4 rounded-lg border ${
+              isDarkMode ? 'bg-green-900 border-green-700 text-green-200' : 'bg-green-50 border-green-200 text-green-800'
+            } flex items-center gap-2`}>
+              <Check size={16} />
+              <span>Settings saved successfully!</span>
+            </div>
+          )}
+
           {/* Main Settings Container */}
           <div className={`p-6 rounded-2xl border ${
             isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
@@ -116,7 +222,7 @@ const TeacherSettings = () => {
                 </label>
                 <select
                   value={language}
-                  onChange={(e) => setLanguage(e.target.value)}
+                  onChange={(e) => handleLanguageChange(e.target.value)}
                   className={`w-full p-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                     isDarkMode 
                       ? 'bg-slate-700 border-slate-600 text-white' 
@@ -124,10 +230,15 @@ const TeacherSettings = () => {
                   }`}
                 >
                   <option value="English">English</option>
-                  <option value="Hindi">Hindi</option>
-                  <option value="Spanish">Spanish</option>
-                  <option value="French">French</option>
+                  <option value="Hindi">हिंदी (Hindi)</option>
+                  <option value="Spanish">Español (Spanish)</option>
+                  <option value="French">Français (French)</option>
+                  <option value="German">Deutsch (German)</option>
+                  <option value="Chinese">中文 (Chinese)</option>
                 </select>
+                <p className={`text-xs mt-1 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                  Current: {language}
+                </p>
               </div>
 
               {/* Timezone Setting */}
@@ -137,7 +248,7 @@ const TeacherSettings = () => {
                 </label>
                 <select
                   value={timezone}
-                  onChange={(e) => setTimezone(e.target.value)}
+                  onChange={(e) => handleTimezoneChange(e.target.value)}
                   className={`w-full p-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                     isDarkMode 
                       ? 'bg-slate-700 border-slate-600 text-white' 
@@ -147,8 +258,15 @@ const TeacherSettings = () => {
                   <option value="Asia/Kolkata (IST)">Asia/Kolkata (IST)</option>
                   <option value="UTC">UTC</option>
                   <option value="America/New_York (EST)">America/New_York (EST)</option>
+                  <option value="America/Los_Angeles (PST)">America/Los_Angeles (PST)</option>
                   <option value="Europe/London (GMT)">Europe/London (GMT)</option>
+                  <option value="Europe/Paris (CET)">Europe/Paris (CET)</option>
+                  <option value="Asia/Tokyo (JST)">Asia/Tokyo (JST)</option>
+                  <option value="Australia/Sydney (AEST)">Australia/Sydney (AEST)</option>
                 </select>
+                <p className={`text-xs mt-1 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                  Current: {timezone} • {new Date().toLocaleTimeString()}
+                </p>
               </div>
 
               {/* Theme Setting */}
@@ -158,7 +276,7 @@ const TeacherSettings = () => {
                 </label>
                 <select
                   value={theme}
-                  onChange={(e) => setTheme(e.target.value)}
+                  onChange={(e) => handleThemeChange(e.target.value)}
                   className={`w-full p-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                     isDarkMode 
                       ? 'bg-slate-700 border-slate-600 text-white' 
@@ -167,8 +285,11 @@ const TeacherSettings = () => {
                 >
                   <option value="Light">Light</option>
                   <option value="Dark">Dark</option>
-                  <option value="Auto">Auto</option>
+                  <option value="Auto">Auto (System)</option>
                 </select>
+                <p className={`text-xs mt-1 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                  Active: {isDarkMode ? 'Dark Mode' : 'Light Mode'}
+                </p>
               </div>
 
               {/* Schedule Default View Setting */}
@@ -178,17 +299,21 @@ const TeacherSettings = () => {
                 </label>
                 <select
                   value={scheduleView}
-                  onChange={(e) => setScheduleView(e.target.value)}
+                  onChange={(e) => handleScheduleViewChange(e.target.value)}
                   className={`w-full p-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                     isDarkMode 
                       ? 'bg-slate-700 border-slate-600 text-white' 
                       : 'bg-white border-gray-300 text-gray-900'
                   }`}
                 >
+                  <option value="Day View">Day View</option>
                   <option value="Week View">Week View</option>
                   <option value="Month View">Month View</option>
-                  <option value="Day View">Day View</option>
+                  <option value="Agenda View">Agenda View</option>
                 </select>
+                <p className={`text-xs mt-1 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                  Default view when opening schedule
+                </p>
               </div>
             </div>
 
@@ -217,11 +342,46 @@ const TeacherSettings = () => {
               </div>
             </div>
 
+            {/* Current Settings Summary */}
+            <div className={`mb-8 p-4 rounded-lg ${
+              isDarkMode ? 'bg-slate-700 border-slate-600' : 'bg-gray-50 border-gray-200'
+            } border`}>
+              <h4 className={`font-medium mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                Current Settings Summary
+              </h4>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                <div>
+                  <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Language:</span>
+                  <br />
+                  <span className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{language}</span>
+                </div>
+                <div>
+                  <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Theme:</span>
+                  <br />
+                  <span className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{theme}</span>
+                </div>
+                <div>
+                  <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Schedule:</span>
+                  <br />
+                  <span className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{scheduleView}</span>
+                </div>
+                <div>
+                  <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Auto-save:</span>
+                  <br />
+                  <span className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    {autoSaveAssignments ? 'Enabled' : 'Disabled'}
+                  </span>
+                </div>
+              </div>
+            </div>
+
             {/* Action Buttons */}
-            <div className="flex items-center gap-4 pt-6 border-t border-gray-200">
+            <div className={`flex items-center gap-4 pt-6 border-t ${
+              isDarkMode ? 'border-slate-600' : 'border-gray-200'
+            }`}>
               <button
                 onClick={handleSavePreferences}
-                className="flex items-center gap-2 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors focus:outline-none"
+                className="flex items-center gap-2 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               >
                 <Save size={16} />
                 Save Preferences
@@ -229,15 +389,21 @@ const TeacherSettings = () => {
               
               <button
                 onClick={handleResetToDefault}
-                className={`flex items-center gap-2 px-6 py-3 rounded-lg transition-colors focus:outline-none ${
+                className={`flex items-center gap-2 px-6 py-3 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 ${
                   isDarkMode 
-                    ? 'bg-slate-700 text-gray-300 hover:bg-slate-600' 
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    ? 'bg-slate-700 text-gray-300 hover:bg-slate-600 focus:ring-slate-500' 
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300 focus:ring-gray-400'
                 }`}
               >
                 <RotateCcw size={16} />
                 Reset to Default
               </button>
+              
+              <div className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                {localStorage.getItem('teacherSettings') && (
+                  <>Last saved: {new Date(JSON.parse(localStorage.getItem('teacherSettings')).savedAt).toLocaleString()}</>
+                )}
+              </div>
             </div>
           </div>
         </div>

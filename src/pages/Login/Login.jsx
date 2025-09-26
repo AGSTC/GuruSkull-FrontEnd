@@ -497,40 +497,7 @@ const LoginPage = () => {
                     Clear Dynamic Credentials
                   </button>
                 </div>
-
-                {/* Demo Credentials Section */}
-                <div className="mt-6">
-                  <div className="relative mb-4">
-                    <div className="absolute inset-0 flex items-center">
-                      <div className={`w-full border-t ${isDarkMode ? 'border-white/20' : 'border-gray-300'}`}></div>
-                    </div>
-                    <div className="relative flex justify-center text-sm">
-                      <span className={`px-4 text-xs ${isDarkMode ? 'bg-black/40 text-white/70' : 'bg-white/80 text-gray-500'}`}>
-                        Demo Credentials
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-2 text-xs">
-                    <div className={`p-2 rounded-lg border ${isDarkMode ? 'bg-white/5 border-white/10' : 'bg-gray-50 border-gray-200'}`}>
-                      <div className={`font-medium ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>Owner</div>
-                      <div className={`${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>owner / owner123</div>
-                    </div>
-                    <div className={`p-2 rounded-lg border ${isDarkMode ? 'bg-white/5 border-white/10' : 'bg-gray-50 border-gray-200'}`}>
-                      <div className={`font-medium ${isDarkMode ? 'text-green-400' : 'text-green-600'}`}>Teacher</div>
-                      <div className={`${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>teacher / teacher123</div>
-                    </div>
-                    <div className={`p-2 rounded-lg border ${isDarkMode ? 'bg-white/5 border-white/10' : 'bg-gray-50 border-gray-200'}`}>
-                      <div className={`font-medium ${isDarkMode ? 'text-orange-400' : 'text-orange-600'}`}>Student</div>
-                      <div className={`${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>student / student123</div>
-                    </div>
-                    <div className={`p-2 rounded-lg border ${isDarkMode ? 'bg-white/5 border-white/10' : 'bg-gray-50 border-gray-200'}`}>
-                      <div className={`font-medium ${isDarkMode ? 'text-purple-400' : 'text-purple-600'}`}>Parent</div>
-                      <div className={`${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>parent / parent123</div>
-                    </div>
-                  </div>
-                </div>
-
+                
                 {/* App Store Download Buttons */}
                 <div className="mt-6">
                   <div className="relative mb-4">

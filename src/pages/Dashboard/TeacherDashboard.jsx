@@ -1,5 +1,6 @@
 // TeacherDashboard.jsx
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext';
 import Header from '../../components/layout/Header';
 import Sidebar from '../../components/layout/Sidebar';
@@ -19,15 +20,68 @@ import {
   ChevronRight,
   GraduationCap,
   FileText,
-  Bell
+  Bell,
+  Megaphone
 } from 'lucide-react';
 
 const TeacherDashboard = () => {
   const { isDarkMode } = useTheme();
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
+  const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setIsSidebarExpanded(!isSidebarExpanded);
+  };
+
+  // Teacher quick actions with navigation paths
+  const quickActions = [
+    { 
+      title: 'Mark Attendance', 
+      description: 'Record student attendance', 
+      icon: UserCheck, 
+      color: 'bg-blue-500',
+      path: '/TeacherAttendanceManagement' 
+    },
+    { 
+      title: 'View Assignment', 
+      description: 'View homework/work', 
+      icon: ClipboardList, 
+      color: 'bg-orange-500',
+      path: '/TeacherAssignmentsManagement' 
+    },
+    { 
+      title: 'Send Message', 
+      description: 'Contact students or parents', 
+      icon: MessageSquare, 
+      color: 'bg-purple-500',
+      path: '/messages' 
+    },
+    { 
+      title: 'Schedule Class', 
+      description: 'Plan upcoming lessons', 
+      icon: Calendar, 
+      color: 'bg-green-500',
+      path: '/schedule' 
+    },
+    { 
+      title: 'Student Progress', 
+      description: 'View performance reports', 
+      icon: TrendingUp, 
+      color: 'bg-indigo-500',
+      path: '/TeacherReportsAnalytics' 
+    },
+    { 
+      title: 'View Announcements', 
+      description: 'View Detail Announcements', 
+      icon: Megaphone, 
+      color: 'bg-teal-500',
+      path: '/TeacherAnnouncements' 
+    }
+  ];
+
+  // Handle quick action click
+  const handleQuickActionClick = (path) => {
+    navigate(path);
   };
 
   // Teacher specific stats
@@ -86,16 +140,6 @@ const TeacherDashboard = () => {
       trend: 'up',
       color: 'indigo'
     }
-  ];
-
-  // Teacher quick actions
-  const quickActions = [
-    { title: 'Mark Attendance', description: 'Record student attendance', icon: UserCheck, color: 'bg-blue-500' },
-    { title: 'Create Assignment', description: 'Assign homework/work', icon: ClipboardList, color: 'bg-orange-500' },
-    { title: 'Send Message', description: 'Contact students or parents', icon: MessageSquare, color: 'bg-purple-500' },
-    { title: 'Schedule Class', description: 'Plan upcoming lessons', icon: Calendar, color: 'bg-green-500' },
-    { title: 'Student Progress', description: 'View performance reports', icon: TrendingUp, color: 'bg-indigo-500' },
-    { title: 'Generate Report', description: 'Create progress reports', icon: FileText, color: 'bg-teal-500' }
   ];
 
   // Today's schedule
@@ -307,7 +351,8 @@ const TeacherDashboard = () => {
                   return (
                     <button
                       key={index}
-                      className={`${action.color} text-white p-4 rounded-xl text-left transition-all hover:scale-105 hover:shadow-lg group relative`}
+                      onClick={() => handleQuickActionClick(action.path)}
+                      className={`${action.color} text-white p-4 rounded-xl text-left transition-all hover:scale-105 hover:shadow-lg group relative cursor-pointer`}
                     >
                       <div className="flex items-start justify-between mb-3">
                         <Icon size={24} className="text-white" />
@@ -329,7 +374,10 @@ const TeacherDashboard = () => {
                 <h2 className={`text-xl font-semibold text-left ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Today's Schedule
                 </h2>
-                <button className="text-blue-500 text-sm font-medium hover:text-blue-600 transition-colors">
+                <button 
+                  onClick={() => navigate('/schedule')}
+                  className="text-blue-500 text-sm font-medium hover:text-blue-600 transition-colors cursor-pointer"
+                >
                   View Full Schedule
                 </button>
               </div>
@@ -380,16 +428,23 @@ const TeacherDashboard = () => {
               <h2 className={`text-xl font-semibold text-left ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Recent Messages
               </h2>
-              <button className="text-blue-500 text-sm font-medium hover:text-blue-600 transition-colors">
+              {/* <button 
+                onClick={() => navigate('/messages/compose')}
+                className="text-blue-500 text-sm font-medium hover:text-blue-600 transition-colors cursor-pointer"
+              >
                 Compose New Message
-              </button>
+              </button> */}
             </div>
             
             <div className="space-y-4">
               {recentMessages.map((message, index) => (
-                <div key={message.id} className={`flex items-start gap-4 p-4 rounded-lg transition-colors cursor-pointer ${
-                  isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-gray-50'
-                }`}>
+                <div 
+                  key={message.id} 
+                  onClick={() => navigate('/messages')}
+                  className={`flex items-start gap-4 p-4 rounded-lg transition-colors cursor-pointer ${
+                    isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-gray-50'
+                  }`}
+                >
                   <div className="relative">
                     <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
                       message.type === 'Parent' ? 'bg-purple-100' : 'bg-green-100'
