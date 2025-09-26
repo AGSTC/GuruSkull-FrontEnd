@@ -426,9 +426,7 @@ const ParentDashboard = () => {
                 <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Upcoming Events
                 </h2>
-                <button className="text-blue-500 text-sm font-medium hover:text-blue-600 transition-colors">
-                  View Calendar
-                </button>
+    
               </div>
               
               <div className="space-y-4 max-h-80 overflow-y-auto">
