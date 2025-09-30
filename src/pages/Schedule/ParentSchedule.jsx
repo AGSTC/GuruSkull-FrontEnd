@@ -160,35 +160,35 @@ const ParentSchedule = () => {
 
       <Sidebar isExpanded={isSidebarExpanded} activeItem="schedule" />
 
-      <main className={`transition-all duration-300 pt-20 pb-16 min-h-screen ${
-        isSidebarExpanded ? 'ml-64' : 'ml-16'
-      }`}>
-        <div className="w-full h-full px-6 py-6">
+      <main className={`transition-all duration-300 ${
+        isSidebarExpanded ? 'ml-0 md:ml-48 lg:ml-64' : 'ml-0 md:ml-16'
+      } pt-16 md:pt-20 pb-12 md:pb-16 min-h-screen overflow-x-hidden`}>
+        <div className="w-full h-full px-3 sm:px-4 md:px-6 py-4 md:py-6">
           
           {/* Header */}
-          <div className="text-left mb-8">
-            <h1 className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <div className="text-left mb-4 md:mb-6 lg:mb-8">
+            <h1 className={`text-xl sm:text-2xl md:text-3xl font-bold mb-1 md:mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               Schedule
             </h1>
-            <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
+            <p className={`text-sm md:text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
               View your child's timetable
             </p>
           </div>
 
           {/* Select Child */}
-          <div className={`p-6 rounded-2xl border mb-8 ${
+          <div className={`p-4 md:p-6 rounded-xl md:rounded-2xl border mb-6 md:mb-8 ${
             isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'
           }`}>
-            <h2 className={`text-xl font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            <h2 className={`text-lg md:text-xl font-semibold mb-3 md:mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               Select Child
             </h2>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
               {children.map((child, index) => (
                 <div
                   key={child.id}
                   onClick={() => setSelectedChild(index)}
-                  className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                  className={`p-3 md:p-4 rounded-lg md:rounded-xl border-2 cursor-pointer transition-all ${
                     selectedChild === index
                       ? 'border-blue-500 bg-blue-50'
                       : isDarkMode 
@@ -196,30 +196,30 @@ const ParentSchedule = () => {
                         : 'border-gray-200 hover:border-gray-300 bg-white'
                   }`}
                 >
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3 md:gap-4">
                     <div className="relative">
                       <img
                         src={child.image}
                         alt={child.name}
-                        className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm"
+                        className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover border-2 border-white shadow-sm"
                         onError={(e) => {
                           e.target.style.display = 'none';
                           e.target.nextSibling.style.display = 'flex';
                         }}
                       />
                       <div 
-                        className={`w-12 h-12 rounded-full hidden items-center justify-center text-white text-lg font-bold ${child.color}`}
+                        className={`w-10 h-10 md:w-12 md:h-12 rounded-full hidden items-center justify-center text-white text-base md:text-lg font-bold ${child.color}`}
                       >
                         {child.avatar}
                       </div>
                     </div>
-                    <div>
-                      <h3 className={`font-semibold ${
+                    <div className="flex-1 min-w-0">
+                      <h3 className={`font-semibold text-sm md:text-base truncate ${
                         selectedChild === index ? 'text-blue-700' : isDarkMode ? 'text-white' : 'text-gray-900'
                       }`}>
                         {child.name}
                       </h3>
-                      <p className={`text-sm ${
+                      <p className={`text-xs md:text-sm ${
                         selectedChild === index ? 'text-blue-600' : isDarkMode ? 'text-gray-400' : 'text-gray-600'
                       }`}>
                         {child.class}
@@ -227,7 +227,7 @@ const ParentSchedule = () => {
                     </div>
                     {selectedChild === index && (
                       <div className="ml-auto">
-                        <span className="text-blue-500 text-sm">✓ Selected</span>
+                        <span className="text-blue-500 text-xs md:text-sm">✓ Selected</span>
                       </div>
                     )}
                   </div>
@@ -237,143 +237,145 @@ const ParentSchedule = () => {
           </div>
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div className="bg-green-500 p-6 rounded-2xl text-white">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-6 md:mb-8">
+            <div className="bg-green-500 p-4 md:p-6 rounded-xl md:rounded-2xl text-white">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-white/80 text-sm font-medium mb-1">
+                <div className="flex-1 min-w-0">
+                  <p className="text-white/80 text-xs md:text-sm font-medium mb-1">
                     Present Days
                   </p>
-                  <p className="text-3xl font-bold">
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold mb-1">
                     {currentChild.stats.attendance.value}
                   </p>
-                  <p className="text-white/80 text-xs mt-1">
+                  <p className="text-white/80 text-xs">
                     22 Days classes attended
                   </p>
                 </div>
-                <div className="bg-white/20 p-3 rounded-xl">
-                  <span className="text-2xl">📅</span>
+                <div className="bg-white/20 p-2 md:p-3 rounded-lg md:rounded-xl flex-shrink-0 ml-3">
+                  <span className="text-lg md:text-2xl">📅</span>
                 </div>
               </div>
             </div>
 
-            <div className="bg-blue-500 p-6 rounded-2xl text-white">
+            <div className="bg-blue-500 p-4 md:p-6 rounded-xl md:rounded-2xl text-white">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-white/80 text-sm font-medium mb-1">
+                <div className="flex-1 min-w-0">
+                  <p className="text-white/80 text-xs md:text-sm font-medium mb-1">
                     Total Days
                   </p>
-                  <p className="text-3xl font-bold">
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold mb-1">
                     {currentChild.stats.totalAttendance.value}
                   </p>
-                  <p className="text-white/80 text-xs mt-1">
+                  <p className="text-white/80 text-xs">
                     25 days class periods
                   </p>
                 </div>
-                <div className="bg-white/20 p-3 rounded-xl">
-                  <span className="text-2xl">📊</span>
+                <div className="bg-white/20 p-2 md:p-3 rounded-lg md:rounded-xl flex-shrink-0 ml-3">
+                  <span className="text-lg md:text-2xl">📊</span>
                 </div>
               </div>
             </div>
 
-            <div className="bg-purple-500 p-6 rounded-2xl text-white">
+            <div className="bg-purple-500 p-4 md:p-6 rounded-xl md:rounded-2xl text-white">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-white/80 text-sm font-medium mb-1">
+                <div className="flex-1 min-w-0">
+                  <p className="text-white/80 text-xs md:text-sm font-medium mb-1">
                     Study Hours
                   </p>
-                  <p className="text-3xl font-bold">
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold mb-1">
                     {currentChild.stats.totalStudyTime.value}
                   </p>
-                  <p className="text-white/80 text-xs mt-1">
+                  <p className="text-white/80 text-xs">
                     5h total study time per week
                   </p>
                 </div>
-                <div className="bg-white/20 p-3 rounded-xl">
-                  <span className="text-2xl">⏰</span>
+                <div className="bg-white/20 p-2 md:p-3 rounded-lg md:rounded-xl flex-shrink-0 ml-3">
+                  <span className="text-lg md:text-2xl">⏰</span>
                 </div>
               </div>
             </div>
 
-            <div className="bg-orange-500 p-6 rounded-2xl text-white">
+            <div className="bg-orange-500 p-4 md:p-6 rounded-xl md:rounded-2xl text-white">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-white/80 text-sm font-medium mb-1">
+                <div className="flex-1 min-w-0">
+                  <p className="text-white/80 text-xs md:text-sm font-medium mb-1">
                     Next Class
                   </p>
-                  <p className="text-3xl font-bold">
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold mb-1">
                     {currentChild.stats.nextClass.value}
                   </p>
-                  <p className="text-white/80 text-xs mt-1">
+                  <p className="text-white/80 text-xs">
                     Next class at 9:00 AM
                   </p>
                 </div>
-                <div className="bg-white/20 p-3 rounded-xl">
-                  <span className="text-2xl">🕘</span>
+                <div className="bg-white/20 p-2 md:p-3 rounded-lg md:rounded-xl flex-shrink-0 ml-3">
+                  <span className="text-lg md:text-2xl">🕘</span>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Weekly Schedule */}
-          <div className={`p-6 rounded-2xl border ${
+          <div className={`p-4 md:p-6 rounded-xl md:rounded-2xl border ${
             isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'
           }`}>
-            <div className="flex items-center justify-between mb-6">
-              <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 md:mb-6 gap-3 sm:gap-0">
+              <h2 className={`text-lg md:text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Weekly Schedule
               </h2>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-xs md:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Class timetable for the current week
               </p>
             </div>
             
             <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr>
-                    <th className={`text-left p-3 font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                      Time
-                    </th>
-                    {days.map((day) => (
-                      <th key={day} className={`text-center p-3 font-medium min-w-32 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                        {day}
+              <div className="min-w-full" style={{ minWidth: '800px' }}>
+                <table className="w-full">
+                  <thead>
+                    <tr>
+                      <th className={`text-left p-2 md:p-3 font-medium text-xs md:text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                        Time
                       </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {Array.from(new Set(Object.values(currentChild.schedule).flat().map(item => item.time))).map((time) => (
-                    <tr key={time}>
-                      <td className={`p-3 font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        {time}
-                      </td>
-                      {days.map((day) => {
-                        const classItem = currentChild.schedule[day].find(item => item.time === time);
-                        return (
-                          <td key={day} className="p-2">
-                            {classItem && (
-                              <div className={`p-3 rounded-lg border ${getSubjectColor(classItem.subject)}`}>
-                                <div className="font-medium text-sm">{classItem.subject}</div>
-                                {classItem.teacher && (
-                                  <div className="text-xs mt-1">{classItem.teacher}</div>
-                                )}
-                                {classItem.room && (
-                                  <div className="text-xs">{classItem.room}</div>
-                                )}
-                              </div>
-                            )}
-                          </td>
-                        );
-                      })}
+                      {days.map((day) => (
+                        <th key={day} className={`text-center p-2 md:p-3 font-medium text-xs md:text-sm min-w-24 md:min-w-32 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                          {day}
+                        </th>
+                      ))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {Array.from(new Set(Object.values(currentChild.schedule).flat().map(item => item.time))).map((time) => (
+                      <tr key={time}>
+                        <td className={`p-2 md:p-3 font-medium text-xs md:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                          {time}
+                        </td>
+                        {days.map((day) => {
+                          const classItem = currentChild.schedule[day].find(item => item.time === time);
+                          return (
+                            <td key={day} className="p-1 md:p-2">
+                              {classItem && (
+                                <div className={`p-2 md:p-3 rounded border text-xs md:text-sm ${getSubjectColor(classItem.subject)}`}>
+                                  <div className="font-medium truncate">{classItem.subject}</div>
+                                  {classItem.teacher && (
+                                    <div className="text-xs mt-1 truncate">{classItem.teacher}</div>
+                                  )}
+                                  {classItem.room && (
+                                    <div className="text-xs truncate">{classItem.room}</div>
+                                  )}
+                                </div>
+                              )}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
 
-            <div className="mt-6 text-center">
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+            <div className="mt-4 md:mt-6 text-center">
+              <p className={`text-xs md:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 * Click on any class to view more details | Total Classes: 25 hours | School Hours: 9:00 AM - 4:00 PM
               </p>
             </div>

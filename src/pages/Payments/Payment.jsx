@@ -4,7 +4,7 @@ import Header from '../../components/layout/Header';
 import Sidebar from '../../components/layout/Sidebar';
 import Footer from '../../components/layout/Footer';
 
-import { 
+import {
   Search,
   Filter,
   Download,
@@ -146,11 +146,11 @@ const Payment = () => {
     const paidAmount = studentPayments
       .filter(p => p.status === 'Paid')
       .reduce((sum, p) => sum + parseInt(p.amount.replace(/[^0-9]/g, '')), 0);
-    
+
     const pendingAmount = studentPayments
       .filter(p => p.status === 'Pending')
       .reduce((sum, p) => sum + parseInt(p.amount.replace(/[^0-9]/g, '')), 0);
-    
+
     const overdueAmount = studentPayments
       .filter(p => p.status === 'Overdue')
       .reduce((sum, p) => sum + parseInt(p.amount.replace(/[^0-9]/g, '')), 0);
@@ -336,8 +336,8 @@ const Payment = () => {
       return;
     }
 
-    const newId = studentPayments.length > 0 
-      ? Math.max(...studentPayments.map(p => p.id)) + 1 
+    const newId = studentPayments.length > 0
+      ? Math.max(...studentPayments.map(p => p.id)) + 1
       : 1;
 
     const newPaymentObj = new Payments(
@@ -357,10 +357,10 @@ const Payment = () => {
       date: new Date().toISOString().split('T')[0],
       status: 'Pending'
     });
-    
+
     // Reset filter to show all payments including the new one
     setActiveFilter('all');
-    
+
     alert('Payment added successfully!');
   };
 
@@ -380,7 +380,7 @@ const Payment = () => {
       return;
     }
 
-    const updatedRefunds = refunds.map(refund => 
+    const updatedRefunds = refunds.map(refund =>
       refund.status === 'Pending' ? { ...refund, status: 'Processing' } : refund
     );
     setRefunds(updatedRefunds);
@@ -414,8 +414,8 @@ const Payment = () => {
       date: teacher.date
     }));
 
-    const payrollBlob = new Blob([JSON.stringify(payrollData, null, 2)], { 
-      type: 'application/json' 
+    const payrollBlob = new Blob([JSON.stringify(payrollData, null, 2)], {
+      type: 'application/json'
     });
     const url = URL.createObjectURL(payrollBlob);
     const a = document.createElement('a');
@@ -449,58 +449,57 @@ const Payment = () => {
 
   return (
     <div className={`min-h-screen w-full ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
-      <Header 
-        isSidebarExpanded={isSidebarExpanded} 
+      <Header
+        isSidebarExpanded={isSidebarExpanded}
         toggleSidebar={toggleSidebar}
       />
 
       <Sidebar isExpanded={isSidebarExpanded} activeItem="payments" />
 
-      <main className={`transition-all duration-300 pt-20 pb-16 min-h-screen ${
-        isSidebarExpanded ? 'ml-64' : 'ml-16'
-      }`}>
-        <div className="w-full h-full px-6 py-6">
-          
+      <main className={`transition-all duration-300 ${isSidebarExpanded ? 'ml-0 md:ml-48 lg:ml-64' : 'ml-0 md:ml-16'
+        } pt-16 md:pt-20 pb-12 md:pb-16 min-h-screen overflow-x-hidden`}>
+        <div className="w-full h-full px-3 sm:px-4 md:px-6 py-4 md:py-6">
+
           {/* Header */}
-          <div className="flex justify-between items-start mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6 md:mb-8">
             <div className="text-left">
-              <h1 className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h1 className={`text-2xl sm:text-3xl font-bold mb-1 md:mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Payment Management
               </h1>
-              <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
-                Comprehensive control financial management for your education institute
+              <p className={`text-sm md:text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
+                Comprehensive financial management for your education institute
               </p>
             </div>
-            <div className="flex gap-3">
-              <button 
+            <div className="flex gap-2 md:gap-3">
+              <button
                 onClick={handleExport}
-                className={`px-4 py-2 border rounded-lg flex items-center gap-2 ${
-                  isDarkMode ? 'border-slate-600 text-white hover:bg-slate-700' : 'border-gray-300 text-gray-700 hover:bg-gray-50'
-                }`}
+                className={`flex-1 sm:flex-none px-3 md:px-4 py-2 border rounded-lg flex items-center justify-center gap-2 text-sm md:text-base ${isDarkMode ? 'border-slate-600 text-white hover:bg-slate-700' : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                  }`}
               >
                 <Download size={16} />
-                Bulk Export
+                <span className="hidden sm:inline">Export</span>
               </button>
-              <button 
+              <button
                 onClick={() => setShowAddPaymentModal(true)}
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg flex items-center gap-2 hover:bg-blue-600"
+                className="flex-1 sm:flex-none px-3 md:px-4 py-2 bg-blue-500 text-white rounded-lg flex items-center justify-center gap-2 hover:bg-blue-600 text-sm md:text-base"
               >
                 <Plus size={16} />
-                Add Payment
+                <span className="hidden sm:inline">Add Payment</span>
+                <span className="sm:hidden">Add</span>
               </button>
             </div>
           </div>
 
+
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
             {stats.map((stat, index) => (
               <div
                 key={index}
-                className={`p-6 rounded-2xl border ${
-                  isDarkMode 
-                    ? 'bg-slate-800 border-slate-700' 
-                    : 'bg-white border-gray-300 shadow-sm'
-                }`}
+                className={`p-6 rounded-2xl border ${isDarkMode
+                  ? 'bg-slate-800 border-slate-700'
+                  : 'bg-white border-gray-300 shadow-sm'
+                  }`}
               >
                 <h3 className={`text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   {stat.title}
@@ -508,9 +507,8 @@ const Payment = () => {
                 <p className={`text-2xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   {stat.value}
                 </p>
-                <div className={`flex items-center gap-1 text-sm ${
-                  stat.trend === 'up' ? 'text-green-600' : 'text-red-600'
-                }`}>
+                <div className={`flex items-center gap-1 text-sm ${stat.trend === 'up' ? 'text-green-600' : 'text-red-600'
+                  }`}>
                   {stat.trend === 'up' ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
                   <span>{stat.change}</span>
                 </div>
@@ -519,9 +517,8 @@ const Payment = () => {
           </div>
 
           {/* Payment Management Chart */}
-          <div className={`p-6 rounded-2xl border mb-8 ${
-            isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
-          }`}>
+          <div className={`p-6 rounded-2xl border mb-8 ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
+            }`}>
             <div className="flex justify-between items-center mb-6">
               <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Payment Management
@@ -541,22 +538,22 @@ const Payment = () => {
                 </div>
               </div>
             </div>
-            
+
             {/* Simple Bar Chart Representation */}
             <div className="flex items-end justify-between h-64 px-4">
               {chartData.map((data, index) => (
                 <div key={index} className="flex flex-col items-center gap-1">
                   <div className="flex items-end gap-1">
-                    <div 
-                      className="w-4 bg-blue-500 rounded-t" 
+                    <div
+                      className="w-4 bg-blue-500 rounded-t"
                       style={{ height: `${data.income}px` }}
                     ></div>
-                    <div 
-                      className="w-4 bg-orange-500 rounded-t" 
+                    <div
+                      className="w-4 bg-orange-500 rounded-t"
                       style={{ height: `${data.pending}px` }}
                     ></div>
-                    <div 
-                      className="w-4 bg-red-500 rounded-t" 
+                    <div
+                      className="w-4 bg-red-500 rounded-t"
                       style={{ height: `${data.overdue}px` }}
                     ></div>
                   </div>
@@ -569,43 +566,40 @@ const Payment = () => {
           </div>
 
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-8">
-            
+
             {/* Student Payment */}
-            <div className={`p-6 rounded-2xl border ${
-              isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
-            }`}>
+            <div className={`p-6 rounded-2xl border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
+              }`}>
               <div className="flex justify-between items-center mb-6">
                 <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Student Payment
                 </h2>
                 <div className="flex gap-2">
-                  <button 
+                  <button
                     onClick={() => setActiveFilter('all')}
-                    className={`px-3 py-1 text-xs rounded-lg ${
-                      activeFilter === 'all' 
-                        ? 'bg-blue-500 text-white' 
-                        : isDarkMode 
-                          ? 'bg-slate-700 text-white' 
-                          : 'bg-gray-100 text-gray-700'
-                    }`}
+                    className={`px-3 py-1 text-xs rounded-lg ${activeFilter === 'all'
+                      ? 'bg-blue-500 text-white'
+                      : isDarkMode
+                        ? 'bg-slate-700 text-white'
+                        : 'bg-gray-100 text-gray-700'
+                      }`}
                   >
                     All Payment
                   </button>
-                  <button 
+                  <button
                     onClick={() => setActiveFilter('due')}
-                    className={`px-3 py-1 text-xs rounded-lg ${
-                      activeFilter === 'due' 
-                        ? 'bg-blue-500 text-white' 
-                        : isDarkMode 
-                          ? 'bg-slate-700 text-white' 
-                          : 'bg-gray-100 text-gray-700'
-                    }`}
+                    className={`px-3 py-1 text-xs rounded-lg ${activeFilter === 'due'
+                      ? 'bg-blue-500 text-white'
+                      : isDarkMode
+                        ? 'bg-slate-700 text-white'
+                        : 'bg-gray-100 text-gray-700'
+                      }`}
                   >
                     Due Payment
                   </button>
                 </div>
               </div>
-              
+
               <div className="space-y-3 max-h-80 overflow-y-auto">
                 {filteredPayments.length === 0 ? (
                   <div className={`text-center py-8 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -637,13 +631,12 @@ const Payment = () => {
             </div>
 
             {/* Payment Methods */}
-            <div className={`p-6 rounded-2xl border ${
-              isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
-            }`}>
+            <div className={`p-6 rounded-2xl border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
+              }`}>
               <h2 className={`text-xl font-semibold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Payment Methods
               </h2>
-              
+
               <div className="space-y-4">
                 {paymentMethods.map((method, index) => (
                   <div key={index}>
@@ -668,16 +661,15 @@ const Payment = () => {
           </div>
 
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-8">
-            
+
             {/* Payment Reminders */}
-            <div className={`p-6 rounded-2xl border ${
-              isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
-            }`}>
+            <div className={`p-6 rounded-2xl border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
+              }`}>
               <div className="flex justify-between items-center mb-6">
                 <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Payment Reminders
                 </h2>
-                <button 
+                <button
                   onClick={handleSendReminder}
                   className="px-3 py-1 bg-red-500 text-white text-xs rounded-lg flex items-center gap-1 hover:bg-red-600"
                 >
@@ -685,7 +677,7 @@ const Payment = () => {
                   Send Reminder
                 </button>
               </div>
-              
+
               <div className="space-y-3">
                 {paymentReminders.map((reminder, index) => (
                   <div key={index} className={`p-4 rounded-lg ${reminder.bgColor}`}>
@@ -702,18 +694,16 @@ const Payment = () => {
             </div>
 
             {/* Installment Plans */}
-            <div className={`p-6 rounded-2xl border ${
-              isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
-            }`}>
+            <div className={`p-6 rounded-2xl border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
+              }`}>
               <h2 className={`text-xl font-semibold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Installment Plans
               </h2>
-              
+
               <div className="space-y-4">
                 {installmentPlans.map((plan, index) => (
-                  <div key={index} className={`p-4 rounded-lg ${
-                    isDarkMode ? 'bg-slate-700' : 'bg-blue-50'
-                  }`}>
+                  <div key={index} className={`p-4 rounded-lg ${isDarkMode ? 'bg-slate-700' : 'bg-blue-50'
+                    }`}>
                     <div className="flex justify-between items-start mb-2">
                       <p className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                         {plan.name}
@@ -737,15 +727,14 @@ const Payment = () => {
           </div>
 
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-8">
-            
+
             {/* Scholarships */}
-            <div className={`p-6 rounded-2xl border ${
-              isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
-            }`}>
+            <div className={`p-6 rounded-2xl border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
+              }`}>
               <h2 className={`text-xl font-semibold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Scholarships
               </h2>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {scholarships.map((scholarship, index) => (
                   <div key={index} className={`p-4 rounded-lg bg-purple-100`}>
@@ -763,14 +752,13 @@ const Payment = () => {
             </div>
 
             {/* Refunds & Adjustments */}
-            <div className={`p-6 rounded-2xl border ${
-              isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
-            }`}>
+            <div className={`p-6 rounded-2xl border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
+              }`}>
               <div className="flex justify-between items-center mb-6">
                 <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Refunds & Adjustments
                 </h2>
-                <button 
+                <button
                   onClick={handleProcessRefund}
                   className="px-3 py-1 bg-orange-500 text-white text-xs rounded-lg flex items-center gap-1 hover:bg-orange-600"
                 >
@@ -778,7 +766,7 @@ const Payment = () => {
                   Process Refund
                 </button>
               </div>
-              
+
               <div className="space-y-3">
                 {refunds.map((refund, index) => (
                   <div key={index} className={`p-4 rounded-lg bg-orange-50`}>
@@ -800,15 +788,14 @@ const Payment = () => {
           </div>
 
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-8">
-            
+
             {/* Banking Overview */}
-            <div className={`p-6 rounded-2xl border ${
-              isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
-            }`}>
+            <div className={`p-6 rounded-2xl border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
+              }`}>
               <h2 className={`text-xl font-semibold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Banking Overview
               </h2>
-              
+
               <div className="space-y-4">
                 {bankingData.map((bank, index) => (
                   <div key={index} className={`p-4 rounded-lg ${bank.bgColor}`}>
@@ -821,8 +808,8 @@ const Payment = () => {
                     </div>
                   </div>
                 ))}
-                
-                <button 
+
+                <button
                   onClick={handleReconcileAccounts}
                   className="w-full py-3 bg-teal-500 text-white font-medium rounded-lg hover:bg-teal-600 transition-colors flex items-center justify-center gap-2"
                 >
@@ -834,22 +821,21 @@ const Payment = () => {
           </div>
 
           {/* Teacher Payment */}
-          <div className={`p-6 rounded-2xl border mb-8 ${
-            isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
-          }`}>
+          <div className={`p-6 rounded-2xl border mb-8 ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
+            }`}>
             <div className="flex justify-between items-center mb-6">
               <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Teacher Payment
               </h2>
               <div className="flex gap-2">
-                <button 
+                <button
                   onClick={handlePayAllTeachers}
                   className="px-3 py-1 bg-green-500 text-white text-xs rounded-lg flex items-center gap-1 hover:bg-green-600"
                 >
                   <DollarSign size={14} />
                   Pay All
                 </button>
-                <button 
+                <button
                   onClick={handleGeneratePayroll}
                   className="px-3 py-1 bg-blue-500 text-white text-xs rounded-lg flex items-center gap-1 hover:bg-blue-600"
                 >
@@ -858,7 +844,7 @@ const Payment = () => {
                 </button>
               </div>
             </div>
-            
+
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
@@ -922,15 +908,14 @@ const Payment = () => {
           </div>
 
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-            
+
             {/* Expense Breakdown */}
-            <div className={`p-6 rounded-2xl border ${
-              isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
-            }`}>
+            <div className={`p-6 rounded-2xl border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
+              }`}>
               <h2 className={`text-xl font-semibold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Expense Breakdown
               </h2>
-              
+
               <div className="space-y-4">
                 {expenses.map((expense, index) => (
                   <div key={index} className="flex justify-between items-center">
@@ -949,26 +934,23 @@ const Payment = () => {
             </div>
 
             {/* Profit Analysis */}
-            <div className={`p-6 rounded-2xl border ${
-              isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
-            }`}>
+            <div className={`p-6 rounded-2xl border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
+              }`}>
               <h2 className={`text-xl font-semibold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Profit Analysis
               </h2>
-              
+
               <div className="space-y-4">
                 {profitData.map((profit, index) => (
-                  <div key={index} className={`p-4 rounded-lg ${
-                    profit.category === 'Total Revenue' ? 'bg-green-50' :
+                  <div key={index} className={`p-4 rounded-lg ${profit.category === 'Total Revenue' ? 'bg-green-50' :
                     profit.category === 'Total Expenses' ? 'bg-red-50' :
-                    'bg-blue-50'
-                  }`}>
+                      'bg-blue-50'
+                    }`}>
                     <div className="flex justify-between items-center">
-                      <span className={`font-medium ${
-                        profit.category === 'Total Revenue' ? 'text-green-800' :
+                      <span className={`font-medium ${profit.category === 'Total Revenue' ? 'text-green-800' :
                         profit.category === 'Total Expenses' ? 'text-red-800' :
-                        'text-blue-800'
-                      }`}>
+                          'text-blue-800'
+                        }`}>
                         {profit.category}
                       </span>
                       <span className={`text-lg font-bold ${profit.color}`}>
@@ -986,14 +968,13 @@ const Payment = () => {
       {/* Add Payment Modal */}
       {showAddPaymentModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className={`p-6 rounded-2xl w-full max-w-md ${
-            isDarkMode ? 'bg-slate-800' : 'bg-white'
-          }`}>
+          <div className={`p-6 rounded-2xl w-full max-w-md ${isDarkMode ? 'bg-slate-800' : 'bg-white'
+            }`}>
             <div className="flex justify-between items-center mb-4">
               <h3 className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Add New Payment
               </h3>
-              <button 
+              <button
                 onClick={handleModalClose}
                 className={`p-1 rounded-full ${isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-gray-100'}`}
               >
@@ -1008,12 +989,11 @@ const Payment = () => {
                 <input
                   type="text"
                   value={newPayment.studentName}
-                  onChange={(e) => setNewPayment({...newPayment, studentName: e.target.value})}
-                  className={`w-full p-2 border rounded-lg ${
-                    isDarkMode 
-                      ? 'bg-slate-700 border-slate-600 text-white' 
-                      : 'bg-white border-gray-300 text-gray-900'
-                  }`}
+                  onChange={(e) => setNewPayment({ ...newPayment, studentName: e.target.value })}
+                  className={`w-full p-2 border rounded-lg ${isDarkMode
+                    ? 'bg-slate-700 border-slate-600 text-white'
+                    : 'bg-white border-gray-300 text-gray-900'
+                    }`}
                   placeholder="Enter student name"
                 />
               </div>
@@ -1024,12 +1004,11 @@ const Payment = () => {
                 <input
                   type="number"
                   value={newPayment.amount}
-                  onChange={(e) => setNewPayment({...newPayment, amount: e.target.value})}
-                  className={`w-full p-2 border rounded-lg ${
-                    isDarkMode 
-                      ? 'bg-slate-700 border-slate-600 text-white' 
-                      : 'bg-white border-gray-300 text-gray-900'
-                  }`}
+                  onChange={(e) => setNewPayment({ ...newPayment, amount: e.target.value })}
+                  className={`w-full p-2 border rounded-lg ${isDarkMode
+                    ? 'bg-slate-700 border-slate-600 text-white'
+                    : 'bg-white border-gray-300 text-gray-900'
+                    }`}
                   placeholder="Enter amount"
                 />
               </div>
@@ -1040,12 +1019,11 @@ const Payment = () => {
                 <input
                   type="date"
                   value={newPayment.date}
-                  onChange={(e) => setNewPayment({...newPayment, date: e.target.value})}
-                  className={`w-full p-2 border rounded-lg ${
-                    isDarkMode 
-                      ? 'bg-slate-700 border-slate-600 text-white' 
-                      : 'bg-white border-gray-300 text-gray-900'
-                  }`}
+                  onChange={(e) => setNewPayment({ ...newPayment, date: e.target.value })}
+                  className={`w-full p-2 border rounded-lg ${isDarkMode
+                    ? 'bg-slate-700 border-slate-600 text-white'
+                    : 'bg-white border-gray-300 text-gray-900'
+                    }`}
                 />
               </div>
               <div>
@@ -1054,12 +1032,11 @@ const Payment = () => {
                 </label>
                 <select
                   value={newPayment.status}
-                  onChange={(e) => setNewPayment({...newPayment, status: e.target.value})}
-                  className={`w-full p-2 border rounded-lg ${
-                    isDarkMode 
-                      ? 'bg-slate-700 border-slate-600 text-white' 
-                      : 'bg-white border-gray-300 text-gray-900'
-                  }`}
+                  onChange={(e) => setNewPayment({ ...newPayment, status: e.target.value })}
+                  className={`w-full p-2 border rounded-lg ${isDarkMode
+                    ? 'bg-slate-700 border-slate-600 text-white'
+                    : 'bg-white border-gray-300 text-gray-900'
+                    }`}
                 >
                   <option value="Pending">Pending</option>
                   <option value="Paid">Paid</option>
@@ -1069,11 +1046,10 @@ const Payment = () => {
               <div className="flex gap-3 pt-4">
                 <button
                   onClick={handleModalClose}
-                  className={`flex-1 py-2 border rounded-lg ${
-                    isDarkMode 
-                      ? 'border-slate-600 text-white hover:bg-slate-700' 
-                      : 'border-gray-300 text-gray-700 hover:bg-gray-50'
-                  }`}
+                  className={`flex-1 py-2 border rounded-lg ${isDarkMode
+                    ? 'border-slate-600 text-white hover:bg-slate-700'
+                    : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                    }`}
                 >
                   Cancel
                 </button>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
+import Loader from './components/common/Loader';
 
 {/* Login Folder */}
 import Login from './pages/Login/Login';
@@ -31,6 +32,7 @@ import Schedule from './pages/Schedule/Schedule';
 import TeacherSchedule from './pages/Schedule/TeacherSchedule';
 import StudentSchedule from './pages/Schedule/StudentSchedule';
 import ParentSchedule from './pages/Schedule/ParentSchedule';
+import StudentScheduleOptional from './pages/Schedule/StudentScheduleOptional';
 
 {/* ReportsAnalytics Folder */}
 import ReportsAnalytics from './pages/ReportsAnalytics/ReportsAnalytics';
@@ -72,7 +74,9 @@ import './App.css';
 
 function App() {
   return (
+    <>
     <ThemeProvider>
+      <Loader />
       <Router>
         <div className="App">
           <Routes>
@@ -119,6 +123,7 @@ function App() {
             <Route path="/StudentAssignments" element={<StudentAssignments />} />
             <Route path="/StudentSettings" element={<StudentSettings />} />
             <Route path="/StudentProfile" element={<StudentProfile />} />
+            <Route path="/StudentScheduleOptional" element={<StudentScheduleOptional />} />
 
             {/* Parent Routes */}
             <Route path="/ParentDashboard" element={<ParentDashboard />} />
@@ -133,6 +138,7 @@ function App() {
         </div>
       </Router>
     </ThemeProvider>
+    </>
   );
 }
 

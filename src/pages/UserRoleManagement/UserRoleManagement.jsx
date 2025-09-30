@@ -22,7 +22,10 @@ import {
   X,
   FileText,
   CheckCircle,
-  Copy
+  Copy,
+  ChevronRight,
+  ArrowUp,
+  ArrowDown
 } from 'lucide-react';
 
 const UserRoleManagement = () => {
@@ -52,7 +55,6 @@ const UserRoleManagement = () => {
     address: ''
   });
 
-  // Enhanced sample user data with more entries
   const generateUserData = () => {
     const studentNames = [
       'Arjun Patel', 'Priya Sharma', 'Sneha Desai', 'Mohammed Khan', 'Kiran Patel',
@@ -89,7 +91,6 @@ const UserRoleManagement = () => {
     const userData = [];
     let idCounter = 1;
 
-    // Generate students
     studentNames.forEach((name, index) => {
       userData.push({
         id: idCounter++,
@@ -107,7 +108,6 @@ const UserRoleManagement = () => {
       });
     });
 
-    // Generate teachers
     teacherNames.forEach((name, index) => {
       userData.push({
         id: idCounter++,
@@ -125,7 +125,6 @@ const UserRoleManagement = () => {
       });
     });
 
-    // Generate parents
     parentNames.forEach((name, index) => {
       userData.push({
         id: idCounter++,
@@ -143,7 +142,6 @@ const UserRoleManagement = () => {
       });
     });
 
-    // Generate accountants
     accountantNames.forEach((name, index) => {
       userData.push({
         id: idCounter++,
@@ -164,16 +162,13 @@ const UserRoleManagement = () => {
     return userData;
   };
 
-  // Initialize users with sample data
   useEffect(() => {
     setUsers(generateUserData());
   }, []);
 
-  // Filter users based on active filter, search query, and status filter
   useEffect(() => {
     let filtered = [...users];
 
-    // Filter by role
     if (activeFilter !== 'All') {
       const roleMap = {
         'All Students': 'Student',
@@ -190,12 +185,10 @@ const UserRoleManagement = () => {
       }
     }
 
-    // Filter by status
     if (statusFilter !== 'All Status') {
       filtered = filtered.filter(user => user.status === statusFilter);
     }
 
-    // Filter by search query
     if (searchQuery.trim() !== '') {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(user =>
@@ -208,14 +201,13 @@ const UserRoleManagement = () => {
     }
 
     setFilteredUsers(filtered);
-    setCurrentPage(1); // Reset to first page when filters change
+    setCurrentPage(1);
   }, [users, activeFilter, statusFilter, searchQuery]);
 
   const toggleSidebar = () => {
     setIsSidebarExpanded(!isSidebarExpanded);
   };
 
-  // Pagination logic
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -225,14 +217,12 @@ const UserRoleManagement = () => {
     setCurrentPage(page);
   };
 
-  // Generate username and password
   const generateCredentials = (firstName, lastName, role) => {
     const username = `${firstName.toLowerCase()}.${lastName.toLowerCase()}${Math.floor(Math.random() * 1000)}`;
     const password = `${role.toLowerCase()}${Math.floor(100000 + Math.random() * 900000)}`;
     return { username, password };
   };
 
-  // Copy to clipboard function
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text).then(() => {
       console.log('Copied to clipboard:', text);
@@ -283,7 +273,6 @@ const UserRoleManagement = () => {
 
     setUsers(prev => [newUser, ...prev]);
 
-    // Store credentials in localStorage
     const existingCredentials = JSON.parse(localStorage.getItem('userCredentials') || '{}');
     const usernameKey = credentials.username.toLowerCase();
     
@@ -369,7 +358,6 @@ const UserRoleManagement = () => {
     return colorMap[color] || colorMap.blue;
   };
 
-  // Calculate dynamic stats based on actual data
   const calculateStats = () => {
     const studentCount = users.filter(user => user.role === 'Student').length;
     const teacherCount = users.filter(user => user.role === 'Teacher').length;
@@ -406,7 +394,6 @@ const UserRoleManagement = () => {
 
   const roleStats = calculateStats();
 
-  // Generate filter tabs based on actual data
   const generateFilterTabs = () => {
     const studentCount = users.filter(user => user.role === 'Student').length;
     const teacherCount = users.filter(user => user.role === 'Teacher').length;
@@ -428,11 +415,9 @@ const UserRoleManagement = () => {
     navigate('/ViewUser');
   };
 
-  // Handle chat button click - NEW FUNCTION
   const handleChatClick = (user) => {
-    // Create a conversation object from the user data
     const conversation = {
-      id: user.id + 1000, // Offset to avoid conflict with existing conversations
+      id: user.id + 1000,
       name: user.name,
       role: user.role,
       lastMessage: `Start a conversation with ${user.name}`,
@@ -444,7 +429,6 @@ const UserRoleManagement = () => {
       type: user.role.toLowerCase()
     };
 
-    // Navigate to chat page with the conversation data
     navigate('/messages', { 
       state: { 
         selectedUser: conversation 
@@ -457,825 +441,807 @@ const UserRoleManagement = () => {
   };
 
   return (
-    <div className={`min-h-screen w-full ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
-      <Header
-        isSidebarExpanded={isSidebarExpanded}
-        toggleSidebar={toggleSidebar}
-      />
+    <>
+      <div className={`min-h-screen w-full ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+        <Header
+          isSidebarExpanded={isSidebarExpanded}
+          toggleSidebar={toggleSidebar}
+        />
 
-      <Sidebar isExpanded={isSidebarExpanded} activeItem="user-roles" />
+        <Sidebar isExpanded={isSidebarExpanded} activeItem="user-roles" />
 
-      <main className={`transition-all duration-300 pt-20 pb-16 min-h-screen ${isSidebarExpanded ? 'ml-64' : 'ml-16'}`}>
-        <div className="w-full h-full px-6 py-6">
+        <main className={`transition-all duration-300 ${
+          isSidebarExpanded ? 'ml-0 md:ml-48 lg:ml-64' : 'ml-0 md:ml-16'
+        } pt-16 md:pt-20 pb-12 md:pb-16 min-h-screen overflow-x-hidden`}>
+          <div className="w-full h-full px-3 sm:px-4 md:px-6 py-4 md:py-6">
 
-          {/* Header */}
-          <div className="flex items-center justify-between mb-8">
-            <div className="text-left">
-              <h1 className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            <div className="text-left mb-4 md:mb-6 lg:mb-8">
+              <h1 className={`text-xl sm:text-2xl md:text-3xl font-bold mb-1 md:mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 User Role Management
               </h1>
-              <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
+              <p className={`text-sm md:text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
                 Manage all users and their roles in your tuition center
               </p>
             </div>
 
-            <div className="flex items-center gap-3">
-              <button className={`flex items-center gap-2 px-4 py-2 border rounded-lg text-sm font-medium transition-colors hover:bg-black ${isDarkMode ? 'text-white' : 'text-black'}`}>
-                <Download size={16} />
-                Export Data
-              </button>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 md:gap-4 mb-4 md:mb-6 lg:mb-8">
+              <div className="flex items-center gap-2 md:gap-3">
+                <button className={`flex items-center gap-1 md:gap-2 px-3 py-2 md:px-4 md:py-2 border rounded-lg text-xs md:text-sm font-medium transition-colors hover:bg-black ${isDarkMode ? 'text-white' : 'text-black'}`}>
+                  <Download size={14} className="md:w-4 md:h-4" />
+                  <span className="hidden sm:inline">Export Data</span>
+                </button>
 
-              <button
-                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
-                onClick={handleAddUserClick}
-              >
-                <Plus size={16} />
-                Add User
-              </button>
-            </div>
-          </div>
-
-          {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            {roleStats.map((stat, index) => {
-              const Icon = stat.icon;
-              const colorClasses = getColorClasses(stat.color);
-              return (
-                <div
-                  key={index}
-                  className={`p-6 rounded-2xl border ${isDarkMode
-                      ? 'bg-slate-800 border-slate-700'
-                      : 'bg-white border-gray-300 shadow-sm'
-                    }`}
+                <button
+                  className="flex items-center gap-1 md:gap-2 px-3 py-2 md:px-4 md:py-2 bg-blue-600 text-white rounded-lg text-xs md:text-sm font-medium hover:bg-blue-700 transition-colors"
+                  onClick={handleAddUserClick}
                 >
-                  <div className="flex justify-between items-start">
-                    <div className="text-left">
-                      <h3 className={`text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        {stat.title}
-                      </h3>
-                      <p className={`text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                        {stat.value}
-                      </p>
-                    </div>
-                    <div className={`p-3 rounded-xl ${colorClasses.iconBg}`}>
-                      <Icon className={`w-6 h-6 ${colorClasses.iconColor}`} />
+                  <Plus size={14} className="md:w-4 md:h-4" />
+                  <span className="hidden sm:inline">Add User</span>
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-6 md:mb-8">
+              {roleStats.map((stat, index) => {
+                const Icon = stat.icon;
+                const colorClasses = getColorClasses(stat.color);
+                return (
+                  <div
+                    key={index}
+                    className={`p-4 md:p-6 rounded-xl md:rounded-2xl border ${
+                      isDarkMode 
+                        ? 'bg-slate-800 border-slate-700' 
+                        : 'bg-white border-gray-300 shadow-sm'
+                    }`}
+                  >
+                    <div className="flex justify-between items-start mb-3 md:mb-4">
+                      <div className="text-left">
+                        <h3 className={`text-xs md:text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                          {stat.title}
+                        </h3>
+                        <p className={`text-xl md:text-2xl lg:text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          {stat.value}
+                        </p>
+                      </div>
+                      <div className={`p-2 md:p-3 rounded-lg md:rounded-xl ${colorClasses.iconBg}`}>
+                        <Icon className={`w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 ${colorClasses.iconColor}`} />
+                      </div>
                     </div>
                   </div>
+                );
+              })}
+            </div>
+
+            <div className={`p-4 md:p-6 rounded-xl md:rounded-2xl border ${
+              isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
+            }`}>
+
+              <div className="mb-4 md:mb-6">
+                <div className={`text-xs md:text-sm font-medium mb-2 md:mb-3 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Filter by Role:</div>
+                <div className="flex flex-wrap gap-1 md:gap-2">
+                  {filterTabs.map((tab, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setActiveFilter(tab.split(' (')[0])}
+                      className={`px-2 py-1 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-medium transition-colors ${activeFilter === tab.split(' (')[0]
+                          ? 'bg-blue-600 text-white'
+                          : isDarkMode
+                            ? 'bg-slate-700 text-gray-300 hover:bg-slate-600'
+                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                        }`}
+                    >
+                      {tab}
+                    </button>
+                  ))}
                 </div>
-              );
-            })}
-          </div>
+              </div>
 
-          {/* Main Content Card */}
-          <div className={`p-6 rounded-2xl border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'}`}>
+              <div className="flex flex-col sm:flex-row items-center gap-3 md:gap-4 mb-4 md:mb-6">
+                <div className="flex-1 w-full relative">
+                  <Search className=" md:w-5 md:h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+                  <input
+                    type="text"
+                    placeholder="Search users..."
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                    className={`w-full pl-10 pr-4 py-2 rounded-lg border text-xs md:text-sm ${
+                      isDarkMode
+                        ? 'bg-slate-700 border-slate-600 text-gray-300 placeholder-gray-500'
+                        : 'bg-white border-gray-300 text-gray-700 placeholder-gray-500'
+                    }`}
+                  />
+                </div>
 
-            {/* Filter Tabs */}
-            <div className="mb-6">
-              <div className="text-sm font-medium mb-3 text-gray-600">Filter by Role:</div>
-              <div className="flex flex-wrap gap-2">
-                {filterTabs.map((tab, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setActiveFilter(tab.split(' (')[0])}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${activeFilter === tab.split(' (')[0]
-                        ? 'bg-blue-600 text-white'
-                        : isDarkMode
-                          ? 'bg-slate-700 text-gray-300 hover:bg-slate-600'
-                          : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                      }`}
+                <div className="flex items-center gap-1 md:gap-2 w-full sm:w-auto">
+                  <span className={`text-xs md:text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Status:</span>
+                  <select
+                    value={statusFilter}
+                    onChange={(e) => setStatusFilter(e.target.value)}
+                    className={`px-2 py-1 md:px-3 md:py-2 rounded-lg text-xs md:text-sm border ${
+                      isDarkMode
+                        ? 'bg-slate-700 border-slate-600 text-gray-300'
+                        : 'bg-white border-gray-300 text-gray-700'
+                    }`}
                   >
-                    {tab}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Search and Status Filter */}
-            <div className="flex items-center justify-between gap-4 mb-6">
-              <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-                <input
-                  type="text"
-                  placeholder="Search users..."
-                  value={searchQuery}
-                  onChange={handleSearchChange}
-                  className={`w-full pl-10 pr-4 py-2 rounded-lg border text-sm ${isDarkMode
-                      ? 'bg-slate-700 border-slate-600 text-gray-300 placeholder-gray-500'
-                      : 'bg-white border-gray-300 text-gray-700 placeholder-gray-500'
-                    }`}
-                />
+                    <option>All Status</option>
+                    <option>Active</option>
+                    <option>Inactive</option>
+                  </select>
+                </div>
               </div>
 
-              <div className="flex items-center gap-2">
-                <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Status:</span>
-                <select
-                  value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value)}
-                  className={`px-3 py-2 rounded-lg text-sm border ${isDarkMode
-                      ? 'bg-slate-700 border-slate-600 text-gray-300'
-                      : 'bg-white border-gray-300 text-gray-700'
-                    }`}
-                >
-                  <option>All Status</option>
-                  <option>Active</option>
-                  <option>Inactive</option>
-                </select>
-              </div>
-            </div>
-
-            {/* Table */}
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className={`border-b ${isDarkMode ? 'border-slate-600' : 'border-gray-200'}`}>
-                    <th className={`text-left py-3 px-4 text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                      USER DETAILS
-                    </th>
-                    <th className={`text-left py-3 px-4 text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                      ROLE & CLASS
-                    </th>
-                    <th className={`text-left py-3 px-4 text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                      CONTACT INFO
-                    </th>
-                    <th className={`text-left py-3 px-4 text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                      STATUS
-                    </th>
-                    <th className={`text-left py-3 px-4 text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                      LAST ACTIVE
-                    </th>
-                    <th className={`text-left py-3 px-4 text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                      ACTIONS
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {currentData.length > 0 ? (
-                    currentData.map((user) => (
-                      <tr key={user.id} className={`border-b ${isDarkMode ? 'border-slate-700' : 'border-gray-100'}`}>
-                        <td className="py-4 px-4">
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                              <span className="text-blue-600 text-sm font-medium">{user.avatar}</span>
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[800px]">
+                  <thead>
+                    <tr className={`border-b ${isDarkMode ? 'border-slate-600' : 'border-gray-200'}`}>
+                      <th className={`text-left py-2 md:py-3 px-2 md:px-4 text-xs md:text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                        USER DETAILS
+                      </th>
+                      <th className={`text-left py-2 md:py-3 px-2 md:px-4 text-xs md:text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                        ROLE & CLASS
+                      </th>
+                      <th className={`text-left py-2 md:py-3 px-2 md:px-4 text-xs md:text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                        CONTACT INFO
+                      </th>
+                      <th className={`text-left py-2 md:py-3 px-2 md:px-4 text-xs md:text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                        STATUS
+                      </th>
+                      <th className={`text-left py-2 md:py-3 px-2 md:px-4 text-xs md:text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                        LAST ACTIVE
+                      </th>
+                      <th className={`text-left py-2 md:py-3 px-2 md:px-4 text-xs md:text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                        ACTIONS
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {currentData.length > 0 ? (
+                      currentData.map((user) => (
+                        <tr key={user.id} className={`border-b ${isDarkMode ? 'border-slate-700' : 'border-gray-100'}`}>
+                          <td className="py-3 md:py-4 px-2 md:px-4">
+                            <div className="flex items-center gap-2 md:gap-3">
+                              <div className="w-6 h-6 md:w-10 md:h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                                <span className="text-blue-600 text-xs md:text-sm font-medium">{user.avatar}</span>
+                              </div>
+                              <div>
+                                <div className={`font-medium text-xs md:text-sm ${isDarkMode ? 'text-gray-200' : 'text-gray-900'}`}>
+                                  {user.name}
+                                  {user.isNew && (
+                                    <span className="ml-1 md:ml-2 px-1 md:px-2 py-0.5 md:py-1 bg-green-100 text-green-800 text-xs rounded-full">New</span>
+                                  )}
+                                </div>
+                                <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                                  {user.email}
+                                </div>
+                              </div>
                             </div>
+                          </td>
+
+                          <td className="py-3 md:py-4 px-2 md:px-4">
                             <div>
-                              <div className={`font-medium text-sm ${isDarkMode ? 'text-gray-200' : 'text-gray-900'}`}>
-                                {user.name}
-                                {user.isNew && (
-                                  <span className="ml-2 px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">New</span>
-                                )}
-                              </div>
-                              <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                                {user.email}
+                              <span className={`px-2 py-1 rounded-full text-xs font-medium border ${user.roleColor}`}>
+                                {user.role}
+                              </span>
+                              <div className={`text-xs mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                                {user.classInfo}
                               </div>
                             </div>
-                          </div>
-                        </td>
+                          </td>
 
-                        <td className="py-4 px-4">
-                          <div>
-                            <span className={`px-3 py-1 rounded-full text-xs font-medium border ${user.roleColor}`}>
-                              {user.role}
+                          <td className="py-3 md:py-4 px-2 md:px-4">
+                            <div>
+                              <div className={`text-xs md:text-sm flex items-center gap-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                                <Phone size={10} className="md:w-3 md:h-3" />
+                                {user.contact}
+                              </div>
+                              <div className={`text-xs flex items-center gap-1 mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                                <Mail size={10} className="md:w-3 md:h-3" />
+                                {user.altContact}
+                              </div>
+                            </div>
+                          </td>
+
+                          <td className="py-3 md:py-4 px-2 md:px-4">
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${user.statusColor}`}>
+                              {user.status}
                             </span>
-                            <div className={`text-xs mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                              {user.classInfo}
+                          </td>
+
+                          <td className={`py-3 md:py-4 px-2 md:px-4 text-xs md:text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                            {user.lastActive}
+                          </td>
+
+                          <td className="py-3 md:py-4 px-2 md:px-4">
+                            <div className="flex items-center gap-1 md:gap-2">
+                              <button type="button" onClick={handleViewUser} className="w-6 h-6 md:w-8 md:h-8 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center hover:bg-blue-200 transition-colors">
+                                <Eye size={12} className="md:w-3 md:h-3" />
+                              </button>
+                              <button className="w-6 h-6 md:w-8 md:h-8 bg-orange-100 text-orange-600 rounded-lg flex items-center justify-center hover:bg-orange-200 transition-colors">
+                                <Edit size={12} className="md:w-3 md:h-3" />
+                              </button>
+                              <button 
+                                onClick={() => handleChatClick(user)}
+                                className="w-6 h-6 md:w-8 md:h-8 bg-green-100 text-green-600 rounded-lg flex items-center justify-center hover:bg-green-200 transition-colors"
+                              >
+                                <MessageSquare size={12} className="md:w-3 md:h-3" />
+                              </button>
+                              <button className="w-6 h-6 md:w-8 md:h-8 bg-red-100 text-red-600 rounded-lg flex items-center justify-center hover:bg-red-200 transition-colors">
+                                <Trash2 size={12} className="md:w-3 md:h-3" />
+                              </button>
                             </div>
-                          </div>
-                        </td>
-
-                        <td className="py-4 px-4">
-                          <div>
-                            <div className={`text-sm flex items-center gap-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                              <Phone size={12} />
-                              {user.contact}
-                            </div>
-                            <div className={`text-xs flex items-center gap-1 mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                              <Mail size={12} />
-                              {user.altContact}
-                            </div>
-                          </div>
-                        </td>
-
-                        <td className="py-4 px-4">
-                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${user.statusColor}`}>
-                            {user.status}
-                          </span>
-                        </td>
-
-                        <td className={`py-4 px-4 text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                          {user.lastActive}
-                        </td>
-
-                        <td className="py-4 px-4">
-                          <div className="flex items-center gap-2">
-                            <button type="button" onClick={handleViewUser} className="w-8 h-8 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center hover:bg-blue-200 transition-colors">
-                              <Eye size={14} />
-                            </button>
-                            <button className="w-8 h-8 bg-orange-100 text-orange-600 rounded-lg flex items-center justify-center hover:bg-orange-200 transition-colors">
-                              <Edit size={14} />
-                            </button>
-                            {/* Updated Chat Button */}
-                            <button 
-                              onClick={() => handleChatClick(user)}
-                              className="w-8 h-8 bg-green-100 text-green-600 rounded-lg flex items-center justify-center hover:bg-green-200 transition-colors"
-                            >
-                              <MessageSquare size={14} />
-                            </button>
-                            <button className="w-8 h-8 bg-red-100 text-red-600 rounded-lg flex items-center justify-center hover:bg-red-200 transition-colors">
-                              <Trash2 size={14} />
-                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="6" className="py-6 md:py-8 text-center">
+                          <div className={`text-sm md:text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                            No users found matching your criteria
                           </div>
                         </td>
                       </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="6" className="py-8 text-center">
-                        <div className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                          No users found matching your criteria
-                        </div>
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+
+              {filteredUsers.length > 0 && (
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-3 md:gap-4 mt-4 md:mt-6">
+                  <div className={`text-xs md:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                    Showing {startIndex + 1} to {Math.min(endIndex, filteredUsers.length)} of {filteredUsers.length} results
+                  </div>
+                  <div className="flex items-center gap-1 md:gap-2">
+                    <button 
+                      onClick={() => handlePageChange(currentPage - 1)}
+                      disabled={currentPage === 1}
+                      className={`px-2 py-1 md:px-3 md:py-2 rounded-lg text-xs md:text-sm font-medium transition-colors ${
+                        currentPage === 1
+                          ? isDarkMode 
+                            ? 'bg-slate-800 text-gray-500 cursor-not-allowed'
+                            : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                          : isDarkMode 
+                            ? 'bg-slate-700 text-gray-300 hover:bg-slate-600'
+                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                      }`}
+                    >
+                      Previous
+                    </button>
+                    
+                    {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+                      let pageNum;
+                      if (totalPages <= 5) {
+                        pageNum = i + 1;
+                      } else if (currentPage <= 3) {
+                        pageNum = i + 1;
+                      } else if (currentPage >= totalPages - 2) {
+                        pageNum = totalPages - 4 + i;
+                      } else {
+                        pageNum = currentPage - 2 + i;
+                      }
+                      
+                      return (
+                        <button
+                          key={pageNum}
+                          onClick={() => handlePageChange(pageNum)}
+                          className={`px-2 py-1 md:px-3 md:py-2 rounded-lg text-xs md:text-sm font-medium transition-colors ${
+                            currentPage === pageNum
+                              ? 'bg-blue-600 text-white'
+                              : isDarkMode 
+                                ? 'bg-slate-700 text-gray-300 hover:bg-slate-600'
+                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                          }`}
+                        >
+                          {pageNum}
+                        </button>
+                      );
+                    })}
+                    
+                    <button 
+                      onClick={() => handlePageChange(currentPage + 1)}
+                      disabled={currentPage === totalPages}
+                      className={`px-2 py-1 md:px-3 md:py-2 rounded-lg text-xs md:text-sm font-medium transition-colors ${
+                        currentPage === totalPages
+                          ? isDarkMode 
+                            ? 'bg-slate-800 text-gray-500 cursor-not-allowed'
+                            : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                          : isDarkMode 
+                            ? 'bg-slate-700 text-gray-300 hover:bg-slate-600'
+                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                      }`}
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
 
-            {/* Pagination */}
-            {filteredUsers.length > 0 && (
-              <div className="flex items-center justify-between mt-6">
-                <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  Showing {startIndex + 1} to {Math.min(endIndex, filteredUsers.length)} of {filteredUsers.length} results
-                </div>
-                <div className="flex items-center gap-2">
-                  <button 
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                    className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      currentPage === 1
-                        ? isDarkMode 
-                          ? 'bg-slate-800 text-gray-500 cursor-not-allowed'
-                          : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                        : isDarkMode 
-                          ? 'bg-slate-700 text-gray-300 hover:bg-slate-600'
-                          : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                    }`}
-                  >
-                    Previous
-                  </button>
+            {showUserTypeModal && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 sm:p-4 z-50">
+                <div className={`w-full max-w-2xl rounded-xl md:rounded-2xl ${
+                  isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'
+                } shadow-2xl overflow-hidden`}>
                   
-                  {/* Page Numbers */}
-                  {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
-                    let pageNum;
-                    if (totalPages <= 5) {
-                      pageNum = i + 1;
-                    } else if (currentPage <= 3) {
-                      pageNum = i + 1;
-                    } else if (currentPage >= totalPages - 2) {
-                      pageNum = totalPages - 4 + i;
-                    } else {
-                      pageNum = currentPage - 2 + i;
-                    }
-                    
-                    return (
+                  <div className={`px-4 py-3 md:px-6 md:py-4 border-b flex items-center justify-between ${
+                    isDarkMode ? 'border-slate-700' : 'border-gray-300'
+                  }`}>
+                    <div>
+                      <h2 className={`text-lg md:text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                        Select User Type
+                      </h2>
+                      <p className={`text-xs md:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                        Choose the type of user you want to add
+                      </p>
+                    </div>
+                    <button
+                      onClick={handleModalClose}
+                      className={`p-1 md:p-2 rounded-lg hover:bg-gray-100 ${
+                        isDarkMode ? 'text-gray-400 hover:bg-slate-700' : 'text-gray-600'
+                      }`}
+                    >
+                      <X size={20} className="md:w-6 md:h-6" />
+                    </button>
+                  </div>
+
+                  <div className="p-4 md:p-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 mb-4 md:mb-6">
                       <button
-                        key={pageNum}
-                        onClick={() => handlePageChange(pageNum)}
-                        className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                          currentPage === pageNum
-                            ? 'bg-blue-600 text-white'
-                            : isDarkMode 
-                              ? 'bg-slate-700 text-gray-300 hover:bg-slate-600'
-                              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                        }`}
+                        onClick={() => handleUserTypeSelect('Student')}
+                        className={`p-3 md:p-4 rounded-xl border-2 transition-all text-left group ${isDarkMode
+                            ? 'bg-slate-700 border-slate-600 hover:border-green-500 hover:bg-slate-600'
+                            : 'bg-gray-50 border-gray-200 hover:border-green-300 hover:bg-green-50'
+                          }`}
                       >
-                        {pageNum}
+                        <div className="flex items-start gap-2 md:gap-3">
+                          <div className={`w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center transition-colors ${isDarkMode
+                              ? 'bg-green-500/20 group-hover:bg-green-500/30'
+                              : 'bg-green-100 group-hover:bg-green-200'
+                            }`}>
+                            <Users className={`w-4 h-4 md:w-5 md:h-5 ${isDarkMode ? 'text-green-400' : 'text-green-600'
+                              }`} />
+                          </div>
+                          <div>
+                            <h3 className={`font-medium mb-1 text-sm md:text-base ${isDarkMode ? 'text-white' : 'text-gray-900'
+                              }`}>
+                              Student
+                            </h3>
+                            <p className={`text-xs md:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                              }`}>
+                              Add new students to your tuition classes
+                            </p>
+                          </div>
+                        </div>
                       </button>
-                    );
-                  })}
+
+                      <button
+                        onClick={() => handleUserTypeSelect('Teacher')}
+                        className={`p-3 md:p-4 rounded-xl border-2 transition-all text-left group ${isDarkMode
+                            ? 'bg-slate-700 border-slate-600 hover:border-purple-500 hover:bg-slate-600'
+                            : 'bg-gray-50 border-gray-200 hover:border-purple-300 hover:bg-purple-50'
+                          }`}
+                      >
+                        <div className="flex items-start gap-2 md:gap-3">
+                          <div className={`w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center transition-colors ${isDarkMode
+                              ? 'bg-purple-500/20 group-hover:bg-purple-500/30'
+                              : 'bg-purple-100 group-hover:bg-purple-200'
+                            }`}>
+                            <GraduationCap className={`w-4 h-4 md:w-5 md:h-5 ${isDarkMode ? 'text-purple-400' : 'text-purple-600'
+                              }`} />
+                          </div>
+                          <div>
+                            <h3 className={`font-medium mb-1 text-sm md:text-base ${isDarkMode ? 'text-white' : 'text-gray-900'
+                              }`}>
+                              Teacher
+                            </h3>
+                            <p className={`text-xs md:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                              }`}>
+                              Add qualified teachers to your staff
+                            </p>
+                          </div>
+                        </div>
+                      </button>
+
+                      <button
+                        onClick={() => handleUserTypeSelect('Parent')}
+                        className={`p-3 md:p-4 rounded-xl border-2 transition-all text-left group ${isDarkMode
+                            ? 'bg-slate-700 border-slate-600 hover:border-orange-500 hover:bg-slate-600'
+                            : 'bg-gray-50 border-gray-200 hover:border-orange-300 hover:bg-orange-50'
+                          }`}
+                      >
+                        <div className="flex items-start gap-2 md:gap-3">
+                          <div className={`w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center transition-colors ${isDarkMode
+                              ? 'bg-orange-500/20 group-hover:bg-orange-500/30'
+                              : 'bg-orange-100 group-hover:bg-orange-200'
+                            }`}>
+                            <UserCheck className={`w-4 h-4 md:w-5 md:h-5 ${isDarkMode ? 'text-orange-400' : 'text-orange-600'
+                              }`} />
+                          </div>
+                          <div>
+                            <h3 className={`font-medium mb-1 text-sm md:text-base ${isDarkMode ? 'text-white' : 'text-gray-900'
+                              }`}>
+                              Parent
+                            </h3>
+                            <p className={`text-xs md:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                              }`}>
+                              Add parents/guardians of students
+                            </p>
+                          </div>
+                        </div>
+                      </button>
+
+                      <button
+                        onClick={() => handleUserTypeSelect('Accountant')}
+                        className={`p-3 md:p-4 rounded-xl border-2 transition-all text-left group ${isDarkMode
+                            ? 'bg-slate-700 border-slate-600 hover:border-blue-500 hover:bg-slate-600'
+                            : 'bg-gray-50 border-gray-200 hover:border-blue-300 hover:bg-blue-50'
+                          }`}
+                      >
+                        <div className="flex items-start gap-2 md:gap-3">
+                          <div className={`w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center transition-colors ${isDarkMode
+                              ? 'bg-blue-500/20 group-hover:bg-blue-500/30'
+                              : 'bg-blue-100 group-hover:bg-blue-200'
+                            }`}>
+                            <FileText className={`w-4 h-4 md:w-5 md:h-5 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'
+                              }`} />
+                          </div>
+                          <div>
+                            <h3 className={`font-medium mb-1 text-sm md:text-base ${isDarkMode ? 'text-white' : 'text-gray-900'
+                              }`}>
+                              Accountant
+                            </h3>
+                            <p className={`text-xs md:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                              }`}>
+                              Add accounting staff members
+                            </p>
+                          </div>
+                        </div>
+                      </button>
+                    </div>
+
+                    <div className="flex justify-end">
+                      <button
+                        onClick={handleModalClose}
+                        className={`px-3 py-2 md:px-4 md:py-2 text-xs md:text-sm font-medium rounded-lg transition-colors ${isDarkMode
+                            ? 'text-gray-300 hover:text-white hover:bg-slate-700'
+                            : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                          }`}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {showAddUserModal && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 sm:p-4 z-50">
+                <div className={`w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-xl md:rounded-2xl ${
+                  isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'
+                } shadow-2xl`}>
                   
-                  <button 
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                    className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      currentPage === totalPages
-                        ? isDarkMode 
-                          ? 'bg-slate-800 text-gray-500 cursor-not-allowed'
-                          : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                        : isDarkMode 
+                  <div className={`px-4 py-3 md:px-6 md:py-4 border-b flex items-center justify-between ${
+                    isDarkMode ? 'border-slate-700' : 'border-gray-300'
+                  }`}>
+                    <div className="flex items-center gap-2 md:gap-4">
+                      <h2 className={`text-lg md:text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                        Add New {selectedUserType}
+                      </h2>
+                      <div className="flex gap-1 md:gap-2">
+                        <div className={`w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center text-xs md:text-sm font-medium ${isDarkMode
+                            ? 'bg-blue-500 text-white'
+                            : 'bg-blue-600 text-white'
+                          }`}>
+                          1
+                        </div>
+                        <div className={`w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center text-xs md:text-sm font-medium ${isDarkMode
+                            ? 'bg-slate-600 text-gray-300 border border-slate-500'
+                            : 'bg-blue-100 text-blue-600'
+                          }`}>
+                          2
+                        </div>
+                      </div>
+                    </div>
+                    <button
+                      onClick={handleModalClose}
+                      className={`p-1 md:p-2 rounded-lg hover:bg-gray-100 ${
+                        isDarkMode ? 'text-gray-400 hover:bg-slate-700' : 'text-gray-600'
+                      }`}
+                    >
+                      <X size={20} className="md:w-6 md:h-6" />
+                    </button>
+                  </div>
+
+                  <div className="p-4 md:p-6">
+                    <div className="mb-4 md:mb-6">
+                      <h3 className={`text-base md:text-lg font-medium mb-3 md:mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                        Basic Information
+                      </h3>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 mb-3 md:mb-4">
+                        <div>
+                          <label className={`block text-xs md:text-sm font-medium mb-1 md:mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                            First Name *
+                          </label>
+                          <input
+                            type="text"
+                            value={formData.firstName}
+                            onChange={(e) => handleFormChange('firstName', e.target.value)}
+                            className={`w-full px-2 py-1 md:px-3 md:py-2 rounded-lg border text-xs md:text-sm transition-colors focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none ${isDarkMode
+                                ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-400 focus:bg-slate-600'
+                                : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                              }`}
+                            placeholder="Enter first name"
+                          />
+                        </div>
+                        <div>
+                          <label className={`block text-xs md:text-sm font-medium mb-1 md:mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                            Last Name *
+                          </label>
+                          <input
+                            type="text"
+                            value={formData.lastName}
+                            onChange={(e) => handleFormChange('lastName', e.target.value)}
+                            className={`w-full px-2 py-1 md:px-3 md:py-2 rounded-lg border text-xs md:text-sm transition-colors focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none ${isDarkMode
+                                ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-400 focus:bg-slate-600'
+                                : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                              }`}
+                            placeholder="Enter last name"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 mb-3 md:mb-4">
+                        <div>
+                          <label className={`block text-xs md:text-sm font-medium mb-1 md:mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                            Email *
+                          </label>
+                          <input
+                            type="email"
+                            value={formData.email}
+                            onChange={(e) => handleFormChange('email', e.target.value)}
+                            className={`w-full px-2 py-1 md:px-3 md:py-2 rounded-lg border text-xs md:text-sm transition-colors focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none ${isDarkMode
+                                ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-400 focus:bg-slate-600'
+                                : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                              }`}
+                            placeholder="Enter email address"
+                          />
+                        </div>
+                        <div>
+                          <label className={`block text-xs md:text-sm font-medium mb-1 md:mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                            Phone *
+                          </label>
+                          <input
+                            type="tel"
+                            value={formData.phone}
+                            onChange={(e) => handleFormChange('phone', e.target.value)}
+                            className={`w-full px-2 py-1 md:px-3 md:py-2 rounded-lg border text-xs md:text-sm transition-colors focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none ${isDarkMode
+                                ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-400 focus:bg-slate-600'
+                                : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                              }`}
+                            placeholder="Enter phone number"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="mb-3 md:mb-4">
+                        <label className={`block text-xs md:text-sm font-medium mb-1 md:mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                          Role *
+                        </label>
+                        <div className="relative">
+                          <div className={`w-full px-2 py-1 md:px-3 md:py-2 rounded-lg border text-xs md:text-sm ${isDarkMode
+                              ? 'bg-blue-500/20 border-blue-500/50'
+                              : 'bg-blue-50 border-blue-200'
+                            }`}>
+                            <div className="flex items-center gap-1 md:gap-2">
+                              <Users className={`w-3 h-3 md:w-4 md:h-4 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'
+                                }`} />
+                              <span className={`font-medium text-xs md:text-sm ${isDarkMode ? 'text-blue-300' : 'text-blue-600'
+                                }`}>
+                                {selectedUserType}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 mb-3 md:mb-4">
+                        <div>
+                          <label className={`block text-xs md:text-sm font-medium mb-1 md:mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                            Date of Birth
+                          </label>
+                          <input
+                            type="date"
+                            value={formData.dateOfBirth}
+                            onChange={(e) => handleFormChange('dateOfBirth', e.target.value)}
+                            className={`w-full px-2 py-1 md:px-3 md:py-2 rounded-lg border text-xs md:text-sm transition-colors focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none ${isDarkMode
+                                ? 'bg-slate-700 border-slate-600 text-white focus:bg-slate-600'
+                                : 'bg-white border-gray-300 text-gray-900'
+                              }`}
+                          />
+                        </div>
+                        <div>
+                          <label className={`block text-xs md:text-sm font-medium mb-1 md:mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                            Emergency Contact
+                          </label>
+                          <input
+                            type="tel"
+                            value={formData.emergencyContact}
+                            onChange={(e) => handleFormChange('emergencyContact', e.target.value)}
+                            className={`w-full px-2 py-1 md:px-3 md:py-2 rounded-lg border text-xs md:text-sm transition-colors focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none ${isDarkMode
+                                ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-400 focus:bg-slate-600'
+                                : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                              }`}
+                            placeholder="Emergency contact number"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="mb-4 md:mb-6">
+                        <label className={`block text-xs md:text-sm font-medium mb-1 md:mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                          Address
+                        </label>
+                        <textarea
+                          value={formData.address}
+                          onChange={(e) => handleFormChange('address', e.target.value)}
+                          rows="3"
+                          className={`w-full px-2 py-1 md:px-3 md:py-2 rounded-lg border text-xs md:text-sm transition-colors focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none ${isDarkMode
+                              ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-400 focus:bg-slate-600'
+                              : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                            }`}
+                          placeholder="Enter complete address"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex justify-end gap-2 md:gap-3">
+                      <button
+                        onClick={handleModalClose}
+                        className={`px-3 py-2 md:px-4 md:py-2 text-xs md:text-sm font-medium rounded-lg transition-colors ${isDarkMode
+                            ? 'text-gray-300 hover:text-white hover:bg-slate-700'
+                            : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                          }`}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={handleFormSubmit}
+                        className={`px-3 py-2 md:px-6 md:py-2 text-xs md:text-sm font-medium rounded-lg transition-colors ${isDarkMode
+                            ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                            : 'bg-blue-600 hover:bg-blue-700 text-white'
+                          }`}
+                      >
+                        Create User
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {showSuccessModal && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 sm:p-4 z-50">
+                <div className={`w-full max-w-md rounded-xl md:rounded-2xl ${
+                  isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'
+                } shadow-2xl overflow-hidden`}>
+                  
+                  <div className="p-4 md:p-6 text-center mb-4 md:mb-6">
+                    <div className={`w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4 ${isDarkMode
+                        ? 'bg-green-500/20'
+                        : 'bg-green-100'
+                      }`}>
+                      <CheckCircle className={`w-6 h-6 md:w-8 md:h-8 ${isDarkMode ? 'text-green-400' : 'text-green-600'
+                        }`} />
+                    </div>
+                    <h2 className={`text-lg md:text-xl font-bold mb-1 md:mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      User Created Successfully!
+                    </h2>
+                    <p className={`text-xs md:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      New {selectedUserType.toLowerCase()} has been added to your system
+                    </p>
+                  </div>
+
+                  <div className={`rounded-lg p-3 md:p-4 mb-4 md:mb-6 mx-3 md:mx-4 ${
+                    isDarkMode
+                      ? 'bg-slate-700 border border-slate-600'
+                      : 'bg-gray-50 border border-gray-200'
+                  }`}>
+                    <h3 className={`text-xs md:text-sm font-medium mb-2 md:mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      Login Credentials
+                    </h3>
+                    
+                    <div className="space-y-2 md:space-y-3">
+                      <div>
+                        <label className={`block text-xs font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                          Username
+                        </label>
+                        <div className="flex items-center gap-1 md:gap-2">
+                          <div className={`flex-1 px-2 py-1 md:px-3 md:py-2 rounded-lg text-xs md:text-sm font-mono ${isDarkMode
+                              ? 'bg-slate-600 text-white'
+                              : 'bg-white text-gray-900 border'
+                            }`}>
+                            {generatedCredentials.username}
+                          </div>
+                          <button
+                            onClick={() => copyToClipboard(generatedCredentials.username)}
+                            className={`p-1 md:p-2 rounded-lg transition-colors ${isDarkMode
+                                ? 'bg-slate-600 text-gray-300 hover:bg-slate-500'
+                                : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
+                              }`}
+                            title="Copy username"
+                          >
+                            <Copy size={14} className="md:w-4 md:h-4" />
+                          </button>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className={`block text-xs font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                          Password
+                        </label>
+                        <div className="flex items-center gap-1 md:gap-2">
+                          <div className={`flex-1 px-2 py-1 md:px-3 md:py-2 rounded-lg text-xs md:text-sm font-mono ${isDarkMode
+                              ? 'bg-slate-600 text-white'
+                              : 'bg-white text-gray-900 border'
+                            }`}>
+                            {generatedCredentials.password}
+                          </div>
+                          <button
+                            onClick={() => copyToClipboard(generatedCredentials.password)}
+                            className={`p-1 md:p-2 rounded-lg transition-colors ${isDarkMode
+                                ? 'bg-slate-600 text-gray-300 hover:bg-slate-500'
+                                : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
+                              }`}
+                            title="Copy password"
+                          >
+                            <Copy size={14} className="md:w-4 md:h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className={`mt-3 md:mt-4 p-2 md:p-3 rounded-lg ${isDarkMode
+                        ? 'bg-blue-500/20 border border-blue-500/30'
+                        : 'bg-blue-50 border border-blue-200'
+                      }`}>
+                      <p className={`text-xs ${isDarkMode ? 'text-blue-300' : 'text-blue-700'
+                        }`}>
+                        Please save these credentials securely. The user can now login using these details.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-2 md:gap-3 p-3 md:p-4">
+                    <button
+                      onClick={handleSuccessClose}
+                      className={`flex-1 px-3 py-2 md:px-4 md:py-2 text-xs md:text-sm font-medium rounded-lg transition-colors ${isDarkMode
                           ? 'bg-slate-700 text-gray-300 hover:bg-slate-600'
                           : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                    }`}
-                  >
-                    Next
-                  </button>
+                        }`}
+                    >
+                      Close
+                    </button>
+                    <button
+                      onClick={() => {
+                        copyToClipboard(`Username: ${generatedCredentials.username}\nPassword: ${generatedCredentials.password}`);
+                      }}
+                      className={`flex-1 px-3 py-2 md:px-4 md:py-2 text-xs md:text-sm font-medium rounded-lg transition-colors ${isDarkMode
+                          ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                          : 'bg-blue-600 hover:bg-blue-700 text-white'
+                        }`}
+                    >
+                      Copy All
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
           </div>
+        </main>
 
-          {/* ... Rest of the modal code remains the same ... */}
-            {/* User Type Selection Modal */}
-          {showUserTypeModal && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-              <div className={`rounded-2xl p-6 w-full max-w-2xl mx-4 shadow-2xl ${isDarkMode
-                  ? 'bg-slate-800 border border-slate-700'
-                  : 'bg-white border border-gray-200'
-                }`}>
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'
-                      }`}>
-                      Select User Type
-                    </h2>
-                    <p className={`text-sm mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'
-                      }`}>
-                      Choose the type of user you want to add
-                    </p>
-                  </div>
-                  <button
-                    onClick={handleModalClose}
-                    className={`p-2 rounded-lg transition-colors ${isDarkMode
-                        ? 'text-gray-400 hover:text-white hover:bg-slate-700'
-                        : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
-                      }`}
-                  >
-                    <X size={20} />
-                  </button>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                  {/* Student Option */}
-                  <button
-                    onClick={() => handleUserTypeSelect('Student')}
-                    className={`p-4 rounded-xl border-2 transition-all text-left group ${isDarkMode
-                        ? 'bg-slate-700 border-slate-600 hover:border-green-500 hover:bg-slate-600'
-                        : 'bg-gray-50 border-gray-200 hover:border-green-300 hover:bg-green-50'
-                      }`}
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${isDarkMode
-                          ? 'bg-green-500/20 group-hover:bg-green-500/30'
-                          : 'bg-green-100 group-hover:bg-green-200'
-                        }`}>
-                        <Users className={`w-5 h-5 ${isDarkMode ? 'text-green-400' : 'text-green-600'
-                          }`} />
-                      </div>
-                      <div>
-                        <h3 className={`font-medium mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'
-                          }`}>
-                          Student
-                        </h3>
-                        <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'
-                          }`}>
-                          Add new students to your tuition classes
-                        </p>
-                      </div>
-                    </div>
-                  </button>
-
-                  {/* Teacher Option */}
-                  <button
-                    onClick={() => handleUserTypeSelect('Teacher')}
-                    className={`p-4 rounded-xl border-2 transition-all text-left group ${isDarkMode
-                        ? 'bg-slate-700 border-slate-600 hover:border-purple-500 hover:bg-slate-600'
-                        : 'bg-gray-50 border-gray-200 hover:border-purple-300 hover:bg-purple-50'
-                      }`}
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${isDarkMode
-                          ? 'bg-purple-500/20 group-hover:bg-purple-500/30'
-                          : 'bg-purple-100 group-hover:bg-purple-200'
-                        }`}>
-                        <GraduationCap className={`w-5 h-5 ${isDarkMode ? 'text-purple-400' : 'text-purple-600'
-                          }`} />
-                      </div>
-                      <div>
-                        <h3 className={`font-medium mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'
-                          }`}>
-                          Teacher
-                        </h3>
-                        <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'
-                          }`}>
-                          Add qualified teachers to your staff
-                        </p>
-                      </div>
-                    </div>
-                  </button>
-
-                  {/* Parent Option */}
-                  <button
-                    onClick={() => handleUserTypeSelect('Parent')}
-                    className={`p-4 rounded-xl border-2 transition-all text-left group ${isDarkMode
-                        ? 'bg-slate-700 border-slate-600 hover:border-orange-500 hover:bg-slate-600'
-                        : 'bg-gray-50 border-gray-200 hover:border-orange-300 hover:bg-orange-50'
-                      }`}
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${isDarkMode
-                          ? 'bg-orange-500/20 group-hover:bg-orange-500/30'
-                          : 'bg-orange-100 group-hover:bg-orange-200'
-                        }`}>
-                        <UserCheck className={`w-5 h-5 ${isDarkMode ? 'text-orange-400' : 'text-orange-600'
-                          }`} />
-                      </div>
-                      <div>
-                        <h3 className={`font-medium mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'
-                          }`}>
-                          Parent
-                        </h3>
-                        <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'
-                          }`}>
-                          Add parents/guardians of students
-                        </p>
-                      </div>
-                    </div>
-                  </button>
-
-                  {/* Accountant Option */}
-                  <button
-                    onClick={() => handleUserTypeSelect('Accountant')}
-                    className={`p-4 rounded-xl border-2 transition-all text-left group ${isDarkMode
-                        ? 'bg-slate-700 border-slate-600 hover:border-blue-500 hover:bg-slate-600'
-                        : 'bg-gray-50 border-gray-200 hover:border-blue-300 hover:bg-blue-50'
-                      }`}
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${isDarkMode
-                          ? 'bg-blue-500/20 group-hover:bg-blue-500/30'
-                          : 'bg-blue-100 group-hover:bg-blue-200'
-                        }`}>
-                        <FileText className={`w-5 h-5 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'
-                          }`} />
-                      </div>
-                      <div>
-                        <h3 className={`font-medium mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'
-                          }`}>
-                          Accountant
-                        </h3>
-                        <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'
-                          }`}>
-                          Add accounting staff members
-                        </p>
-                      </div>
-                    </div>
-                  </button>
-                </div>
-
-                <div className="flex justify-end">
-                  <button
-                    onClick={handleModalClose}
-                    className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${isDarkMode
-                        ? 'text-gray-300 hover:text-white hover:bg-slate-700'
-                        : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
-                      }`}
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Add New User Form Modal */}
-          {showAddUserModal && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-              <div className={`rounded-2xl p-6 w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto shadow-2xl ${isDarkMode
-                  ? 'bg-slate-800 border border-slate-700'
-                  : 'bg-white border border-gray-200'
-                }`}>
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center gap-4">
-                    <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'
-                      }`}>
-                      Add New {selectedUserType}
-                    </h2>
-                    <div className="flex gap-2">
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${isDarkMode
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-blue-600 text-white'
-                        }`}>
-                        1
-                      </div>
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${isDarkMode
-                          ? 'bg-slate-600 text-gray-300 border border-slate-500'
-                          : 'bg-blue-100 text-blue-600'
-                        }`}>
-                        2
-                      </div>
-                    </div>
-                  </div>
-                  <button
-                    onClick={handleModalClose}
-                    className={`p-2 rounded-lg transition-colors ${isDarkMode
-                        ? 'text-gray-400 hover:text-white hover:bg-slate-700'
-                        : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
-                      }`}
-                  >
-                    <X size={20} />
-                  </button>
-                </div>
-
-                <div className="mb-6">
-                  <h3 className={`text-lg font-medium mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'
-                    }`}>
-                    Basic Information
-                  </h3>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                      <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'
-                        }`}>
-                        First Name *
-                      </label>
-                      <input
-                        type="text"
-                        value={formData.firstName}
-                        onChange={(e) => handleFormChange('firstName', e.target.value)}
-                        className={`w-full px-3 py-2 rounded-lg border text-sm transition-colors focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none ${isDarkMode
-                            ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-400 focus:bg-slate-600'
-                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                          }`}
-                        placeholder="Enter first name"
-                      />
-                    </div>
-                    <div>
-                      <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'
-                        }`}>
-                        Last Name *
-                      </label>
-                      <input
-                        type="text"
-                        value={formData.lastName}
-                        onChange={(e) => handleFormChange('lastName', e.target.value)}
-                        className={`w-full px-3 py-2 rounded-lg border text-sm transition-colors focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none ${isDarkMode
-                            ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-400 focus:bg-slate-600'
-                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                          }`}
-                        placeholder="Enter last name"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                      <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'
-                        }`}>
-                        Email *
-                      </label>
-                      <input
-                        type="email"
-                        value={formData.email}
-                        onChange={(e) => handleFormChange('email', e.target.value)}
-                        className={`w-full px-3 py-2 rounded-lg border text-sm transition-colors focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none ${isDarkMode
-                            ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-400 focus:bg-slate-600'
-                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                          }`}
-                        placeholder="Enter email address"
-                      />
-                    </div>
-                    <div>
-                      <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'
-                        }`}>
-                        Phone *
-                      </label>
-                      <input
-                        type="tel"
-                        value={formData.phone}
-                        onChange={(e) => handleFormChange('phone', e.target.value)}
-                        className={`w-full px-3 py-2 rounded-lg border text-sm transition-colors focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none ${isDarkMode
-                            ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-400 focus:bg-slate-600'
-                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                          }`}
-                        placeholder="Enter phone number"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="mb-4">
-                    <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'
-                      }`}>
-                      Role *
-                    </label>
-                    <div className="relative">
-                      <div className={`w-full px-3 py-2 rounded-lg border text-sm ${isDarkMode
-                          ? 'bg-blue-500/20 border-blue-500/50'
-                          : 'bg-blue-50 border-blue-200'
-                        }`}>
-                        <div className="flex items-center gap-2">
-                          <Users className={`w-4 h-4 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'
-                            }`} />
-                          <span className={`font-medium ${isDarkMode ? 'text-blue-300' : 'text-blue-600'
-                            }`}>
-                            {selectedUserType}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                      <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'
-                        }`}>
-                        Date of Birth
-                      </label>
-                      <input
-                        type="date"
-                        value={formData.dateOfBirth}
-                        onChange={(e) => handleFormChange('dateOfBirth', e.target.value)}
-                        className={`w-full px-3 py-2 rounded-lg border text-sm transition-colors focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none ${isDarkMode
-                            ? 'bg-slate-700 border-slate-600 text-white focus:bg-slate-600'
-                            : 'bg-white border-gray-300 text-gray-900'
-                          }`}
-                      />
-                    </div>
-                    <div>
-                      <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'
-                        }`}>
-                        Emergency Contact
-                      </label>
-                      <input
-                        type="tel"
-                        value={formData.emergencyContact}
-                        onChange={(e) => handleFormChange('emergencyContact', e.target.value)}
-                        className={`w-full px-3 py-2 rounded-lg border text-sm transition-colors focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none ${isDarkMode
-                            ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-400 focus:bg-slate-600'
-                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                          }`}
-                        placeholder="Emergency contact number"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="mb-6">
-                    <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'
-                      }`}>
-                      Address
-                    </label>
-                    <textarea
-                      value={formData.address}
-                      onChange={(e) => handleFormChange('address', e.target.value)}
-                      rows="3"
-                      className={`w-full px-3 py-2 rounded-lg border text-sm transition-colors focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none ${isDarkMode
-                          ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-400 focus:bg-slate-600'
-                          : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                        }`}
-                      placeholder="Enter complete address"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex justify-end gap-3">
-                  <button
-                    onClick={handleModalClose}
-                    className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${isDarkMode
-                        ? 'text-gray-300 hover:text-white hover:bg-slate-700'
-                        : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
-                      }`}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={handleFormSubmit}
-                    className={`px-6 py-2 text-sm font-medium rounded-lg transition-colors ${isDarkMode
-                        ? 'bg-blue-600 hover:bg-blue-700 text-white'
-                        : 'bg-blue-600 hover:bg-blue-700 text-white'
-                      }`}
-                  >
-                    Create User
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Success Modal with Generated Credentials */}
-          {showSuccessModal && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-              <div className={`rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl ${isDarkMode
-                  ? 'bg-slate-800 border border-slate-700'
-                  : 'bg-white border border-gray-200'
-                }`}>
-                <div className="text-center mb-6">
-                  <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${isDarkMode
-                      ? 'bg-green-500/20'
-                      : 'bg-green-100'
-                    }`}>
-                    <CheckCircle className={`w-8 h-8 ${isDarkMode ? 'text-green-400' : 'text-green-600'
-                      }`} />
-                  </div>
-                  <h2 className={`text-xl font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'
-                    }`}>
-                    User Created Successfully!
-                  </h2>
-                  <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'
-                    }`}>
-                    New {selectedUserType.toLowerCase()} has been added to your system
-                  </p>
-                </div>
-
-                <div className={`rounded-lg p-4 mb-6 ${isDarkMode
-                    ? 'bg-slate-700 border border-slate-600'
-                    : 'bg-gray-50 border border-gray-200'
-                  }`}>
-                  <h3 className={`text-sm font-medium mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'
-                    }`}>
-                    Login Credentials
-                  </h3>
-                  
-                  <div className="space-y-3">
-                    <div>
-                      <label className={`block text-xs font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'
-                        }`}>
-                        Username
-                      </label>
-                      <div className="flex items-center gap-2">
-                        <div className={`flex-1 px-3 py-2 rounded-lg text-sm font-mono ${isDarkMode
-                            ? 'bg-slate-600 text-white'
-                            : 'bg-white text-gray-900 border'
-                          }`}>
-                          {generatedCredentials.username}
-                        </div>
-                        <button
-                          onClick={() => copyToClipboard(generatedCredentials.username)}
-                          className={`p-2 rounded-lg transition-colors ${isDarkMode
-                              ? 'bg-slate-600 text-gray-300 hover:bg-slate-500'
-                              : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
-                            }`}
-                          title="Copy username"
-                        >
-                          <Copy size={16} />
-                        </button>
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className={`block text-xs font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'
-                        }`}>
-                        Password
-                      </label>
-                      <div className="flex items-center gap-2">
-                        <div className={`flex-1 px-3 py-2 rounded-lg text-sm font-mono ${isDarkMode
-                            ? 'bg-slate-600 text-white'
-                            : 'bg-white text-gray-900 border'
-                          }`}>
-                          {generatedCredentials.password}
-                        </div>
-                        <button
-                          onClick={() => copyToClipboard(generatedCredentials.password)}
-                          className={`p-2 rounded-lg transition-colors ${isDarkMode
-                              ? 'bg-slate-600 text-gray-300 hover:bg-slate-500'
-                              : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
-                            }`}
-                          title="Copy password"
-                        >
-                          <Copy size={16} />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className={`mt-4 p-3 rounded-lg ${isDarkMode
-                      ? 'bg-blue-500/20 border border-blue-500/30'
-                      : 'bg-blue-50 border border-blue-200'
-                    }`}>
-                    <p className={`text-xs ${isDarkMode ? 'text-blue-300' : 'text-blue-700'
-                      }`}>
-                      Please save these credentials securely. The user can now login using these details.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex gap-3">
-                  <button
-                    onClick={handleSuccessClose}
-                    className={`flex-1 px-4 py-2 text-sm font-medium rounded-lg transition-colors ${isDarkMode
-                        ? 'bg-slate-700 text-gray-300 hover:bg-slate-600'
-                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                      }`}
-                  >
-                    Close
-                  </button>
-                  <button
-                    onClick={() => {
-                      copyToClipboard(`Username: ${generatedCredentials.username}\nPassword: ${generatedCredentials.password}`);
-                    }}
-                    className={`flex-1 px-4 py-2 text-sm font-medium rounded-lg transition-colors ${isDarkMode
-                        ? 'bg-blue-600 hover:bg-blue-700 text-white'
-                        : 'bg-blue-600 hover:bg-blue-700 text-white'
-                      }`}
-                  >
-                    Copy All
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </main>
-
-      <Footer isSidebarExpanded={isSidebarExpanded} />
-    </div>
+        <Footer isSidebarExpanded={isSidebarExpanded} />
+      </div>
+    </>
   );
 };
 

@@ -22,7 +22,7 @@ const StudentSchedule = () => {
     setIsSidebarExpanded(!isSidebarExpanded);
   };
 
-  // Multiple weeks schedule data
+  // Multiple weeks schedule data (keeping your exact same data)
   const weeklySchedules = [
     {
       week: 'Week of 08/09/2025 - 13/09/2025',
@@ -255,23 +255,23 @@ const StudentSchedule = () => {
 
       <Sidebar isExpanded={isSidebarExpanded} activeItem="schedule" />
 
-      <main className={`transition-all duration-300 pt-20 pb-16 min-h-screen ${
-        isSidebarExpanded ? 'ml-64' : 'ml-16'
-      }`}>
-        <div className="w-full h-full px-6 py-6">
+      <main className={`transition-all duration-300 ${
+        isSidebarExpanded ? 'ml-0 md:ml-48 lg:ml-64' : 'ml-0 md:ml-16'
+      } pt-16 md:pt-20 pb-12 md:pb-16 min-h-screen overflow-x-hidden`}>
+        <div className="w-full h-full px-3 sm:px-4 md:px-6 py-4 md:py-6">
             
           {/* Header */}
-          <div className="text-left mb-8">
-            <h1 className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <div className="text-left mb-4 md:mb-6 lg:mb-8">
+            <h1 className={`text-xl sm:text-2xl md:text-3xl font-bold mb-1 md:mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               Class Schedule
             </h1>
-            <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
+            <p className={`text-sm md:text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
               Manage your teaching schedule and plan lessons
             </p>
           </div>
 
           {/* Week Navigation */}
-          <div className={`mb-8 p-4 rounded-2xl border ${
+          <div className={`mb-6 md:mb-8 p-3 md:p-4 rounded-xl md:rounded-2xl border ${
             isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
           }`}>
             <div className="flex items-center justify-between">
@@ -286,27 +286,27 @@ const StudentSchedule = () => {
                       : 'hover:bg-gray-100'
                 }`}
               >
-                <ChevronLeft size={20} className={isDarkMode ? 'text-white' : 'text-gray-600'} />
+                <ChevronLeft size={16} className="md:w-5 md:h-5" />
               </button>
               
-              <div className="flex items-center gap-3 relative">
-                <Calendar size={20} className={isDarkMode ? 'text-white' : 'text-gray-600'} />
+              <div className="flex items-center gap-2 md:gap-3 relative">
+                <Calendar size={16} className={`md:w-5 md:h-5 ${isDarkMode ? 'text-white' : 'text-gray-600'}`} />
                 <div className="relative">
                   <button
                     onClick={() => setShowWeekDropdown(!showWeekDropdown)}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-lg font-semibold transition-all ${
+                    className={`flex items-center gap-1 md:gap-2 px-2 md:px-3 py-1 md:py-2 rounded-lg font-semibold transition-all text-sm md:text-base ${
                       isDarkMode 
                         ? 'text-white hover:bg-slate-700' 
                         : 'text-gray-900 hover:bg-gray-100'
                     }`}
                   >
-                    <span className="text-lg">{currentWeek.week}</span>
-                    <ChevronDown size={16} className={`transition-transform ${showWeekDropdown ? 'rotate-180' : ''}`} />
+                    <span className="text-xs md:text-sm">{currentWeek.week}</span>
+                    <ChevronDown size={14} className={`md:w-4 md:h-4 transition-transform ${showWeekDropdown ? 'rotate-180' : ''}`} />
                   </button>
                   
                   {/* Week Dropdown */}
                   {showWeekDropdown && (
-                    <div className={`absolute top-full left-0 mt-1 w-64 rounded-lg border shadow-lg z-10 ${
+                    <div className={`absolute top-full left-0 mt-1 w-48 md:w-64 rounded-lg border shadow-lg z-10 ${
                       isDarkMode 
                         ? 'bg-slate-800 border-slate-700' 
                         : 'bg-white border-gray-300'
@@ -315,7 +315,7 @@ const StudentSchedule = () => {
                         <button
                           key={index}
                           onClick={() => selectWeek(index)}
-                          className={`w-full text-left px-4 py-3 transition-all ${
+                          className={`w-full text-left px-3 py-2 md:px-4 md:py-3 transition-all text-xs md:text-sm ${
                             index === currentWeekIndex
                               ? isDarkMode
                                 ? 'bg-blue-600 text-white'
@@ -346,18 +346,18 @@ const StudentSchedule = () => {
                       : 'hover:bg-gray-100'
                 }`}
               >
-                <ChevronRight size={20} className={isDarkMode ? 'text-white' : 'text-gray-600'} />
+                <ChevronRight size={16} className="md:w-5 md:h-5" />
               </button>
             </div>
 
             {/* Week Progress Indicator */}
-            <div className="flex justify-center mt-4">
-              <div className="flex gap-2">
+            <div className="flex justify-center mt-3 md:mt-4">
+              <div className="flex gap-1 md:gap-2">
                 {weeklySchedules.map((_, index) => (
                   <button
                     key={index}
                     onClick={() => selectWeek(index)}
-                    className={`w-3 h-3 rounded-full transition-all ${
+                    className={`w-2 h-2 md:w-3 md:h-3 rounded-full transition-all ${
                       index === currentWeekIndex
                         ? isDarkMode
                           ? 'bg-blue-400'
@@ -372,79 +372,81 @@ const StudentSchedule = () => {
             </div>
           </div>
 
-          {/* Schedule Grid */}
-          <div className={`rounded-2xl border overflow-hidden ${
-            isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
-          }`}>
-            
-            {/* Header Row */}
-            <div className={`grid grid-cols-7 border-b ${
-              isDarkMode ? 'border-slate-600 bg-slate-700' : 'border-gray-300 bg-gray-50'
+          {/* Schedule Grid - Horizontal scroll on mobile */}
+          <div className="overflow-x-auto">
+            <div className={`min-w-[800px] rounded-xl md:rounded-2xl border ${
+              isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
             }`}>
-              <div className={`p-4 font-semibold text-center ${
-                isDarkMode ? 'text-white' : 'text-gray-900'
+              
+              {/* Header Row */}
+              <div className={`grid grid-cols-7 border-b ${
+                isDarkMode ? 'border-slate-600 bg-slate-700' : 'border-gray-300 bg-gray-50'
               }`}>
-                Time
-              </div>
-              {days.map((day) => (
-                <div key={day} className={`p-4 font-semibold text-center ${
+                <div className={`p-3 md:p-4 font-semibold text-center text-sm md:text-base ${
                   isDarkMode ? 'text-white' : 'text-gray-900'
                 }`}>
-                  {day}
+                  Time
                 </div>
-              ))}
-            </div>
-
-            {/* Schedule Rows */}
-            {currentWeek.schedule.map((timeSlot, index) => (
-              <div key={index} className={`grid grid-cols-7 border-b ${
-                isDarkMode ? 'border-slate-600' : 'border-gray-200'
-              }`}>
-                {/* Time Column */}
-                <div className={`p-4 font-medium text-center ${
-                  isDarkMode ? 'text-white bg-slate-700' : 'text-gray-900 bg-gray-50'
-                }`}>
-                  {timeSlot.time}
-                </div>
-                
-                {/* Day Columns */}
-                {['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'].map((day) => (
-                  <div key={day} className="p-2 min-h-[100px] relative">
-                    {timeSlot[day] ? (
-                      <div className={`${timeSlot[day].color} text-white p-3 rounded-lg h-full text-left shadow-sm hover:shadow-md transition-shadow cursor-pointer`}>
-                        <div className="font-semibold text-sm mb-1">
-                          {timeSlot[day].subject}
-                        </div>
-                        <div className="text-xs opacity-90 mb-1">
-                          {timeSlot[day].teacher}
-                        </div>
-                        {timeSlot[day].room && (
-                          <div className="text-xs opacity-80">
-                            {timeSlot[day].room}
-                          </div>
-                        )}
-                      </div>
-                    ) : timeSlot.time === '11:00 AM' ? (
-                      <div className={`${
-                        isDarkMode ? 'bg-slate-600 text-gray-300' : 'bg-gray-200 text-gray-600'
-                      } p-3 rounded-lg h-full flex items-center justify-center text-sm font-medium`}>
-                        Break
-                      </div>
-                    ) : null}
+                {days.map((day) => (
+                  <div key={day} className={`p-3 md:p-4 font-semibold text-center text-sm md:text-base ${
+                    isDarkMode ? 'text-white' : 'text-gray-900'
+                  }`}>
+                    {day}
                   </div>
                 ))}
               </div>
-            ))}
+
+              {/* Schedule Rows */}
+              {currentWeek.schedule.map((timeSlot, index) => (
+                <div key={index} className={`grid grid-cols-7 border-b ${
+                  isDarkMode ? 'border-slate-600' : 'border-gray-200'
+                }`}>
+                  {/* Time Column */}
+                  <div className={`p-3 md:p-4 font-medium text-center text-sm md:text-base ${
+                    isDarkMode ? 'text-white bg-slate-700' : 'text-gray-900 bg-gray-50'
+                  }`}>
+                    {timeSlot.time}
+                  </div>
+                  
+                  {/* Day Columns */}
+                  {['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'].map((day) => (
+                    <div key={day} className="p-2 md:p-3 min-h-[80px] md:min-h-[100px] relative">
+                      {timeSlot[day] ? (
+                        <div className={`${timeSlot[day].color} text-white p-2 md:p-3 rounded-lg h-full text-left shadow-sm hover:shadow-md transition-shadow cursor-pointer`}>
+                          <div className="font-semibold text-xs md:text-sm mb-1">
+                            {timeSlot[day].subject}
+                          </div>
+                          <div className="text-xs opacity-90 mb-1">
+                            {timeSlot[day].teacher}
+                          </div>
+                          {timeSlot[day].room && (
+                            <div className="text-xs opacity-80">
+                              {timeSlot[day].room}
+                            </div>
+                          )}
+                        </div>
+                      ) : timeSlot.time === '11:00 AM' ? (
+                        <div className={`${
+                          isDarkMode ? 'bg-slate-600 text-gray-300' : 'bg-gray-200 text-gray-600'
+                        } p-2 md:p-3 rounded-lg h-full flex items-center justify-center text-xs md:text-sm font-medium`}>
+                          Break
+                        </div>
+                      ) : null}
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Legend */}
-          <div className={`mt-8 p-6 rounded-2xl border ${
+          <div className={`mt-6 md:mt-8 p-4 md:p-6 rounded-xl md:rounded-2xl border ${
             isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
           }`}>
-            <h3 className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            <h3 className={`text-lg md:text-xl font-semibold mb-3 md:mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               Subject Legend
             </h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4">
               {[
                 { subject: 'Mathematics', color: 'bg-blue-500' },
                 { subject: 'Physics', color: 'bg-green-500' },
@@ -455,9 +457,9 @@ const StudentSchedule = () => {
                 { subject: 'Test Series', color: 'bg-red-500' },
                 { subject: 'Revision', color: 'bg-indigo-500' }
               ].map((item) => (
-                <div key={item.subject} className="flex items-center gap-3">
-                  <div className={`w-4 h-4 rounded ${item.color}`}></div>
-                  <span className={`text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <div key={item.subject} className="flex items-center gap-2 md:gap-3">
+                  <div className={`w-3 h-3 md:w-4 md:h-4 rounded ${item.color}`}></div>
+                  <span className={`text-xs md:text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     {item.subject}
                   </span>
                 </div>

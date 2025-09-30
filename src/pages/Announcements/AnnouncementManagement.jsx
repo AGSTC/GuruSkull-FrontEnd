@@ -21,10 +21,12 @@ import {
   CheckCircle,
   X,
   Archive,
-  Send
+  Send,
+  ChevronRight,
+  ArrowUp,
+  ArrowDown
 } from 'lucide-react';
 
-// Move categories outside the component to prevent re-renders
 const categories = [
   'All Categories',
   'Academic',
@@ -34,7 +36,6 @@ const categories = [
   'Schedule'
 ];
 
-// Create separate modal components outside the main component
 const CreateAnnouncementModal = ({ 
   isOpen, 
   onClose, 
@@ -45,7 +46,6 @@ const CreateAnnouncementModal = ({
 }) => {
   const [localAnnouncement, setLocalAnnouncement] = useState(newAnnouncement);
 
-  // Update local state when props change
   useEffect(() => {
     setLocalAnnouncement(newAnnouncement);
   }, [newAnnouncement]);
@@ -65,129 +65,153 @@ const CreateAnnouncementModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className={`p-6 rounded-2xl w-full max-w-md ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>
-        <div className="flex justify-between items-center mb-4">
-          <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            Create New Announcement
-          </h3>
-          <button onClick={onClose} className={`p-1 rounded-full ${isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-700'}`}>
-            <X size={20} />
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 sm:p-4 z-50">
+      <div className={`w-full max-w-md rounded-xl md:rounded-2xl ${
+        isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'
+      } shadow-2xl overflow-hidden`}>
+        
+        <div className={`px-4 py-3 md:px-6 md:py-4 border-b flex items-center justify-between ${
+          isDarkMode ? 'border-slate-700' : 'border-gray-300'
+        }`}>
+          <div>
+            <h2 className={`text-lg md:text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              Create New Announcement
+            </h2>
+            <p className={`text-xs md:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              Fill in the details for your new announcement
+            </p>
+          </div>
+          <button onClick={onClose} className={`p-1 md:p-2 rounded-lg hover:bg-gray-100 ${
+            isDarkMode ? 'text-gray-400 hover:bg-slate-700' : 'text-gray-600'
+          }`}>
+            <X size={20} className="md:w-6 md:h-6" />
           </button>
         </div>
         
-        <div className="space-y-4">
-          <div>
-            <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              Title *
-            </label>
-            <input
-              type="text"
-              value={localAnnouncement.title}
-              onChange={(e) => handleChange('title', e.target.value)}
-              className={`w-full px-3 py-2 rounded-lg border text-sm ${
-                isDarkMode 
-                  ? 'bg-slate-700 border-slate-600 text-white' 
-                  : 'bg-white border-gray-300 text-gray-900'
-              } focus:outline-none focus:ring-2 focus:ring-blue-500`}
-              placeholder="Enter announcement title"
-            />
-          </div>
-          
-          <div>
-            <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              Description *
-            </label>
-            <textarea
-              value={localAnnouncement.description}
-              onChange={(e) => handleChange('description', e.target.value)}
-              rows={3}
-              className={`w-full px-3 py-2 rounded-lg border text-sm ${
-                isDarkMode 
-                  ? 'bg-slate-700 border-slate-600 text-white' 
-                  : 'bg-white border-gray-300 text-gray-900'
-              } focus:outline-none focus:ring-2 focus:ring-blue-500`}
-              placeholder="Enter announcement description"
-            />
-          </div>
-          
-          <div className="grid grid-cols-2 gap-4">
+        <div className="p-4 md:p-6">
+          <div className="space-y-3 md:space-y-4">
             <div>
-              <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Category
+              <label className={`block text-xs md:text-sm font-medium mb-1 md:mb-2 ${
+                isDarkMode ? 'text-gray-300' : 'text-gray-700'
+              }`}>
+                Title *
               </label>
-              <select
-                value={localAnnouncement.category}
-                onChange={(e) => handleChange('category', e.target.value)}
-                className={`w-full px-3 py-2 rounded-lg border text-sm ${
+              <input
+                type="text"
+                value={localAnnouncement.title}
+                onChange={(e) => handleChange('title', e.target.value)}
+                className={`w-full px-3 py-2 rounded-lg border text-xs md:text-sm ${
                   isDarkMode 
-                    ? 'bg-slate-700 border-slate-600 text-white' 
-                    : 'bg-white border-gray-300 text-gray-900'
+                    ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-400' 
+                    : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
                 } focus:outline-none focus:ring-2 focus:ring-blue-500`}
-              >
-                {categories.filter(cat => cat !== 'All Categories').map(category => (
-                  <option key={category} value={category}>{category}</option>
-                ))}
-              </select>
+                placeholder="Enter announcement title"
+              />
             </div>
             
             <div>
-              <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Priority
+              <label className={`block text-xs md:text-sm font-medium mb-1 md:mb-2 ${
+                isDarkMode ? 'text-gray-300' : 'text-gray-700'
+              }`}>
+                Description *
+              </label>
+              <textarea
+                value={localAnnouncement.description}
+                onChange={(e) => handleChange('description', e.target.value)}
+                rows={3}
+                className={`w-full px-3 py-2 rounded-lg border text-xs md:text-sm ${
+                  isDarkMode 
+                    ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-400' 
+                    : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                placeholder="Enter announcement description"
+              />
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+              <div>
+                <label className={`block text-xs md:text-sm font-medium mb-1 md:mb-2 ${
+                  isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                }`}>
+                  Category
+                </label>
+                <select
+                  value={localAnnouncement.category}
+                  onChange={(e) => handleChange('category', e.target.value)}
+                  className={`w-full px-3 py-2 rounded-lg border text-xs md:text-sm ${
+                    isDarkMode 
+                      ? 'bg-slate-700 border-slate-600 text-white' 
+                      : 'bg-white border-gray-300 text-gray-900'
+                  } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                >
+                  {categories.filter(cat => cat !== 'All Categories').map(category => (
+                    <option key={category} value={category}>{category}</option>
+                  ))}
+                </select>
+              </div>
+              
+              <div>
+                <label className={`block text-xs md:text-sm font-medium mb-1 md:mb-2 ${
+                  isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                }`}>
+                  Priority
+                </label>
+                <select
+                  value={localAnnouncement.priority}
+                  onChange={(e) => handleChange('priority', e.target.value)}
+                  className={`w-full px-3 py-2 rounded-lg border text-xs md:text-sm ${
+                    isDarkMode 
+                      ? 'bg-slate-700 border-slate-600 text-white' 
+                      : 'bg-white border-gray-300 text-gray-900'
+                  } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                >
+                  <option value="High">High</option>
+                  <option value="Medium">Medium</option>
+                  <option value="Low">Low</option>
+                </select>
+              </div>
+            </div>
+            
+            <div>
+              <label className={`block text-xs md:text-sm font-medium mb-1 md:mb-2 ${
+                isDarkMode ? 'text-gray-300' : 'text-gray-700'
+              }`}>
+                Status
               </label>
               <select
-                value={localAnnouncement.priority}
-                onChange={(e) => handleChange('priority', e.target.value)}
-                className={`w-full px-3 py-2 rounded-lg border text-sm ${
+                value={localAnnouncement.status}
+                onChange={(e) => handleChange('status', e.target.value)}
+                className={`w-full px-3 py-2 rounded-lg border text-xs md:text-sm ${
                   isDarkMode 
                     ? 'bg-slate-700 border-slate-600 text-white' 
                     : 'bg-white border-gray-300 text-gray-900'
                 } focus:outline-none focus:ring-2 focus:ring-blue-500`}
               >
-                <option value="High">High</option>
-                <option value="Medium">Medium</option>
-                <option value="Low">Low</option>
+                <option value="Draft">Draft</option>
+                <option value="Scheduled">Scheduled</option>
+                <option value="Active">Active</option>
               </select>
             </div>
           </div>
           
-          <div>
-            <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              Status
-            </label>
-            <select
-              value={localAnnouncement.status}
-              onChange={(e) => handleChange('status', e.target.value)}
-              className={`w-full px-3 py-2 rounded-lg border text-sm ${
+          <div className="flex gap-2 md:gap-3 mt-4 md:mt-6">
+            <button
+              onClick={onClose}
+              className={`flex-1 px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-medium ${
                 isDarkMode 
-                  ? 'bg-slate-700 border-slate-600 text-white' 
-                  : 'bg-white border-gray-300 text-gray-900'
-              } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  ? 'bg-slate-700 text-gray-300 hover:bg-slate-600' 
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
             >
-              <option value="Draft">Draft</option>
-              <option value="Scheduled">Scheduled</option>
-              <option value="Active">Active</option>
-            </select>
+              Cancel
+            </button>
+            <button
+              onClick={handleCreate}
+              className="flex-1 px-3 py-2 md:px-4 md:py-2 bg-blue-500 text-white rounded-lg text-xs md:text-sm font-medium hover:bg-blue-600"
+            >
+              Create
+            </button>
           </div>
-        </div>
-        
-        <div className="flex gap-3 mt-6">
-          <button
-            onClick={onClose}
-            className={`flex-1 px-4 py-2 rounded-lg text-sm font-medium ${
-              isDarkMode 
-                ? 'bg-slate-700 text-gray-300 hover:bg-slate-600' 
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            }`}
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleCreate}
-            className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600"
-          >
-            Create
-          </button>
         </div>
       </div>
     </div>
@@ -206,51 +230,65 @@ const ViewAnnouncementModal = ({
   if (!isOpen || !selectedAnnouncement) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className={`p-6 rounded-2xl w-full max-w-md ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>
-        <div className="flex justify-between items-center mb-4">
-          <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            Announcement Details
-          </h3>
-          <button onClick={onClose} className={`p-1 rounded-full ${isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-700'}`}>
-            <X size={20} />
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 sm:p-4 z-50">
+      <div className={`w-full max-w-md rounded-xl md:rounded-2xl ${
+        isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'
+      } shadow-2xl overflow-hidden`}>
+        
+        <div className={`px-4 py-3 md:px-6 md:py-4 border-b flex items-center justify-between ${
+          isDarkMode ? 'border-slate-700' : 'border-gray-300'
+        }`}>
+          <div>
+            <h2 className={`text-lg md:text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              Announcement Details
+            </h2>
+            <p className={`text-xs md:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              Complete information about the announcement
+            </p>
+          </div>
+          <button onClick={onClose} className={`p-1 md:p-2 rounded-lg hover:bg-gray-100 ${
+            isDarkMode ? 'text-gray-400 hover:bg-slate-700' : 'text-gray-600'
+          }`}>
+            <X size={20} className="md:w-6 md:h-6" />
           </button>
         </div>
         
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getCategoryColor(selectedAnnouncement.category)}`}>
-              {selectedAnnouncement.category}
-            </span>
-            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(selectedAnnouncement.priority)}`}>
-              {selectedAnnouncement.priority}
-            </span>
-            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(selectedAnnouncement.status)}`}>
-              {selectedAnnouncement.status}
-            </span>
+        <div className="p-4 md:p-6">
+          <div className="space-y-3 md:space-y-4">
+            <div className="flex flex-wrap gap-1 md:gap-2">
+              <span className={`px-2 py-1 rounded-full text-xs font-medium ${getCategoryColor(selectedAnnouncement.category)}`}>
+                {selectedAnnouncement.category}
+              </span>
+              <span className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(selectedAnnouncement.priority)}`}>
+                {selectedAnnouncement.priority}
+              </span>
+              <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(selectedAnnouncement.status)}`}>
+                {selectedAnnouncement.status}
+              </span>
+            </div>
+            
+            <h4 className={`font-semibold text-sm md:text-base ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              {selectedAnnouncement.title}
+            </h4>
+            
+            <p className={`text-xs md:text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+              {selectedAnnouncement.description}
+            </p>
+            
+            <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+              <p>Author: {selectedAnnouncement.author}</p>
+              <p>Date: {selectedAnnouncement.date}</p>
+              <p>Views: {selectedAnnouncement.views}</p>
+            </div>
           </div>
           
-          <h4 className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            {selectedAnnouncement.title}
-          </h4>
-          
-          <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-            {selectedAnnouncement.description}
-          </p>
-          
-          <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-            <p>Author: {selectedAnnouncement.author}</p>
-            <p>Date: {selectedAnnouncement.date}</p>
-            <p>Views: {selectedAnnouncement.views}</p>
-          </div>
+          <button
+            onClick={onClose}
+            className="w-full mt-4 md:mt-6 px-3 py-2 md:px-4 md:py-2 bg-blue-500 text-white rounded-lg text-xs md:text-sm font-medium hover:bg-blue-600"
+          >
+            Close
+          </button>
         </div>
-        
-        <button
-          onClick={onClose}
-          className="w-full mt-6 px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600"
-        >
-          Close
-        </button>
       </div>
     </div>
   );
@@ -266,7 +304,6 @@ const EditAnnouncementModal = ({
 }) => {
   const [localAnnouncement, setLocalAnnouncement] = useState(selectedAnnouncement);
 
-  // Update local state when props change
   useEffect(() => {
     setLocalAnnouncement(selectedAnnouncement);
   }, [selectedAnnouncement]);
@@ -286,128 +323,152 @@ const EditAnnouncementModal = ({
   if (!isOpen || !localAnnouncement) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className={`p-6 rounded-2xl w-full max-w-md ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>
-        <div className="flex justify-between items-center mb-4">
-          <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            Edit Announcement
-          </h3>
-          <button onClick={onClose} className={`p-1 rounded-full ${isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-700'}`}>
-            <X size={20} />
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 sm:p-4 z-50">
+      <div className={`w-full max-w-md rounded-xl md:rounded-2xl ${
+        isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'
+      } shadow-2xl overflow-hidden`}>
+        
+        <div className={`px-4 py-3 md:px-6 md:py-4 border-b flex items-center justify-between ${
+          isDarkMode ? 'border-slate-700' : 'border-gray-300'
+        }`}>
+          <div>
+            <h2 className={`text-lg md:text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              Edit Announcement
+            </h2>
+            <p className={`text-xs md:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              Update the announcement details
+            </p>
+          </div>
+          <button onClick={onClose} className={`p-1 md:p-2 rounded-lg hover:bg-gray-100 ${
+            isDarkMode ? 'text-gray-400 hover:bg-slate-700' : 'text-gray-600'
+          }`}>
+            <X size={20} className="md:w-6 md:h-6" />
           </button>
         </div>
         
-        <div className="space-y-4">
-          <div>
-            <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              Title *
-            </label>
-            <input
-              type="text"
-              value={localAnnouncement.title}
-              onChange={(e) => handleChange('title', e.target.value)}
-              className={`w-full px-3 py-2 rounded-lg border text-sm ${
-                isDarkMode 
-                  ? 'bg-slate-700 border-slate-600 text-white' 
-                  : 'bg-white border-gray-300 text-gray-900'
-              } focus:outline-none focus:ring-2 focus:ring-blue-500`}
-            />
-          </div>
-          
-          <div>
-            <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              Description *
-            </label>
-            <textarea
-              value={localAnnouncement.description}
-              onChange={(e) => handleChange('description', e.target.value)}
-              rows={3}
-              className={`w-full px-3 py-2 rounded-lg border text-sm ${
-                isDarkMode 
-                  ? 'bg-slate-700 border-slate-600 text-white' 
-                  : 'bg-white border-gray-300 text-gray-900'
-              } focus:outline-none focus:ring-2 focus:ring-blue-500`}
-            />
-          </div>
-          
-          <div className="grid grid-cols-2 gap-4">
+        <div className="p-4 md:p-6">
+          <div className="space-y-3 md:space-y-4">
             <div>
-              <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Category
+              <label className={`block text-xs md:text-sm font-medium mb-1 md:mb-2 ${
+                isDarkMode ? 'text-gray-300' : 'text-gray-700'
+              }`}>
+                Title *
               </label>
-              <select
-                value={localAnnouncement.category}
-                onChange={(e) => handleChange('category', e.target.value)}
-                className={`w-full px-3 py-2 rounded-lg border text-sm ${
+              <input
+                type="text"
+                value={localAnnouncement.title}
+                onChange={(e) => handleChange('title', e.target.value)}
+                className={`w-full px-3 py-2 rounded-lg border text-xs md:text-sm ${
                   isDarkMode 
                     ? 'bg-slate-700 border-slate-600 text-white' 
                     : 'bg-white border-gray-300 text-gray-900'
                 } focus:outline-none focus:ring-2 focus:ring-blue-500`}
-              >
-                {categories.filter(cat => cat !== 'All Categories').map(category => (
-                  <option key={category} value={category}>{category}</option>
-                ))}
-              </select>
+              />
             </div>
             
             <div>
-              <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Priority
+              <label className={`block text-xs md:text-sm font-medium mb-1 md:mb-2 ${
+                isDarkMode ? 'text-gray-300' : 'text-gray-700'
+              }`}>
+                Description *
+              </label>
+              <textarea
+                value={localAnnouncement.description}
+                onChange={(e) => handleChange('description', e.target.value)}
+                rows={3}
+                className={`w-full px-3 py-2 rounded-lg border text-xs md:text-sm ${
+                  isDarkMode 
+                    ? 'bg-slate-700 border-slate-600 text-white' 
+                    : 'bg-white border-gray-300 text-gray-900'
+                } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              />
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+              <div>
+                <label className={`block text-xs md:text-sm font-medium mb-1 md:mb-2 ${
+                  isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                }`}>
+                  Category
+                </label>
+                <select
+                  value={localAnnouncement.category}
+                  onChange={(e) => handleChange('category', e.target.value)}
+                  className={`w-full px-3 py-2 rounded-lg border text-xs md:text-sm ${
+                    isDarkMode 
+                      ? 'bg-slate-700 border-slate-600 text-white' 
+                      : 'bg-white border-gray-300 text-gray-900'
+                  } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                >
+                  {categories.filter(cat => cat !== 'All Categories').map(category => (
+                    <option key={category} value={category}>{category}</option>
+                  ))}
+                </select>
+              </div>
+              
+              <div>
+                <label className={`block text-xs md:text-sm font-medium mb-1 md:mb-2 ${
+                  isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                }`}>
+                  Priority
+                </label>
+                <select
+                  value={localAnnouncement.priority}
+                  onChange={(e) => handleChange('priority', e.target.value)}
+                  className={`w-full px-3 py-2 rounded-lg border text-xs md:text-sm ${
+                    isDarkMode 
+                      ? 'bg-slate-700 border-slate-600 text-white' 
+                      : 'bg-white border-gray-300 text-gray-900'
+                  } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                >
+                  <option value="High">High</option>
+                  <option value="Medium">Medium</option>
+                  <option value="Low">Low</option>
+                </select>
+              </div>
+            </div>
+            
+            <div>
+              <label className={`block text-xs md:text-sm font-medium mb-1 md:mb-2 ${
+                isDarkMode ? 'text-gray-300' : 'text-gray-700'
+              }`}>
+                Status
               </label>
               <select
-                value={localAnnouncement.priority}
-                onChange={(e) => handleChange('priority', e.target.value)}
-                className={`w-full px-3 py-2 rounded-lg border text-sm ${
+                value={localAnnouncement.status}
+                onChange={(e) => handleChange('status', e.target.value)}
+                className={`w-full px-3 py-2 rounded-lg border text-xs md:text-sm ${
                   isDarkMode 
                     ? 'bg-slate-700 border-slate-600 text-white' 
                     : 'bg-white border-gray-300 text-gray-900'
                 } focus:outline-none focus:ring-2 focus:ring-blue-500`}
               >
-                <option value="High">High</option>
-                <option value="Medium">Medium</option>
-                <option value="Low">Low</option>
+                <option value="Draft">Draft</option>
+                <option value="Scheduled">Scheduled</option>
+                <option value="Active">Active</option>
+                <option value="Archived">Archived</option>
               </select>
             </div>
           </div>
           
-          <div>
-            <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              Status
-            </label>
-            <select
-              value={localAnnouncement.status}
-              onChange={(e) => handleChange('status', e.target.value)}
-              className={`w-full px-3 py-2 rounded-lg border text-sm ${
+          <div className="flex gap-2 md:gap-3 mt-4 md:mt-6">
+            <button
+              onClick={onClose}
+              className={`flex-1 px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-medium ${
                 isDarkMode 
-                  ? 'bg-slate-700 border-slate-600 text-white' 
-                  : 'bg-white border-gray-300 text-gray-900'
-              } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  ? 'bg-slate-700 text-gray-300 hover:bg-slate-600' 
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
             >
-              <option value="Draft">Draft</option>
-              <option value="Scheduled">Scheduled</option>
-              <option value="Active">Active</option>
-              <option value="Archived">Archived</option>
-            </select>
+              Cancel
+            </button>
+            <button
+              onClick={handleSave}
+              className="flex-1 px-3 py-2 md:px-4 md:py-2 bg-blue-500 text-white rounded-lg text-xs md:text-sm font-medium hover:bg-blue-600"
+            >
+              Save Changes
+            </button>
           </div>
-        </div>
-        
-        <div className="flex gap-3 mt-6">
-          <button
-            onClick={onClose}
-            className={`flex-1 px-4 py-2 rounded-lg text-sm font-medium ${
-              isDarkMode 
-                ? 'bg-slate-700 text-gray-300 hover:bg-slate-600' 
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            }`}
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleSave}
-            className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600"
-          >
-            Save Changes
-          </button>
         </div>
       </div>
     </div>
@@ -439,7 +500,6 @@ const AnnouncementManagement = () => {
     setIsSidebarExpanded(!isSidebarExpanded);
   };
 
-  // Initialize announcements
   useEffect(() => {
     const initialAnnouncements = [
       {
@@ -524,7 +584,6 @@ const AnnouncementManagement = () => {
     setAnnouncements(initialAnnouncements);
   }, []);
 
-  // Stats data
   const stats = [
     {
       title: 'Total Announcements',
@@ -560,7 +619,6 @@ const AnnouncementManagement = () => {
     }
   ];
 
-  // Filter announcements based on selected filters and search
   const filteredAnnouncements = announcements.filter(announcement => {
     const matchesCategory = selectedCategory === 'All Categories' || announcement.category === selectedCategory;
     const matchesPriority = selectedPriority === 'All Priorities' || announcement.priority === selectedPriority;
@@ -636,7 +694,6 @@ const AnnouncementManagement = () => {
     
     setAnnouncements([newAnnouncementObj, ...announcements]);
     setIsCreateModalOpen(false);
-    // Reset form after closing modal
     setNewAnnouncement({
       title: '',
       description: '',
@@ -673,7 +730,6 @@ const AnnouncementManagement = () => {
 
   const handleCreateModalClose = () => {
     setIsCreateModalOpen(false);
-    // Reset form when closing modal
     setNewAnnouncement({
       title: '',
       description: '',
@@ -734,338 +790,319 @@ const AnnouncementManagement = () => {
     }
   };
 
-  // Handle input changes for create modal
   const handleNewAnnouncementChange = (updatedAnnouncement) => {
     setNewAnnouncement(updatedAnnouncement);
   };
 
-  // Handle input changes for edit modal
   const handleSelectedAnnouncementChange = (updatedAnnouncement) => {
     setSelectedAnnouncement(updatedAnnouncement);
   };
 
   return (
-    <div className={`min-h-screen w-full ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
-      <Header 
-        isSidebarExpanded={isSidebarExpanded} 
-        toggleSidebar={toggleSidebar}
-      />
+    <>
+      <div className={`min-h-screen w-full ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+        <Header 
+          isSidebarExpanded={isSidebarExpanded} 
+          toggleSidebar={toggleSidebar}
+        />
 
-      <Sidebar isExpanded={isSidebarExpanded} activeItem="announcements" />
+        <Sidebar isExpanded={isSidebarExpanded} activeItem="announcements" />
 
-      <main className={`transition-all duration-300 pt-20 pb-16 min-h-screen ${
-        isSidebarExpanded ? 'ml-64' : 'ml-16'
-      }`}>
-        <div className="w-full h-full px-6 py-6">
+        <main className={`transition-all duration-300 ${
+          isSidebarExpanded ? 'ml-0 md:ml-48 lg:ml-64' : 'ml-0 md:ml-16'
+        } pt-16 md:pt-20 pb-12 md:pb-16 min-h-screen overflow-x-hidden`}>
+          <div className="w-full h-full px-3 sm:px-4 md:px-6 py-4 md:py-6">
         
-          {/* Header */}
-          <div className="flex justify-between items-start mb-8">
-            <div className="text-left">
-              <h1 className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            <div className="text-left mb-4 md:mb-6 lg:mb-8">
+              <h1 className={`text-xl sm:text-2xl md:text-3xl font-bold mb-1 md:mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Announcement Management
               </h1>
-              <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
+              <p className={`text-sm md:text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
                 Manage all announcements in your tuition center
               </p>
             </div>
-          </div>
 
-          {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            {stats.map((stat, index) => (
-              <div
-                key={index}
-                className={`p-6 rounded-2xl border ${
-                  isDarkMode 
-                    ? 'bg-slate-800 border-slate-700' 
-                    : 'bg-white border-gray-300 shadow-sm'
-                }`}
-              >
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className={`text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                      {stat.title}
-                    </h3>
-                    <p className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                      {stat.value}
-                    </p>
-                  </div>
-                  <div className={`text-2xl ${stat.iconBg} p-3 rounded-xl`}>
-                    {stat.icon}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Filters and Actions */}
-          <div className={`p-6 rounded-2xl border mb-6 ${
-            isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
-          }`}>
-            
-            {/* Category Filters */}
-            <div className="mb-6">
-              <div className="flex items-center gap-2 mb-3">
-                <span className={`text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  Category:
-                </span>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {categories.map((category) => (
-                  <button
-                    key={category}
-                    onClick={() => handleCategoryClick(category)}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      selectedCategory === category
-                        ? 'bg-blue-500 text-white'
-                        : isDarkMode
-                          ? 'bg-slate-700 text-gray-300 hover:bg-slate-600'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
-                  >
-                    {category}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Controls */}
-            <div className="flex flex-wrap gap-4 items-center justify-between">
-              <div className="flex gap-4 items-center">
-                {/* Priority Filter */}
-                <div className="flex items-center gap-2">
-                  <span className={`text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                    Priority:
-                  </span>
-                  <select
-                    value={selectedPriority}
-                    onChange={(e) => setSelectedPriority(e.target.value)}
-                    className={`px-3 py-2 rounded-lg border text-sm ${
-                      isDarkMode 
-                        ? 'bg-slate-700 border-slate-600 text-white' 
-                        : 'bg-white border-gray-300 text-gray-900'
-                    } focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                  >
-                    <option value="All Priorities">All Priorities</option>
-                    <option value="High">High</option>
-                    <option value="Medium">Medium</option>
-                    <option value="Low">Low</option>
-                  </select>
-                </div>
-
-                {/* Status Filter */}
-                <div className="flex items-center gap-2">
-                  <span className={`text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                    Status:
-                  </span>
-                  <select
-                    value={selectedStatus}
-                    onChange={(e) => setSelectedStatus(e.target.value)}
-                    className={`px-3 py-2 rounded-lg border text-sm ${
-                      isDarkMode 
-                        ? 'bg-slate-700 border-slate-600 text-white' 
-                        : 'bg-white border-gray-300 text-gray-900'
-                    } focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                  >
-                    <option value="All Status">All Status</option>
-                    <option value="Active">Active</option>
-                    <option value="Draft">Draft</option>
-                    <option value="Scheduled">Scheduled</option>
-                    <option value="Archived">Archived</option>
-                  </select>
-                </div>
-
-                {/* Search */}
-                <div className="relative">
-                  <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 ${
-                    isDarkMode ? 'text-gray-400' : 'text-gray-500'
-                  }`} />
-                  <input
-                    type="text"
-                    placeholder="Search announcements..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className={`pl-10 pr-4 py-2 rounded-lg border text-sm ${
-                      isDarkMode 
-                        ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-400' 
-                        : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                    } focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                  />
-                </div>
-              </div>
-
-              <button 
-                onClick={() => setIsCreateModalOpen(true)}
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors flex items-center gap-2"
-              >
-                <Plus size={16} />
-                Create Announcement
-              </button>
-            </div>
-
-            {/* Selection Actions */}
-            {selectedAnnouncements.length > 0 && (
-              <div className={`mt-4 pt-4 border-t ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
-                <div className="flex items-center justify-between">
-                  <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                    {selectedAnnouncements.length} announcement{selectedAnnouncements.length !== 1 ? 's' : ''} selected
-                  </span>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => handleBulkAction('publish')}
-                      className="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600 transition-colors flex items-center gap-1"
-                    >
-                      <Send size={14} />
-                      Publish
-                    </button>
-                    <button
-                      onClick={() => handleBulkAction('archive')}
-                      className="px-3 py-1 bg-orange-500 text-white rounded text-sm hover:bg-orange-600 transition-colors flex items-center gap-1"
-                    >
-                      <Archive size={14} />
-                      Archive
-                    </button>
-                    <button
-                      onClick={() => handleBulkAction('delete')}
-                      className="px-3 py-1 bg-red-500 text-white rounded text-sm hover:bg-red-600 transition-colors flex items-center gap-1"
-                    >
-                      <Trash2 size={14} />
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Announcements Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredAnnouncements.map((announcement) => {
-              const CategoryIcon = announcement.categoryIcon;
-              return (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-6 md:mb-8">
+              {stats.map((stat, index) => (
                 <div
-                  key={announcement.id}
-                  className={`p-6 rounded-2xl border transition-all hover:shadow-lg ${
+                  key={index}
+                  className={`p-4 md:p-6 rounded-xl md:rounded-2xl border ${
                     isDarkMode 
-                      ? 'bg-slate-800 border-slate-700 hover:border-slate-600' 
-                      : 'bg-white border-gray-300 shadow-sm hover:border-gray-400'
+                      ? 'bg-slate-800 border-slate-700' 
+                      : 'bg-white border-gray-300 shadow-sm'
                   }`}
                 >
-                  {/* Card Header */}
-                  <div className="flex items-start justify-between mb-4">
-                    <input
-                      type="checkbox"
-                      checked={selectedAnnouncements.includes(announcement.id)}
-                      onChange={() => handleAnnouncementSelect(announcement.id)}
-                      className="w-4 h-4 text-blue-500 border-gray-300 rounded focus:ring-blue-500 mt-1"
-                    />
-                    <div className="flex gap-2">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(announcement.priority)}`}>
-                        {announcement.priority}
-                      </span>
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(announcement.status)}`}>
-                        {announcement.status}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Category */}
-                  <div className="flex items-center gap-2 mb-3">
-                    <CategoryIcon className="w-4 h-4" />
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${announcement.categoryColor}`}>
-                      {announcement.category}
-                    </span>
-                  </div>
-
-                  {/* Content */}
-                  <h3 className={`font-semibold mb-2 line-clamp-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                    {announcement.title}
-                  </h3>
-                  <p className={`text-sm mb-4 line-clamp-3 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                    {announcement.description}
-                  </p>
-
-                  {/* Footer */}
-                  <div className="flex items-center justify-between text-xs">
+                  <div className="flex justify-between items-start">
                     <div>
-                      <p className={`font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                        {announcement.author}
-                      </p>
-                      <p className={`${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
-                        {announcement.date}
+                      <h3 className={`text-xs md:text-sm font-medium mb-1 md:mb-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                        {stat.title}
+                      </h3>
+                      <p className={`text-xl md:text-2xl lg:text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                        {stat.value}
                       </p>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <div className={`flex items-center gap-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        <Eye className="w-3 h-3" />
-                        <span>{announcement.views}</span>
-                      </div>
-                      <div className="flex gap-1">
-                        <button 
-                          onClick={() => {
-                            setSelectedAnnouncement(announcement);
-                            setIsViewModalOpen(true);
-                          }}
-                          className={`p-1 rounded hover:bg-gray-100 dark:hover:bg-slate-700 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
-                        >
-                          <Eye className="w-4 h-4" />
-                        </button>
-                        <button 
-                          onClick={() => {
-                            setSelectedAnnouncement({...announcement});
-                            setIsEditModalOpen(true);
-                          }}
-                          className={`p-1 rounded hover:bg-gray-100 dark:hover:bg-slate-700 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
-                        >
-                          <Edit className="w-4 h-4" />
-                        </button>
-                        <button 
-                          onClick={() => handleDeleteAnnouncement(announcement.id)}
-                          className={`p-1 rounded hover:bg-gray-100 dark:hover:bg-slate-700 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
+                    <div className={`text-lg md:text-xl p-2 md:p-3 rounded-lg md:rounded-xl ${stat.iconBg}`}>
+                      {stat.icon}
                     </div>
                   </div>
                 </div>
-              );
-            })}
+              ))}
+            </div>
+
+            <div className={`p-4 md:p-6 rounded-xl md:rounded-2xl border mb-6 ${
+              isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
+            }`}>
+              
+              <div className="mb-4 md:mb-6">
+                <div className={`text-xs md:text-sm font-medium mb-2 md:mb-3 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  Category:
+                </div>
+                <div className="flex flex-wrap gap-1 md:gap-2">
+                  {categories.map((category) => (
+                    <button
+                      key={category}
+                      onClick={() => handleCategoryClick(category)}
+                      className={`px-2 py-1 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-medium transition-colors ${
+                        selectedCategory === category
+                          ? 'bg-blue-500 text-white'
+                          : isDarkMode
+                            ? 'bg-slate-700 text-gray-300 hover:bg-slate-600'
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      {category}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 md:gap-4 mb-4 md:mb-6">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 md:gap-4">
+                  <div className="flex items-center gap-1 md:gap-2">
+                    <span className={`text-xs md:text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                      Priority:
+                    </span>
+                    <select
+                      value={selectedPriority}
+                      onChange={(e) => setSelectedPriority(e.target.value)}
+                      className={`px-2 py-1 md:px-3 md:py-2 rounded-lg border text-xs md:text-sm ${
+                        isDarkMode 
+                          ? 'bg-slate-700 border-slate-600 text-white' 
+                          : 'bg-white border-gray-300 text-gray-900'
+                      } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                    >
+                      <option value="All Priorities">All Priorities</option>
+                      <option value="High">High</option>
+                      <option value="Medium">Medium</option>
+                      <option value="Low">Low</option>
+                    </select>
+                  </div>
+
+                  <div className="flex items-center gap-1 md:gap-2">
+                    <span className={`text-xs md:text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                      Status:
+                    </span>
+                    <select
+                      value={selectedStatus}
+                      onChange={(e) => setSelectedStatus(e.target.value)}
+                      className={`px-2 py-1 md:px-3 md:py-2 rounded-lg border text-xs md:text-sm ${
+                        isDarkMode 
+                          ? 'bg-slate-700 border-slate-600 text-white' 
+                          : 'bg-white border-gray-300 text-gray-900'
+                      } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                    >
+                      <option value="All Status">All Status</option>
+                      <option value="Active">Active</option>
+                      <option value="Draft">Draft</option>
+                      <option value="Scheduled">Scheduled</option>
+                      <option value="Archived">Archived</option>
+                    </select>
+                  </div>
+
+                  <div className="relative">
+                    <Search className={`absolute left-2 md:left-3 top-1/2 transform -translate-y-1/2 w-3 h-3 md:w-4 md:h-4 ${
+                      isDarkMode ? 'text-gray-400' : 'text-gray-500'
+                    }`} />
+                    <input
+                      type="text"
+                      placeholder="Search announcements..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className={`pl-7 md:pl-10 pr-3 md:pr-4 py-1 md:py-2 rounded-lg border text-xs md:text-sm ${
+                        isDarkMode 
+                          ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-400' 
+                          : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                      } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                    />
+                  </div>
+                </div>
+
+                <button 
+                  onClick={() => setIsCreateModalOpen(true)}
+                  className="px-3 py-2 md:px-4 md:py-2 bg-blue-500 text-white rounded-lg text-xs md:text-sm font-medium hover:bg-blue-600 transition-colors flex items-center gap-1 md:gap-2"
+                >
+                  <Plus size={14} className="md:w-4 md:h-4" />
+                  Create Announcement
+                </button>
+              </div>
+
+              {selectedAnnouncements.length > 0 && (
+                <div className={`mt-3 md:mt-4 pt-3 md:pt-4 border-t ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 md:gap-4">
+                    <span className={`text-xs md:text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                      {selectedAnnouncements.length} announcement{selectedAnnouncements.length !== 1 ? 's' : ''} selected
+                    </span>
+                    <div className="flex gap-1 md:gap-2">
+                      <button
+                        onClick={() => handleBulkAction('publish')}
+                        className="px-2 py-1 md:px-3 md:py-1 bg-blue-500 text-white rounded text-xs md:text-sm hover:bg-blue-600 transition-colors flex items-center gap-1"
+                      >
+                        <Send size={12} className="md:w-3 md:h-3" />
+                        Publish
+                      </button>
+                      <button
+                        onClick={() => handleBulkAction('archive')}
+                        className="px-2 py-1 md:px-3 md:py-1 bg-orange-500 text-white rounded text-xs md:text-sm hover:bg-orange-600 transition-colors flex items-center gap-1"
+                      >
+                        <Archive size={12} className="md:w-3 md:h-3" />
+                        Archive
+                      </button>
+                      <button
+                        onClick={() => handleBulkAction('delete')}
+                        className="px-2 py-1 md:px-3 md:py-1 bg-red-500 text-white rounded text-xs md:text-sm hover:bg-red-600 transition-colors flex items-center gap-1"
+                      >
+                        <Trash2 size={12} className="md:w-3 md:h-3" />
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+              {filteredAnnouncements.map((announcement) => {
+                const CategoryIcon = announcement.categoryIcon;
+                return (
+                  <div
+                    key={announcement.id}
+                    className={`p-4 md:p-6 rounded-xl md:rounded-2xl border transition-all hover:shadow-lg ${
+                      isDarkMode 
+                        ? 'bg-slate-800 border-slate-700 hover:border-slate-600' 
+                        : 'bg-white border-gray-300 shadow-sm hover:border-gray-400'
+                    }`}
+                  >
+                    <div className="flex items-start justify-between mb-3 md:mb-4">
+                      <input
+                        type="checkbox"
+                        checked={selectedAnnouncements.includes(announcement.id)}
+                        onChange={() => handleAnnouncementSelect(announcement.id)}
+                        className="w-4 h-4 text-blue-500 border-gray-300 rounded focus:ring-blue-500 mt-1"
+                      />
+                      <div className="flex gap-1 md:gap-2">
+                        <span className={`px-1 py-0.5 md:px-2 md:py-1 rounded-full text-xs font-medium ${getPriorityColor(announcement.priority)}`}>
+                          {announcement.priority}
+                        </span>
+                        <span className={`px-1 py-0.5 md:px-2 md:py-1 rounded-full text-xs font-medium ${getStatusColor(announcement.status)}`}>
+                          {announcement.status}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-1 md:gap-2 mb-2 md:mb-3">
+                      <CategoryIcon className="w-3 h-3 md:w-4 md:h-4" />
+                      <span className={`px-1 py-0.5 md:px-2 md:py-1 rounded-full text-xs font-medium ${announcement.categoryColor}`}>
+                        {announcement.category}
+                      </span>
+                    </div>
+
+                    <h3 className={`font-semibold text-sm md:text-base mb-1 md:mb-2 line-clamp-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      {announcement.title}
+                    </h3>
+                    <p className={`text-xs md:text-sm mb-3 md:mb-4 line-clamp-3 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      {announcement.description}
+                    </p>
+
+                    <div className="flex items-center justify-between text-xs">
+                      <div>
+                        <p className={`font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                          {announcement.author}
+                        </p>
+                        <p className={`${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
+                          {announcement.date}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-1 md:gap-2">
+                        <div className={`flex items-center gap-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                          <Eye className="w-3 h-3" />
+                          <span>{announcement.views}</span>
+                        </div>
+                        <div className="flex gap-1">
+                          <button 
+                            onClick={() => {
+                              setSelectedAnnouncement(announcement);
+                              setIsViewModalOpen(true);
+                            }}
+                            className={`p-1 rounded hover:bg-gray-100 dark:hover:bg-slate-700 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
+                          >
+                            <Eye className="w-3 h-3 md:w-4 md:h-4" />
+                          </button>
+                          <button 
+                            onClick={() => {
+                              setSelectedAnnouncement({...announcement});
+                              setIsEditModalOpen(true);
+                            }}
+                            className={`p-1 rounded hover:bg-gray-100 dark:hover:bg-slate-700 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
+                          >
+                            <Edit className="w-3 h-3 md:w-4 md:h-4" />
+                          </button>
+                          <button 
+                            onClick={() => handleDeleteAnnouncement(announcement.id)}
+                            className={`p-1 rounded hover:bg-gray-100 dark:hover:bg-slate-700 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
+                          >
+                            <Trash2 className="w-3 h-3 md:w-4 md:h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
 
-      <Footer isSidebarExpanded={isSidebarExpanded} />
+        <Footer isSidebarExpanded={isSidebarExpanded} />
 
-      {/* Modals */}
-      <CreateAnnouncementModal 
-        isOpen={isCreateModalOpen}
-        onClose={handleCreateModalClose}
-        isDarkMode={isDarkMode}
-        newAnnouncement={newAnnouncement}
-        onNewAnnouncementChange={handleNewAnnouncementChange}
-        onCreate={handleCreateAnnouncement}
-      />
-      
-      <ViewAnnouncementModal 
-        isOpen={isViewModalOpen}
-        onClose={handleViewModalClose}
-        isDarkMode={isDarkMode}
-        selectedAnnouncement={selectedAnnouncement}
-        getCategoryColor={getCategoryColor}
-        getPriorityColor={getPriorityColor}
-        getStatusColor={getStatusColor}
-      />
-      
-      <EditAnnouncementModal 
-        isOpen={isEditModalOpen}
-        onClose={handleEditModalClose}
-        isDarkMode={isDarkMode}
-        selectedAnnouncement={selectedAnnouncement}
-        onAnnouncementChange={handleSelectedAnnouncementChange}
-        onSave={handleEditAnnouncement}
-      />
-    </div>
+        <CreateAnnouncementModal 
+          isOpen={isCreateModalOpen}
+          onClose={handleCreateModalClose}
+          isDarkMode={isDarkMode}
+          newAnnouncement={newAnnouncement}
+          onNewAnnouncementChange={handleNewAnnouncementChange}
+          onCreate={handleCreateAnnouncement}
+        />
+        
+        <ViewAnnouncementModal 
+          isOpen={isViewModalOpen}
+          onClose={handleViewModalClose}
+          isDarkMode={isDarkMode}
+          selectedAnnouncement={selectedAnnouncement}
+          getCategoryColor={getCategoryColor}
+          getPriorityColor={getPriorityColor}
+          getStatusColor={getStatusColor}
+        />
+        
+        <EditAnnouncementModal 
+          isOpen={isEditModalOpen}
+          onClose={handleEditModalClose}
+          isDarkMode={isDarkMode}
+          selectedAnnouncement={selectedAnnouncement}
+          onAnnouncementChange={handleSelectedAnnouncementChange}
+          onSave={handleEditAnnouncement}
+        />
+      </div>
+    </>
   );
 };
 

@@ -9,7 +9,7 @@ const TeacherAnnouncements = () => {
   const { isDarkMode } = useTheme();
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const [filterType, setFilterType] = useState('All Types');
-  const [displayCount, setDisplayCount] = useState(6); // Initially show 6 announcements
+  const [displayCount, setDisplayCount] = useState(6);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [selectedAnnouncement, setSelectedAnnouncement] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -273,7 +273,7 @@ const TeacherAnnouncements = () => {
   // Reset display count when filter changes
   const handleFilterChange = (e) => {
     setFilterType(e.target.value);
-    setDisplayCount(6); // Reset to show initial 6 announcements
+    setDisplayCount(6);
   };
 
   const getPriorityColor = (priority) => {
@@ -313,32 +313,32 @@ const TeacherAnnouncements = () => {
       <Sidebar isExpanded={isSidebarExpanded} activeItem="announcements" />
 
       <main className={`transition-all duration-300 pt-20 pb-16 min-h-screen ${
-        isSidebarExpanded ? 'ml-64' : 'ml-16'
+        isSidebarExpanded ? 'lg:ml-64' : 'lg:ml-16'
       }`}>
-        <div className="w-full h-full px-6 py-6">
+        <div className="w-full h-full px-4 sm:px-6 py-6">
           
           {/* Header */}
-          <div className="text-left mb-8">
-            <h1 className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <div className="text-left mb-6 sm:mb-8">
+            <h1 className={`text-2xl sm:text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               Announcements
             </h1>
-            <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
+            <p className={`text-base sm:text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
               Manage and share important updates with students and parents
             </p>
           </div>
 
           {/* Main Container */}
-          <div className={`p-6 rounded-2xl border ${
+          <div className={`p-4 sm:p-6 rounded-xl sm:rounded-2xl border ${
             isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
-          } mb-8`}>
+          } mb-6 sm:mb-8`}>
             
             {/* Header with Filter */}
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
               <div className="flex items-center gap-4">
-                <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <h2 className={`text-lg sm:text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Recent Announcements
                 </h2>
-                <span className={`text-sm px-2 py-1 rounded-full ${
+                <span className={`text-xs sm:text-sm px-2 py-1 rounded-full ${
                   isDarkMode ? 'bg-blue-900 text-blue-300' : 'bg-blue-100 text-blue-700'
                 }`}>
                   {filteredAnnouncements.length} {filterType === 'All Types' ? 'Total' : filterType}
@@ -374,7 +374,7 @@ const TeacherAnnouncements = () => {
                   <div key={announcement.id} className={`p-4 rounded-lg border transition-colors ${
                     isDarkMode ? 'bg-slate-700 border-slate-600 hover:bg-slate-600' : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
                   }`}>
-                    <div className="flex items-start gap-4">
+                    <div className="flex items-start gap-3 sm:gap-4">
                       
                       {/* Status Indicator */}
                       <div className="flex flex-col items-center gap-2 flex-shrink-0 pt-2">
@@ -382,18 +382,18 @@ const TeacherAnnouncements = () => {
                       </div>
 
                       {/* Avatar */}
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-sm flex-shrink-0">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-xs sm:text-sm flex-shrink-0">
                         {announcement.author.charAt(0)}
                       </div>
                       
                       {/* Content */}
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-start justify-between mb-2">
-                          <div className="flex-1">
-                            <h3 className={`font-semibold text-base mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 sm:gap-4 mb-2">
+                          <div className="flex-1 min-w-0">
+                            <h3 className={`font-semibold text-sm sm:text-base mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                               {announcement.title}
                             </h3>
-                            <div className="flex items-center gap-2 text-sm mb-2">
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 text-xs sm:text-sm mb-2">
                               <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                                 {announcement.author}
                               </span>
@@ -404,7 +404,7 @@ const TeacherAnnouncements = () => {
                           </div>
                           
                           {/* Priority Badge and Dropdown */}
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 self-start sm:self-auto">
                             <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getPriorityColor(announcement.priority)}`}>
                               {announcement.priority}
                             </span>
@@ -442,27 +442,28 @@ const TeacherAnnouncements = () => {
                           </div>
                         </div>
                         
-                        <p className={`text-sm mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                        <p className={`text-xs sm:text-sm mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'} line-clamp-2`}>
                           {announcement.content}
                         </p>
                         
                         {/* Engagement Stats */}
-                        <div className="flex items-center gap-6 text-sm">
+                        <div className="flex items-center gap-4 sm:gap-6 text-xs">
                           <button className={`flex items-center gap-1 ${isDarkMode ? 'text-gray-400 hover:text-blue-400' : 'text-gray-600 hover:text-blue-600'}`}>
-                            <Eye size={14} />
+                            <Eye size={12} className="sm:w-4 sm:h-4" />
                             <span>{announcement.views}</span>
                           </button>
                           <button className={`flex items-center gap-1 ${isDarkMode ? 'text-gray-400 hover:text-red-400' : 'text-gray-600 hover:text-red-600'}`}>
-                            <Heart size={14} />
+                            <Heart size={12} className="sm:w-4 sm:h-4" />
                             <span>{announcement.likes}</span>
                           </button>
                           <button className={`flex items-center gap-1 ${isDarkMode ? 'text-gray-400 hover:text-green-400' : 'text-gray-600 hover:text-green-600'}`}>
-                            <MessageCircle size={14} />
+                            <MessageCircle size={12} className="sm:w-4 sm:h-4" />
                             <span>{announcement.comments}</span>
                           </button>
                           <button className={`flex items-center gap-1 ${isDarkMode ? 'text-gray-400 hover:text-purple-400' : 'text-gray-600 hover:text-purple-600'}`}>
-                            <Share2 size={14} />
-                            <span>Share</span>
+                            <Share2 size={12} className="sm:w-4 sm:h-4" />
+                            <span className="hidden sm:inline">Share</span>
+                            <span className="sm:hidden">Share</span>
                           </button>
                         </div>
                       </div>
@@ -474,23 +475,23 @@ const TeacherAnnouncements = () => {
 
             {/* Load More Button */}
             {hasMoreAnnouncements && (
-              <div className="mt-8 text-center">
+              <div className="mt-6 sm:mt-8 text-center">
                 <button 
                   onClick={loadMoreAnnouncements}
-                  className={`px-6 py-3 rounded-lg border transition-colors ${
+                  className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg border transition-colors text-sm sm:text-base ${
                     isDarkMode 
                       ? 'border-slate-600 text-gray-300 hover:bg-slate-700' 
                       : 'border-gray-300 text-gray-700 hover:bg-gray-50'
                   }`}
                 >
-                  Load More Announcements ({filteredAnnouncements.length - displayCount} remaining)
+                  Load More ({filteredAnnouncements.length - displayCount} remaining)
                 </button>
               </div>
             )}
 
             {/* Show "All loaded" message when no more announcements */}
             {!hasMoreAnnouncements && announcementsToShow.length > 6 && (
-              <div className={`mt-8 text-center text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <div className={`mt-6 sm:mt-8 text-center text-xs sm:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 All announcements loaded ({filteredAnnouncements.length} total)
               </div>
             )}
@@ -505,20 +506,20 @@ const TeacherAnnouncements = () => {
             } shadow-2xl`}>
               
               {/* Modal Header */}
-              <div className={`p-6 border-b ${isDarkMode ? 'border-slate-700' : 'border-gray-200'}`}>
+              <div className={`p-4 sm:p-6 border-b ${isDarkMode ? 'border-slate-700' : 'border-gray-200'}`}>
                 <div className="flex items-start justify-between">
-                  <div className="flex items-start gap-4 flex-1">
+                  <div className="flex items-start gap-3 sm:gap-4 flex-1">
                     {/* Avatar */}
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold flex-shrink-0">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold flex-shrink-0">
                       {selectedAnnouncement.author.charAt(0)}
                     </div>
                     
                     {/* Author info */}
-                    <div className="flex-1">
-                      <h3 className={`text-xl font-bold mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    <div className="flex-1 min-w-0">
+                      <h3 className={`text-lg sm:text-xl font-bold mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                         {selectedAnnouncement.title}
                       </h3>
-                      <div className="flex items-center gap-3 text-sm mb-2">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-xs sm:text-sm mb-2">
                         <span className={`font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                           {selectedAnnouncement.author}
                         </span>
@@ -528,7 +529,7 @@ const TeacherAnnouncements = () => {
                       </div>
                       
                       {/* Priority and Type badges */}
-                      <div className="flex items-center gap-2">
+                      <div className="flex flex-wrap gap-2">
                         <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getPriorityColor(selectedAnnouncement.priority)}`}>
                           {selectedAnnouncement.priority} Priority
                         </span>
@@ -550,7 +551,7 @@ const TeacherAnnouncements = () => {
                   {/* Close button */}
                   <button
                     onClick={closeModal}
-                    className={`p-2 rounded-lg ${
+                    className={`p-2 rounded-lg flex-shrink-0 ${
                       isDarkMode ? 'text-gray-400 hover:text-white hover:bg-slate-700' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
                     }`}
                   >
@@ -560,29 +561,29 @@ const TeacherAnnouncements = () => {
               </div>
 
               {/* Modal Content */}
-              <div className="p-6">
-                <div className={`text-base leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+              <div className="p-4 sm:p-6">
+                <div className={`text-sm sm:text-base leading-relaxed mb-4 sm:mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   {selectedAnnouncement.content}
                 </div>
                 
                 {/* Engagement Stats */}
-                <div className={`flex items-center gap-8 p-4 rounded-lg ${
+                <div className={`flex items-center gap-4 sm:gap-8 p-3 sm:p-4 rounded-lg ${
                   isDarkMode ? 'bg-slate-700' : 'bg-gray-50'
                 }`}>
-                  <div className="flex items-center gap-2 text-sm">
-                    <Eye size={16} className={isDarkMode ? 'text-blue-400' : 'text-blue-600'} />
+                  <div className="flex items-center gap-2 text-xs sm:text-sm">
+                    <Eye size={14} className={`sm:w-4 sm:h-4 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`} />
                     <span className={`font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                       {selectedAnnouncement.views} Views
                     </span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <Heart size={16} className={isDarkMode ? 'text-red-400' : 'text-red-600'} />
+                  <div className="flex items-center gap-2 text-xs sm:text-sm">
+                    <Heart size={14} className={`sm:w-4 sm:h-4 ${isDarkMode ? 'text-red-400' : 'text-red-600'}`} />
                     <span className={`font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                       {selectedAnnouncement.likes} Likes
                     </span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <MessageCircle size={16} className={isDarkMode ? 'text-green-400' : 'text-green-600'} />
+                  <div className="flex items-center gap-2 text-xs sm:text-sm">
+                    <MessageCircle size={14} className={`sm:w-4 sm:h-4 ${isDarkMode ? 'text-green-400' : 'text-green-600'}`} />
                     <span className={`font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                       {selectedAnnouncement.comments} Comments
                     </span>
@@ -591,38 +592,38 @@ const TeacherAnnouncements = () => {
               </div>
 
               {/* Modal Footer */}
-              <div className={`p-6 border-t ${isDarkMode ? 'border-slate-700' : 'border-gray-200'}`}>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <button className={`px-4 py-2 rounded-lg border transition-colors ${
+              <div className={`p-4 sm:p-6 border-t ${isDarkMode ? 'border-slate-700' : 'border-gray-200'}`}>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <button className={`px-3 sm:px-4 py-2 rounded-lg border transition-colors text-xs sm:text-sm ${
                       isDarkMode 
                         ? 'border-slate-600 text-gray-300 hover:bg-slate-700' 
                         : 'border-gray-300 text-gray-700 hover:bg-gray-50'
                     }`}>
-                      <Heart size={14} className="inline mr-2" />
+                      <Heart size={12} className="sm:w-4 sm:h-4 inline mr-1 sm:mr-2" />
                       Like
                     </button>
-                    <button className={`px-4 py-2 rounded-lg border transition-colors ${
+                    <button className={`px-3 sm:px-4 py-2 rounded-lg border transition-colors text-xs sm:text-sm ${
                       isDarkMode 
                         ? 'border-slate-600 text-gray-300 hover:bg-slate-700' 
                         : 'border-gray-300 text-gray-700 hover:bg-gray-50'
                     }`}>
-                      <MessageCircle size={14} className="inline mr-2" />
+                      <MessageCircle size={12} className="sm:w-4 sm:h-4 inline mr-1 sm:mr-2" />
                       Comment
                     </button>
-                    <button className={`px-4 py-2 rounded-lg border transition-colors ${
+                    <button className={`px-3 sm:px-4 py-2 rounded-lg border transition-colors text-xs sm:text-sm ${
                       isDarkMode 
                         ? 'border-slate-600 text-gray-300 hover:bg-slate-700' 
                         : 'border-gray-300 text-gray-700 hover:bg-gray-50'
                     }`}>
-                      <Share2 size={14} className="inline mr-2" />
+                      <Share2 size={12} className="sm:w-4 sm:h-4 inline mr-1 sm:mr-2" />
                       Share
                     </button>
                   </div>
                   
                   <button
                     onClick={closeModal}
-                    className={`px-6 py-2 rounded-lg ${
+                    className={`px-4 sm:px-6 py-2 rounded-lg text-sm sm:text-base ${
                       isDarkMode 
                         ? 'bg-blue-600 hover:bg-blue-700 text-white' 
                         : 'bg-blue-600 hover:bg-blue-700 text-white'

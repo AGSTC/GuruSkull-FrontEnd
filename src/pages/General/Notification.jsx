@@ -12,7 +12,9 @@ import {
   AlertTriangle, 
   CheckCheck,
   Archive,
-  Filter
+  Filter,
+  ChevronDown,
+  X
 } from 'lucide-react';
 
 const Notifications = () => {
@@ -22,8 +24,9 @@ const Notifications = () => {
   const [selectedFilter, setSelectedFilter] = useState('All Notifications');
   const [notifications, setNotifications] = useState([]);
   const [filteredNotifications, setFilteredNotifications] = useState([]);
-  const [displayCount, setDisplayCount] = useState(5); // Number of notifications to display
+  const [displayCount, setDisplayCount] = useState(5);
   const [hasMoreNotifications, setHasMoreNotifications] = useState(true);
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   // Initialize notifications with sample data
   useEffect(() => {
@@ -220,11 +223,7 @@ const Notifications = () => {
     });
     
     setFilteredNotifications(filtered);
-    
-    // Reset display count when filters change
     setDisplayCount(5);
-    
-    // Check if there are more notifications to load
     setHasMoreNotifications(filtered.length > 5);
   }, [notifications, searchTerm, selectedFilter]);
 
@@ -232,7 +231,6 @@ const Notifications = () => {
     setIsSidebarExpanded(!isSidebarExpanded);
   };
 
-  // Mark a single notification as read
   const markAsRead = (id) => {
     setNotifications(prevNotifications =>
       prevNotifications.map(notification =>
@@ -241,14 +239,12 @@ const Notifications = () => {
     );
   };
 
-  // Mark all notifications as read
   const markAllAsRead = () => {
     setNotifications(prevNotifications =>
       prevNotifications.map(notification => ({ ...notification, isUnread: false }))
     );
   };
 
-  // Archive old notifications (older than 1 day)
   const archiveOldNotifications = () => {
     const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
     
@@ -258,22 +254,18 @@ const Notifications = () => {
       )
     );
     
-    // Show confirmation message (you can replace this with a toast notification)
     alert('Old notifications have been archived successfully!');
   };
 
-  // Load more notifications
   const loadMoreNotifications = () => {
     const newDisplayCount = displayCount + 5;
     setDisplayCount(newDisplayCount);
     
-    // Check if we've reached the end of the notifications list
     if (newDisplayCount >= filteredNotifications.length) {
       setHasMoreNotifications(false);
     }
   };
 
-  // Calculate counts for filter categories
   const getFilterCounts = () => {
     const activeNotifications = notifications.filter(n => !n.isArchived);
     
@@ -298,7 +290,6 @@ const Notifications = () => {
     { name: 'System Alerts', count: filterCounts['System Alerts'], icon: AlertTriangle }
   ];
 
-  // Format time display
   const formatTime = (timestamp) => {
     const now = new Date();
     const diffInSeconds = Math.floor((now - timestamp) / 1000);
@@ -309,8 +300,96 @@ const Notifications = () => {
     return `${Math.floor(diffInSeconds / 86400)} day${Math.floor(diffInSeconds / 86400) > 1 ? 's' : ''} ago`;
   };
 
-  // Get notifications to display (limited by displayCount)
   const notificationsToDisplay = filteredNotifications.slice(0, displayCount);
+
+  const FilterSidebar = () => (
+    <div className={`w-full lg:w-80 ${isDarkMode ? 'bg-slate-800' : 'bg-white'} rounded-xl md:rounded-2xl border ${
+      isDarkMode ? 'border-slate-700' : 'border-gray-300'
+    } p-4 md:p-6 h-fit`}>
+      
+      {/* Search */}
+      <div className="mb-4 md:mb-6">
+        <div className="relative">
+          <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 ${
+            isDarkMode ? 'text-gray-400' : 'text-gray-500'
+          }`} />
+          <input
+            type="text"
+            placeholder="Search notifications..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className={`w-full pl-10 pr-4 py-2 md:py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm md:text-base ${
+              isDarkMode 
+                ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-400' 
+                : 'bg-gray-50 border-gray-300 text-gray-900 placeholder-gray-500'
+            }`}
+          />
+        </div>
+      </div>
+
+      {/* Filter by Type */}
+      <div className="mb-4 md:mb-6">
+        <h3 className={`text-sm font-medium mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+          Filter by Type
+        </h3>
+        <div className="space-y-1">
+          {filterCategories.map((category) => {
+            const Icon = category.icon;
+            return (
+              <button
+                key={category.name}
+                onClick={() => setSelectedFilter(category.name)}
+                className={`w-full flex items-center justify-between p-2 md:p-3 rounded-lg text-left transition-colors text-sm ${
+                  selectedFilter === category.name
+                    ? (isDarkMode ? 'bg-blue-600 text-white' : 'bg-blue-100 text-blue-900')
+                    : (isDarkMode ? 'hover:bg-slate-700 text-gray-300' : 'hover:bg-gray-100 text-gray-700')
+                }`}
+              >
+                <div className="flex items-center gap-2 md:gap-3">
+                  <Icon size={16} />
+                  <span className="font-medium">{category.name}</span>
+                </div>
+                <span className={`text-xs px-2 py-1 rounded-full ${
+                  selectedFilter === category.name
+                    ? (isDarkMode ? 'bg-blue-500 text-white' : 'bg-blue-200 text-blue-800')
+                    : (isDarkMode ? 'bg-slate-600 text-gray-300' : 'bg-gray-200 text-gray-600')
+                }`}>
+                  {category.count}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div>
+        <h3 className={`text-sm font-medium mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+          Quick Actions
+        </h3>
+        <div className="space-y-2">
+          <button 
+            onClick={markAllAsRead}
+            className={`w-full flex items-center gap-2 md:gap-3 p-2 md:p-3 rounded-lg text-left transition-colors text-sm ${
+              isDarkMode ? 'hover:bg-slate-700 text-gray-300' : 'hover:bg-gray-100 text-gray-700'
+            }`}
+          >
+            <CheckCheck size={16} />
+            <span>Mark all as read</span>
+          </button>
+          <button 
+            onClick={archiveOldNotifications}
+            className={`w-full flex items-center gap-2 md:gap-3 p-2 md:p-3 rounded-lg text-left transition-colors text-sm ${
+              isDarkMode ? 'hover:bg-slate-700 text-gray-300' : 'hover:bg-gray-100 text-gray-700'
+            }`}
+          >
+            <Archive size={16} />
+            <span>Archive old notifications</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className={`min-h-screen w-full ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
@@ -321,121 +400,59 @@ const Notifications = () => {
 
       <Sidebar isExpanded={isSidebarExpanded} activeItem="notifications" />
 
-      <main className={`transition-all duration-300 pt-20 pb-16 min-h-screen ${
-        isSidebarExpanded ? 'ml-64' : 'ml-16'
-      }`}>
-        <div className="w-full h-full p-6">
+      <main className={`transition-all duration-300 ${
+        isSidebarExpanded ? 'ml-0 md:ml-48 lg:ml-64' : 'ml-0 md:ml-16'
+      } pt-16 md:pt-20 pb-12 md:pb-16 min-h-screen overflow-x-hidden`}>
+        <div className="w-full h-full px-3 sm:px-4 md:px-6 py-4 md:py-6">
           
           {/* Header Section */}
-          <div className="text-left mb-6">
-            <h1 className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <div className="text-left mb-4 md:mb-6">
+            <h1 className={`text-xl sm:text-2xl md:text-3xl font-bold mb-1 md:mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               Notifications
             </h1>
-            <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
+            <p className={`text-sm md:text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
               Stay updated with your tuition classes activities
             </p>
           </div>
 
-          <div className="flex gap-6">
+          {/* Mobile Filter Toggle */}
+          <div className="lg:hidden mb-4">
+            <button
+              onClick={() => setShowMobileFilters(!showMobileFilters)}
+              className={`w-full flex items-center justify-between p-3 rounded-lg border ${
+                isDarkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-white border-gray-300 text-gray-900'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <Filter size={18} />
+                <span>Filters</span>
+                <span className={`px-2 py-1 rounded-full text-xs ${
+                  isDarkMode ? 'bg-slate-600 text-gray-300' : 'bg-gray-200 text-gray-600'
+                }`}>
+                  {filterCounts[selectedFilter]}
+                </span>
+              </div>
+              <ChevronDown size={18} className={`transform ${showMobileFilters ? 'rotate-180' : ''}`} />
+            </button>
+          </div>
+
+          <div className="flex flex-col lg:flex-row gap-4 md:gap-6">
             
             {/* Left Sidebar - Filters */}
-            <div className={`w-80 ${isDarkMode ? 'bg-slate-800' : 'bg-white'} rounded-2xl border ${
-              isDarkMode ? 'border-slate-700' : 'border-gray-300'
-            } p-6 h-fit`}>
-              
-              {/* Search */}
-              <div className="mb-6">
-                <div className="relative">
-                  <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 ${
-                    isDarkMode ? 'text-gray-400' : 'text-gray-500'
-                  }`} />
-                  <input
-                    type="text"
-                    placeholder="Search notifications..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className={`w-full pl-10 pr-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                      isDarkMode 
-                        ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-400' 
-                        : 'bg-gray-50 border-gray-300 text-gray-900 placeholder-gray-500'
-                    }`}
-                  />
-                </div>
-              </div>
-
-              {/* Filter by Type */}
-              <div className="mb-6">
-                <h3 className={`text-sm font-medium mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  Filter by Type
-                </h3>
-                <div className="space-y-1">
-                  {filterCategories.map((category) => {
-                    const Icon = category.icon;
-                    return (
-                      <button
-                        key={category.name}
-                        onClick={() => setSelectedFilter(category.name)}
-                        className={`w-full flex items-center justify-between p-3 rounded-lg text-left transition-colors ${
-                          selectedFilter === category.name
-                            ? (isDarkMode ? 'bg-blue-600 text-white' : 'bg-blue-100 text-blue-900')
-                            : (isDarkMode ? 'hover:bg-slate-700 text-gray-300' : 'hover:bg-gray-100 text-gray-700')
-                        }`}
-                      >
-                        <div className="flex items-center gap-3">
-                          <Icon size={16} />
-                          <span className="text-sm font-medium">{category.name}</span>
-                        </div>
-                        <span className={`text-xs px-2 py-1 rounded-full ${
-                          selectedFilter === category.name
-                            ? (isDarkMode ? 'bg-blue-500 text-white' : 'bg-blue-200 text-blue-800')
-                            : (isDarkMode ? 'bg-slate-600 text-gray-300' : 'bg-gray-200 text-gray-600')
-                        }`}>
-                          {category.count}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Quick Actions */}
-              <div>
-                <h3 className={`text-sm font-medium mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  Quick Actions
-                </h3>
-                <div className="space-y-2">
-                  <button 
-                    onClick={markAllAsRead}
-                    className={`w-full flex items-center gap-3 p-3 rounded-lg text-left transition-colors ${
-                      isDarkMode ? 'hover:bg-slate-700 text-gray-300' : 'hover:bg-gray-100 text-gray-700'
-                    }`}
-                  >
-                    <CheckCheck size={16} />
-                    <span className="text-sm">Mark all as read</span>
-                  </button>
-                  <button 
-                    onClick={archiveOldNotifications}
-                    className={`w-full flex items-center gap-3 p-3 rounded-lg text-left transition-colors ${
-                      isDarkMode ? 'hover:bg-slate-700 text-gray-300' : 'hover:bg-gray-100 text-gray-700'
-                    }`}
-                  >
-                    <Archive size={16} />
-                    <span className="text-sm">Archive old notifications</span>
-                  </button>
-                </div>
-              </div>
+            <div className={`${showMobileFilters ? 'block' : 'hidden'} lg:block`}>
+              <FilterSidebar />
             </div>
 
             {/* Right Content - Notifications List */}
             <div className="flex-1">
               
               {/* Header with View All */}
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-4">
-                  <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 md:mb-6">
+                <div className="flex items-center gap-3">
+                  <h2 className={`text-lg md:text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     {selectedFilter}
                   </h2>
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                     isDarkMode ? 'bg-slate-700 text-gray-300' : 'bg-gray-200 text-gray-600'
                   }`}>
                     {notificationsToDisplay.length} of {filteredNotifications.length} {filteredNotifications.length === 1 ? 'notification' : 'notifications'}
@@ -443,20 +460,20 @@ const Notifications = () => {
                 </div>
                 <button 
                   onClick={markAllAsRead}
-                  className="px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg hover:bg-blue-600 transition-colors"
+                  className="px-3 py-2 md:px-4 md:py-2 bg-blue-500 text-white text-sm font-medium rounded-lg hover:bg-blue-600 transition-colors w-full sm:w-auto"
                 >
                   Mark All Read
                 </button>
               </div>
 
               {/* Notifications List */}
-              <div className={`${isDarkMode ? 'bg-slate-800' : 'bg-white'} rounded-2xl border ${
+              <div className={`${isDarkMode ? 'bg-slate-800' : 'bg-white'} rounded-xl md:rounded-2xl border ${
                 isDarkMode ? 'border-slate-700' : 'border-gray-300'
               } overflow-hidden`}>
                 {notificationsToDisplay.length === 0 ? (
-                  <div className="p-12 text-center">
-                    <Bell className={`w-16 h-16 mx-auto mb-4 ${isDarkMode ? 'text-gray-600' : 'text-gray-400'}`} />
-                    <h3 className={`text-lg font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  <div className="p-8 md:p-12 text-center">
+                    <Bell className={`w-12 h-12 md:w-16 md:h-16 mx-auto mb-3 md:mb-4 ${isDarkMode ? 'text-gray-600' : 'text-gray-400'}`} />
+                    <h3 className={`text-base md:text-lg font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                       No notifications found
                     </h3>
                     <p className={`text-sm ${isDarkMode ? 'text-gray-500' : 'text-gray-600'}`}>
@@ -469,7 +486,7 @@ const Notifications = () => {
                       <div 
                         key={notification.id} 
                         onClick={() => markAsRead(notification.id)}
-                        className={`p-6 border-b ${
+                        className={`p-4 md:p-6 border-b ${
                           isDarkMode ? 'border-slate-700' : 'border-gray-200'
                         } ${index === notificationsToDisplay.length - 1 ? 'border-b-0' : ''} ${
                           notification.isUnread 
@@ -477,10 +494,10 @@ const Notifications = () => {
                             : ''
                         } hover:${isDarkMode ? 'bg-slate-700' : 'bg-gray-50'} transition-colors cursor-pointer`}
                       >
-                        <div className="flex items-start gap-4">
+                        <div className="flex items-start gap-3 md:gap-4">
                           
                           {/* Icon */}
-                          <div className={`w-10 h-10 rounded-full flex items-center justify-center text-lg flex-shrink-0 ${
+                          <div className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-base md:text-lg flex-shrink-0 ${
                             notification.isUnread 
                               ? (isDarkMode ? 'bg-blue-600' : 'bg-blue-100') 
                               : (isDarkMode ? 'bg-slate-600' : 'bg-gray-100')
@@ -490,19 +507,19 @@ const Notifications = () => {
 
                           {/* Content */}
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-start justify-between">
-                              <div className="flex-1">
+                            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
+                              <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-2 mb-1">
-                                  <h3 className={`font-semibold text-sm ${
+                                  <h3 className={`font-semibold text-sm md:text-base truncate ${
                                     isDarkMode ? 'text-white' : 'text-gray-900'
                                   }`}>
                                     {notification.title}
                                   </h3>
                                   {notification.isUnread && (
-                                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                                    <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0"></div>
                                   )}
                                 </div>
-                                <p className={`text-sm mb-2 ${
+                                <p className={`text-sm mb-2 line-clamp-2 ${
                                   isDarkMode ? 'text-gray-300' : 'text-gray-700'
                                 }`}>
                                   {notification.description}
@@ -510,7 +527,7 @@ const Notifications = () => {
                               </div>
                               
                               {/* Time */}
-                              <span className={`text-xs whitespace-nowrap ${
+                              <span className={`text-xs whitespace-nowrap flex-shrink-0 ${
                                 isDarkMode ? 'text-gray-500' : 'text-gray-600'
                               }`}>
                                 {formatTime(notification.timestamp)}
@@ -523,7 +540,7 @@ const Notifications = () => {
                     
                     {/* Load More Button */}
                     {hasMoreNotifications && filteredNotifications.length > 5 && (
-                      <div className="p-6 text-center border-t">
+                      <div className="p-4 md:p-6 text-center border-t">
                         <button 
                           onClick={loadMoreNotifications}
                           className={`text-sm font-medium px-4 py-2 rounded-lg transition-colors ${
@@ -545,6 +562,30 @@ const Notifications = () => {
       </main>
 
       <Footer isSidebarExpanded={isSidebarExpanded} />
+
+      {/* Mobile Filter Modal */}
+      {showMobileFilters && (
+        <div className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40">
+          <div className={`fixed bottom-0 left-0 right-0 max-h-[80vh] overflow-y-auto ${
+            isDarkMode ? 'bg-slate-800' : 'bg-white'
+          } rounded-t-2xl p-4`}>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                Filters
+              </h3>
+              <button 
+                onClick={() => setShowMobileFilters(false)}
+                className={`p-2 rounded-lg ${
+                  isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-gray-100'
+                }`}
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <FilterSidebar />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -11,51 +11,36 @@ const TeacherSchedule = () => {
   const [showAddClassModal, setShowAddClassModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   
-  // Week state management
   const [currentWeekStart, setCurrentWeekStart] = useState(new Date('2025-09-08'));
   const [weeksData, setWeeksData] = useState({
     '2025-09-08': [
-      // Monday
       { id: 1, day: 0, time: 0, subject: 'Physics', class: 'Class 10-A', room: 'Room 101', duration: 1, color: 'bg-green-200 border-green-300' },
       { id: 2, day: 0, time: 1, subject: 'Mathematics', class: 'Class 10-C', room: 'Room 205', duration: 1, color: 'bg-blue-200 border-blue-300' },
       { id: 3, day: 0, time: 3, subject: 'Physics', class: 'Class 9-B', room: 'Room 103', duration: 1, color: 'bg-green-200 border-green-300' },
       { id: 4, day: 0, time: 6, subject: 'Mathematics', class: 'Class 11-A', room: 'Room 201', duration: 1, color: 'bg-blue-200 border-blue-300' },
-
-      // Tuesday
       { id: 5, day: 1, time: 2, subject: 'Mathematics', class: 'Class 12-B', room: 'Room 301', duration: 1, color: 'bg-blue-200 border-blue-300' },
-
-      // Wednesday
       { id: 6, day: 2, time: 0, subject: 'Physics', class: 'Class 11-C', room: 'Room 105', duration: 1, color: 'bg-green-200 border-green-300' },
       { id: 7, day: 2, time: 2, subject: 'Mathematics', class: 'Class 11-A', room: 'Room 203', duration: 1, color: 'bg-blue-200 border-blue-300' },
       { id: 8, day: 2, time: 3, subject: 'Physics', class: 'Class 10-B', room: 'Room 102', duration: 1, color: 'bg-green-200 border-green-300' },
-
-      // Thursday
       { id: 9, day: 3, time: 2, subject: 'Mathematics', class: 'Class 11-A', room: 'Room 204', duration: 1, color: 'bg-blue-200 border-blue-300' },
       { id: 10, day: 3, time: 4, subject: 'Doubt Session', class: 'All Classes', room: 'Hall A', duration: 1, color: 'bg-purple-200 border-purple-300' },
-
-      // Friday
       { id: 11, day: 4, time: 1, subject: 'Mathematics', class: 'Class 10-A', room: 'Room 202', duration: 1, color: 'bg-blue-200 border-blue-300' },
       { id: 12, day: 4, time: 3, subject: 'Test - Physics', class: 'Class 12-A', room: 'Room 301', duration: 1, color: 'bg-yellow-200 border-yellow-300' },
       { id: 13, day: 4, time: 6, subject: 'Physics', class: 'Class 9-C', room: 'Room 104', duration: 1, color: 'bg-green-200 border-green-300' },
       { id: 14, day: 4, time: 7, subject: 'Parent Meeting', class: 'Various', room: 'Office', duration: 1, color: 'bg-orange-200 border-orange-300' },
       { id: 15, day: 4, time: 8, subject: 'Test - Mathematics', class: 'Class 11-B', room: 'Room 205', duration: 1, color: 'bg-blue-200 border-blue-300' },
-
-      // Saturday
       { id: 16, day: 5, time: 1, subject: 'Extra Classes', class: 'Class 10-B', room: 'Room 106', duration: 1, color: 'bg-indigo-200 border-indigo-300' },
     ],
     '2025-09-01': [
-      // Previous week sample data
       { id: 17, day: 0, time: 1, subject: 'Chemistry', class: 'Class 11-A', room: 'Lab 1', duration: 1, color: 'bg-red-200 border-red-300' },
       { id: 18, day: 2, time: 3, subject: 'Biology', class: 'Class 10-B', room: 'Lab 3', duration: 1, color: 'bg-teal-200 border-teal-300' },
     ],
     '2025-09-15': [
-      // Next week sample data
       { id: 19, day: 1, time: 0, subject: 'Computer Science', class: 'Class 12-A', room: 'Lab 4', duration: 1, color: 'bg-indigo-200 border-indigo-300' },
       { id: 20, day: 3, time: 2, subject: 'Mathematics', class: 'Class 9-A', room: 'Room 105', duration: 1, color: 'bg-blue-200 border-blue-300' },
     ]
   });
 
-  // New class form state
   const [newClass, setNewClass] = useState({
     subject: '',
     class: '',
@@ -69,16 +54,13 @@ const TeacherSchedule = () => {
     setIsSidebarExpanded(!isSidebarExpanded);
   };
 
-  // Helper function to format date as YYYY-MM-DD key
   const getWeekKey = (date) => {
     return date.toISOString().split('T')[0];
   };
 
-  // Get current week's classes
   const currentWeekKey = getWeekKey(currentWeekStart);
   const currentClasses = weeksData[currentWeekKey] || [];
 
-  // Week navigation functionality
   const goToPreviousWeek = () => {
     const newDate = new Date(currentWeekStart);
     newDate.setDate(newDate.getDate() - 7);
@@ -93,11 +75,10 @@ const TeacherSchedule = () => {
     setErrorMessage('');
   };
 
-  // Format week display
   const getWeekDisplay = () => {
     const start = new Date(currentWeekStart);
     const end = new Date(currentWeekStart);
-    end.setDate(end.getDate() + 5); // Monday to Saturday
+    end.setDate(end.getDate() + 5);
     
     const formattedStart = start.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
     const formattedEnd = end.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
@@ -119,14 +100,12 @@ const TeacherSchedule = () => {
     { name: 'Saturday', date: getDayDate(5) }
   ];
 
-  // Helper function to get date for each day of the week
   function getDayDate(dayIndex) {
     const date = new Date(currentWeekStart);
     date.setDate(date.getDate() + dayIndex);
     return date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' });
   }
 
-  // Calculate week stats
   const weekStats = {
     totalClasses: currentClasses.length,
     teachingHours: currentClasses.reduce((total, cls) => total + cls.duration, 0),
@@ -139,17 +118,15 @@ const TeacherSchedule = () => {
     'Extra Sessions': { classes: currentClasses.filter(cls => cls.subject.includes('Session') || cls.subject.includes('Extra')).length, color: 'bg-indigo-500' }
   };
 
-  // Handle input changes for new class form
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewClass(prev => ({
       ...prev,
       [name]: name === 'day' || name === 'time' || name === 'duration' ? parseInt(value) : value
     }));
-    setErrorMessage(''); // Clear error when user makes changes
+    setErrorMessage('');
   };
 
-  // Check if time slot is occupied
   const isTimeSlotOccupied = (day, time, duration) => {
     for (let i = 0; i < duration; i++) {
       const occupied = currentClasses.some(cls => 
@@ -160,7 +137,6 @@ const TeacherSchedule = () => {
     return false;
   };
 
-  // Handle add new class
   const handleAddClass = (e) => {
     e.preventDefault();
     
@@ -169,19 +145,17 @@ const TeacherSchedule = () => {
       return;
     }
 
-    // Check if time slot is occupied
     if (isTimeSlotOccupied(newClass.day, newClass.time, newClass.duration)) {
       setErrorMessage('This time slot is already occupied. Please choose a different time.');
       return;
     }
 
     const newClassObj = {
-      id: Date.now(), // Use timestamp for unique ID
+      id: Date.now(),
       ...newClass,
       color: getClassColor(newClass.subject)
     };
 
-    // Update weeks data
     setWeeksData(prev => ({
       ...prev,
       [currentWeekKey]: [...(prev[currentWeekKey] || []), newClassObj]
@@ -190,7 +164,6 @@ const TeacherSchedule = () => {
     setShowAddClassModal(false);
     setErrorMessage('');
     
-    // Reset form
     setNewClass({
       subject: '',
       class: '',
@@ -201,7 +174,6 @@ const TeacherSchedule = () => {
     });
   };
 
-  // Get color based on subject
   const getClassColor = (subject) => {
     const colorMap = {
       'Mathematics': 'bg-blue-200 border-blue-300',
@@ -231,37 +203,34 @@ const TeacherSchedule = () => {
       <Sidebar isExpanded={isSidebarExpanded} activeItem="schedule" />
 
       <main className={`transition-all duration-300 pt-20 pb-16 min-h-screen ${
-        isSidebarExpanded ? 'ml-64' : 'ml-16'
+        isSidebarExpanded ? 'lg:ml-64' : 'lg:ml-16'
       }`}>
-        <div className="w-full h-full px-6 py-6">
+        <div className="w-full h-full px-4 sm:px-6 py-6">
           
-          {/* Header */}
-          <div className="text-left mb-8">
-            <h1 className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <div className="text-left mb-6 sm:mb-8">
+            <h1 className={`text-2xl sm:text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               Class Schedule
             </h1>
-            <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
+            <p className={`text-base sm:text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
               Manage your teaching schedule and plan lessons
             </p>
           </div>
 
-          {/* Schedule Container */}
-          <div className={`p-6 rounded-2xl border ${
+          <div className={`p-4 sm:p-6 rounded-xl sm:rounded-2xl border ${
             isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
-          } mb-8`}>
+          } mb-6 sm:mb-8`}>
             
-            {/* Week Navigation */}
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4 sm:mb-6">
+              <div className="flex items-center gap-2 sm:gap-4">
                 <button 
                   onClick={goToPreviousWeek}
                   className={`p-2 rounded-lg transition-colors ${
                     isDarkMode ? 'text-gray-400 hover:text-white hover:bg-slate-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                   }`}
                 >
-                  <ChevronLeft size={20} />
+                  <ChevronLeft size={18} className="sm:w-5 sm:h-5" />
                 </button>
-                <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <h3 className={`text-base sm:text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   {getWeekDisplay()}
                 </h3>
                 <button 
@@ -270,66 +239,61 @@ const TeacherSchedule = () => {
                     isDarkMode ? 'text-gray-400 hover:text-white hover:bg-slate-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                   }`}
                 >
-                  <ChevronRight size={20} />
+                  <ChevronRight size={18} className="sm:w-5 sm:h-5" />
                 </button>
               </div>
               <button 
                 onClick={() => setShowAddClassModal(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors focus:outline-none"
+                className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors focus:outline-none text-sm sm:text-base"
               >
-                <Plus size={16} />
+                <Plus size={16} className="sm:w-4 sm:h-4" />
                 Add Class
               </button>
             </div>
 
-            {/* Schedule Grid */}
             <div className="overflow-x-auto">
               <div className="min-w-full">
-                {/* Header Row */}
-                <div className="grid grid-cols-7 gap-px bg-gray-300 rounded-t-lg overflow-hidden">
-                  <div className={`p-3 text-center font-medium ${
+                <div className="grid grid-cols-7 gap-px bg-gray-300 rounded-t-lg overflow-hidden min-w-[800px]">
+                  <div className={`p-2 sm:p-3 text-center font-medium ${
                     isDarkMode ? 'bg-slate-700 text-gray-300' : 'bg-gray-100 text-gray-700'
                   }`}>
                     Time
                   </div>
                   {days.map((day, index) => (
-                    <div key={index} className={`p-3 text-center ${
+                    <div key={index} className={`p-2 sm:p-3 text-center ${
                       isDarkMode ? 'bg-slate-700' : 'bg-gray-100'
                     }`}>
-                      <div className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <div className={`font-medium text-xs sm:text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                         {day.name}
                       </div>
-                      <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                         {day.date}
                       </div>
                     </div>
                   ))}
                 </div>
 
-                {/* Time Slots */}
-                <div className="bg-gray-300" style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '1px' }}>
+                <div className="bg-gray-300 min-w-[800px]" style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '1px' }}>
                   {timeSlots.map((time, timeIndex) => (
                     <React.Fragment key={timeIndex}>
-                      {/* Time Column */}
-                      <div className={`p-3 text-center font-medium border-r ${
+                      <div className={`p-2 sm:p-3 text-center font-medium border-r ${
                         isDarkMode ? 'bg-slate-800 text-gray-300 border-slate-600' : 'bg-white text-gray-700 border-gray-200'
                       }`}>
-                        {time}
+                        <span className="text-xs sm:text-sm">{time}</span>
                       </div>
                       
-                      {/* Day Columns */}
                       {days.map((_, dayIndex) => {
                         const classInSlot = currentClasses.find(c => c.day === dayIndex && c.time === timeIndex);
                         return (
-                          <div key={`${timeIndex}-${dayIndex}`} className={`p-2 min-h-16 ${
+                          <div key={`${timeIndex}-${dayIndex}`} className={`p-1 sm:p-2 min-h-12 sm:min-h-16 ${
                             isDarkMode ? 'bg-slate-800' : 'bg-white'
                           }`}>
                             {classInSlot && (
-                              <div className={`p-2 rounded-lg border ${classInSlot.color} h-full`}>
-                                <div className="text-sm font-semibold text-gray-800 mb-1">
+                              <div className={`p-1 sm:p-2 rounded border ${classInSlot.color} h-full`}>
+                                <div className="text-xs font-semibold text-gray-800 mb-0.5 sm:mb-1">
                                   {classInSlot.subject}
                                 </div>
-                                <div className="text-xs text-gray-600 mb-1">
+                                <div className="text-xs text-gray-600 mb-0.5 sm:mb-1">
                                   {classInSlot.class}
                                 </div>
                                 <div className="text-xs text-gray-500">
@@ -347,46 +311,43 @@ const TeacherSchedule = () => {
             </div>
           </div>
 
-          {/* Bottom Stats */}
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 sm:gap-8">
             
-            {/* This Week Stats */}
-            <div className={`p-6 rounded-2xl border ${
+            <div className={`p-4 sm:p-6 rounded-xl sm:rounded-2xl border ${
               isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
             }`}>
-              <h3 className={`text-xl font-semibold mb-6 text-left ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h3 className={`text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-left ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 This Week
               </h3>
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 <div className="flex justify-between items-center">
                   <span className={`text-sm font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Total Classes:</span>
-                  <span className={`font-bold text-2xl ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <span className={`font-bold text-xl sm:text-2xl ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     {weekStats.totalClasses}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className={`text-sm font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Teaching Hours:</span>
-                  <span className={`font-semibold text-xl ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <span className={`font-semibold text-lg sm:text-xl ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     {weekStats.teachingHours} hours
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className={`text-sm font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Test Sessions:</span>
-                  <span className={`font-semibold text-xl ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <span className={`font-semibold text-lg sm:text-xl ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     {weekStats.testSessions}
                   </span>
                 </div>
               </div>
             </div>
 
-            {/* Subject Distribution */}
-            <div className={`p-6 rounded-2xl border ${
+            <div className={`p-4 sm:p-6 rounded-xl sm:rounded-2xl border ${
               isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
             }`}>
-              <h3 className={`text-xl font-semibold mb-6 text-left ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h3 className={`text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-left ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Subject Distribution
               </h3>
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 {Object.entries(subjectDistribution).map(([subject, data]) => (
                   <div key={subject}>
                     <div className="flex justify-between items-center mb-2">
@@ -413,16 +374,15 @@ const TeacherSchedule = () => {
 
       <Footer isSidebarExpanded={isSidebarExpanded} />
 
-      {/* Add Class Modal */}
       {showAddClassModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className={`rounded-2xl w-full max-w-md ${
+          <div className={`rounded-xl sm:rounded-2xl w-full max-w-md max-h-[90vh] overflow-y-auto ${
             isDarkMode ? 'bg-slate-800' : 'bg-white'
           }`}>
-            <div className={`flex items-center justify-between p-6 border-b ${
+            <div className={`flex items-center justify-between p-4 sm:p-6 border-b ${
               isDarkMode ? 'border-slate-700' : 'border-gray-200'
             }`}>
-              <h3 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h3 className={`text-lg sm:text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Add New Class
               </h3>
               <button 
@@ -434,12 +394,11 @@ const TeacherSchedule = () => {
                   isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-gray-100'
                 }`}
               >
-                <X size={20} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
+                <X size={18} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
               </button>
             </div>
 
-            <form onSubmit={handleAddClass} className="p-6 space-y-4">
-              {/* Error Message */}
+            <form onSubmit={handleAddClass} className="p-4 sm:p-6 space-y-4">
               {errorMessage && (
                 <div className="flex items-center gap-2 p-3 bg-red-100 border border-red-300 rounded-lg">
                   <AlertCircle size={16} className="text-red-500" />

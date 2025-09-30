@@ -4,10 +4,10 @@ import Header from '../../components/layout/Header';
 import Sidebar from '../../components/layout/Sidebar';
 import Footer from '../../components/layout/Footer';
 
-import { 
-  Users, 
-  TrendingUp, 
-  DollarSign, 
+import {
+  Users,
+  TrendingUp,
+  DollarSign,
   Star,
   ChevronDown,
   Filter,
@@ -63,78 +63,78 @@ const ReportsAnalytics = () => {
 
   // Base data - this would typically come from your API
   const baseClassPerformance = [
-    { 
-      class: 'Mathematics Grade 10', 
-      teacher: 'Ms. Sarah Lee', 
-      students: 32, 
-      attendance: 94, 
-      performance: 4.8, 
+    {
+      class: 'Mathematics Grade 10',
+      teacher: 'Ms. Sarah Lee',
+      students: 32,
+      attendance: 94,
+      performance: 4.8,
       fees: '₹8,500',
       status: 'Excellent',
       subject: 'mathematics',
       dateRange: 'thisMonth'
     },
-    { 
-      class: 'Physics Grade 11', 
-      teacher: 'Dr. John Smith', 
-      students: 28, 
-      attendance: 91, 
-      performance: 4.6, 
+    {
+      class: 'Physics Grade 11',
+      teacher: 'Dr. John Smith',
+      students: 28,
+      attendance: 91,
+      performance: 4.6,
       fees: '₹7,200',
       status: 'Good',
       subject: 'physics',
       dateRange: 'thisMonth'
     },
-    { 
-      class: 'Chemistry Grade 10', 
-      teacher: 'Ms. Emily Brown', 
-      students: 35, 
-      attendance: 89, 
-      performance: 4.4, 
+    {
+      class: 'Chemistry Grade 10',
+      teacher: 'Ms. Emily Brown',
+      students: 35,
+      attendance: 89,
+      performance: 4.4,
       fees: '₹9,100',
       status: 'Good',
       subject: 'chemistry',
       dateRange: 'thisMonth'
     },
-    { 
-      class: 'Biology Grade 9', 
-      teacher: 'Mrs. Lisa Chen', 
-      students: 30, 
-      attendance: 87, 
-      performance: 4.2, 
+    {
+      class: 'Biology Grade 9',
+      teacher: 'Mrs. Lisa Chen',
+      students: 30,
+      attendance: 87,
+      performance: 4.2,
       fees: '₹6,800',
       status: 'Fair',
       subject: 'biology',
       dateRange: 'thisMonth'
     },
-    { 
-      class: 'English Writing 1', 
-      teacher: 'Mr. Robert Johnson', 
-      students: 25, 
-      attendance: 85, 
-      performance: 4.0, 
+    {
+      class: 'English Writing 1',
+      teacher: 'Mr. Robert Johnson',
+      students: 25,
+      attendance: 85,
+      performance: 4.0,
       fees: '₹5,500',
       status: 'Fair',
       subject: 'english',
       dateRange: 'thisMonth'
     },
-    { 
-      class: 'Advanced Mathematics', 
-      teacher: 'Dr. Michael Wilson', 
-      students: 20, 
-      attendance: 78, 
-      performance: 3.8, 
+    {
+      class: 'Advanced Mathematics',
+      teacher: 'Dr. Michael Wilson',
+      students: 20,
+      attendance: 78,
+      performance: 3.8,
       fees: '₹12,000',
       status: 'Fair',
       subject: 'mathematics',
       dateRange: 'lastMonth'
     },
-    { 
-      class: 'Organic Chemistry', 
-      teacher: 'Prof. Amanda Davis', 
-      students: 18, 
-      attendance: 96, 
-      performance: 4.9, 
+    {
+      class: 'Organic Chemistry',
+      teacher: 'Prof. Amanda Davis',
+      students: 18,
+      attendance: 96,
+      performance: 4.9,
       fees: '₹15,000',
       status: 'Excellent',
       subject: 'chemistry',
@@ -218,10 +218,10 @@ const ReportsAnalytics = () => {
   const filteredStats = useMemo(() => {
     const totalStudents = filteredClassData.reduce((sum, classData) => sum + classData.students, 0);
     const totalClasses = filteredClassData.length;
-    const avgAttendance = totalClasses > 0 
+    const avgAttendance = totalClasses > 0
       ? (filteredClassData.reduce((sum, classData) => sum + classData.attendance, 0) / totalClasses).toFixed(1)
       : 0;
-    const avgRating = totalClasses > 0 
+    const avgRating = totalClasses > 0
       ? (filteredClassData.reduce((sum, classData) => sum + classData.performance, 0) / totalClasses).toFixed(1)
       : 0;
 
@@ -326,7 +326,7 @@ const ReportsAnalytics = () => {
   ];
 
   const getStatusColor = (status) => {
-    switch(status) {
+    switch (status) {
       case 'Excellent': return 'text-green-600 bg-green-100';
       case 'Good': return 'text-blue-600 bg-blue-100';
       case 'Fair': return 'text-yellow-600 bg-yellow-100';
@@ -335,17 +335,16 @@ const ReportsAnalytics = () => {
   };
 
   const FilterPanel = () => (
-    <div className={`absolute top-full right-0 mt-2 w-80 rounded-lg border shadow-lg z-50 ${
-      isDarkMode 
-        ? 'bg-slate-800 border-slate-700' 
+    <div className={`absolute top-full right-0 mt-2 w-80 rounded-lg border shadow-lg z-50 ${isDarkMode
+        ? 'bg-slate-800 border-slate-700'
         : 'bg-white border-gray-300'
-    }`}>
+      }`}>
       <div className="p-4">
         <div className="flex items-center justify-between mb-4">
           <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
             Filter Reports
           </h3>
-          <button 
+          <button
             onClick={toggleFilter}
             className={`p-1 rounded-lg ${isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-gray-100'}`}
           >
@@ -359,14 +358,13 @@ const ReportsAnalytics = () => {
             <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
               Date Range
             </label>
-            <select 
+            <select
               value={filters.dateRange}
               onChange={(e) => handleFilterChange('dateRange', e.target.value)}
-              className={`w-full p-2 rounded-lg border ${
-                isDarkMode 
-                  ? 'bg-slate-700 border-slate-600 text-white' 
+              className={`w-full p-2 rounded-lg border ${isDarkMode
+                  ? 'bg-slate-700 border-slate-600 text-white'
                   : 'bg-white border-gray-300 text-gray-900'
-              }`}
+                }`}
             >
               <option value="all">All Time</option>
               <option value="today">Today</option>
@@ -383,14 +381,13 @@ const ReportsAnalytics = () => {
             <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
               Subject
             </label>
-            <select 
+            <select
               value={filters.subject}
               onChange={(e) => handleFilterChange('subject', e.target.value)}
-              className={`w-full p-2 rounded-lg border ${
-                isDarkMode 
-                  ? 'bg-slate-700 border-slate-600 text-white' 
+              className={`w-full p-2 rounded-lg border ${isDarkMode
+                  ? 'bg-slate-700 border-slate-600 text-white'
                   : 'bg-white border-gray-300 text-gray-900'
-              }`}
+                }`}
             >
               <option value="all">All Subjects</option>
               <option value="mathematics">Mathematics</option>
@@ -406,14 +403,13 @@ const ReportsAnalytics = () => {
             <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
               Performance Level
             </label>
-            <select 
+            <select
               value={filters.performance}
               onChange={(e) => handleFilterChange('performance', e.target.value)}
-              className={`w-full p-2 rounded-lg border ${
-                isDarkMode 
-                  ? 'bg-slate-700 border-slate-600 text-white' 
+              className={`w-full p-2 rounded-lg border ${isDarkMode
+                  ? 'bg-slate-700 border-slate-600 text-white'
                   : 'bg-white border-gray-300 text-gray-900'
-              }`}
+                }`}
             >
               <option value="all">All Performance Levels</option>
               <option value="excellent">Excellent (4.5+)</option>
@@ -428,14 +424,13 @@ const ReportsAnalytics = () => {
             <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
               Attendance Rate
             </label>
-            <select 
+            <select
               value={filters.attendance}
               onChange={(e) => handleFilterChange('attendance', e.target.value)}
-              className={`w-full p-2 rounded-lg border ${
-                isDarkMode 
-                  ? 'bg-slate-700 border-slate-600 text-white' 
+              className={`w-full p-2 rounded-lg border ${isDarkMode
+                  ? 'bg-slate-700 border-slate-600 text-white'
                   : 'bg-white border-gray-300 text-gray-900'
-              }`}
+                }`}
             >
               <option value="all">All Attendance Rates</option>
               <option value="high">High (90%+)</option>
@@ -446,17 +441,16 @@ const ReportsAnalytics = () => {
         </div>
 
         <div className="flex items-center gap-3 mt-6 pt-4 border-t border-gray-200 dark:border-slate-600">
-          <button 
+          <button
             onClick={resetFilters}
-            className={`flex-1 py-2 px-4 rounded-lg border transition-colors ${
-              isDarkMode 
-                ? 'border-slate-600 text-gray-300 hover:bg-slate-700' 
+            className={`flex-1 py-2 px-4 rounded-lg border transition-colors ${isDarkMode
+                ? 'border-slate-600 text-gray-300 hover:bg-slate-700'
                 : 'border-gray-300 text-gray-700 hover:bg-gray-50'
-            }`}
+              }`}
           >
             Reset
           </button>
-          <button 
+          <button
             onClick={applyFilters}
             className="flex-1 py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
@@ -469,31 +463,30 @@ const ReportsAnalytics = () => {
 
   return (
     <div className={`min-h-screen w-full ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
-      <Header 
-        isSidebarExpanded={isSidebarExpanded} 
+      <Header
+        isSidebarExpanded={isSidebarExpanded}
         toggleSidebar={toggleSidebar}
       />
 
       <Sidebar isExpanded={isSidebarExpanded} activeItem="analytics" />
 
-      <main className={`transition-all duration-300 pt-20 pb-16 min-h-screen ${
-        isSidebarExpanded ? 'ml-64' : 'ml-16'
-      }`}>
-        <div className="w-full h-full px-6 py-6">
-            
+      <main className={`transition-all duration-300 ${isSidebarExpanded ? 'ml-0 md:ml-48 lg:ml-64' : 'ml-0 md:ml-16'
+        } pt-16 md:pt-20 pb-12 md:pb-16 min-h-screen overflow-x-hidden`}>
+        <div className="w-full h-full px-3 sm:px-4 md:px-6 py-4 md:py-6">
+
           {/* Header */}
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6 md:mb-8">
             <div className="text-left">
-              <h1 className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h1 className={`text-2xl sm:text-3xl font-bold mb-1 md:mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Reports & Analytics
               </h1>
-              <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
+              <p className={`text-sm md:text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
                 Comprehensive insights on your institute's performance
               </p>
               {/* Filter Status Indicator */}
               {(filters.dateRange !== 'thisMonth' || filters.subject !== 'all' || filters.performance !== 'all' || filters.attendance !== 'all') && (
-                <div className="flex items-center gap-2 mt-2">
-                  <span className={`text-sm ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>
+                <div className="flex items-center gap-2 mt-2 flex-wrap">
+                  <span className={`text-xs md:text-sm ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>
                     Filters applied:
                   </span>
                   {filters.subject !== 'all' && (
@@ -519,15 +512,14 @@ const ReportsAnalytics = () => {
                 </div>
               )}
             </div>
-            <div className="flex items-center gap-3 relative">
-              <div className="relative">
-                <button 
+            <div className="flex items-center gap-2 md:gap-3 relative">
+              <div className="relative flex-1 sm:flex-none">
+                <button
                   onClick={toggleFilter}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors ${
-                    isDarkMode 
-                      ? 'bg-slate-800 border-slate-600 text-gray-300 hover:bg-slate-700' 
+                  className={`w-full sm:w-auto flex items-center justify-center gap-2 px-3 md:px-4 py-2 rounded-lg border transition-colors text-sm md:text-base ${isDarkMode
+                      ? 'bg-slate-800 border-slate-600 text-gray-300 hover:bg-slate-700'
                       : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
-                  } ${isFilterOpen ? 'ring-2 ring-blue-500' : ''}`}
+                    } ${isFilterOpen ? 'ring-2 ring-blue-500' : ''}`}
                 >
                   <Filter size={16} />
                   Filter
@@ -535,26 +527,26 @@ const ReportsAnalytics = () => {
                 </button>
                 {isFilterOpen && <FilterPanel />}
               </div>
-              <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <button className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-3 md:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm md:text-base">
                 <Download size={16} />
-                Export
+                <span className="hidden sm:inline">Export</span>
               </button>
             </div>
           </div>
 
           {/* Stats Grid - Now uses filtered data */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {/* Stats Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
             {filteredStats.map((stat, index) => {
               const Icon = stat.icon;
               const colorClasses = getColorClasses(stat.color);
               return (
                 <div
                   key={index}
-                  className={`p-6 rounded-2xl border ${
-                    isDarkMode 
-                      ? 'bg-slate-800 border-slate-700' 
+                  className={`p-6 rounded-2xl border ${isDarkMode
+                      ? 'bg-slate-800 border-slate-700'
                       : 'bg-white border-gray-300 shadow-sm'
-                  }`}
+                    }`}
                 >
                   <div className="flex justify-between items-start mb-4">
                     <div className="text-left">
@@ -575,51 +567,48 @@ const ReportsAnalytics = () => {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-            
+
             {/* Revenue Trends Chart */}
-            <div className={`p-6 rounded-2xl border ${
-              isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
-            }`}>
+            <div className={`p-6 rounded-2xl border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
+              }`}>
               <div className="flex items-center justify-between mb-6">
                 <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Revenue Trends
                 </h2>
                 <div className="flex items-center gap-2">
-                  <button 
+                  <button
                     onClick={() => setSelectedPeriod('monthly')}
-                    className={`px-3 py-1 rounded-lg text-sm transition-colors ${
-                      selectedPeriod === 'monthly'
-                        ? isDarkMode 
-                          ? 'bg-blue-600 text-white' 
+                    className={`px-3 py-1 rounded-lg text-sm transition-colors ${selectedPeriod === 'monthly'
+                        ? isDarkMode
+                          ? 'bg-blue-600 text-white'
                           : 'bg-blue-100 text-blue-700'
-                        : isDarkMode 
-                          ? 'text-gray-400 hover:bg-slate-700' 
+                        : isDarkMode
+                          ? 'text-gray-400 hover:bg-slate-700'
                           : 'text-gray-600 hover:bg-gray-100'
-                    }`}
+                      }`}
                   >
                     Monthly
                   </button>
-                  <button 
+                  <button
                     onClick={() => setSelectedPeriod('quarterly')}
-                    className={`px-3 py-1 rounded-lg text-sm transition-colors ${
-                      selectedPeriod === 'quarterly'
-                        ? isDarkMode 
-                          ? 'bg-blue-600 text-white' 
+                    className={`px-3 py-1 rounded-lg text-sm transition-colors ${selectedPeriod === 'quarterly'
+                        ? isDarkMode
+                          ? 'bg-blue-600 text-white'
                           : 'bg-blue-100 text-blue-700'
-                        : isDarkMode 
-                          ? 'text-gray-400 hover:bg-slate-700' 
+                        : isDarkMode
+                          ? 'text-gray-400 hover:bg-slate-700'
                           : 'text-gray-600 hover:bg-gray-100'
-                    }`}
+                      }`}
                   >
                     Quarterly
                   </button>
                 </div>
               </div>
-              
+
               <div className="h-64 flex items-end justify-between gap-2 mb-4">
                 {currentRevenueData.map((data, index) => (
                   <div key={index} className="flex flex-col items-center flex-1">
-                    <div 
+                    <div
                       className="w-full bg-blue-500 rounded-t-lg mb-2 transition-all hover:bg-blue-600 cursor-pointer"
                       style={{ height: `${(data.value / maxValue) * 200}px` }}
                       title={`${data.period}: ${data.value}k`}
@@ -638,13 +627,12 @@ const ReportsAnalytics = () => {
             </div>
 
             {/* Subject Analysis - Now uses filtered data */}
-            <div className={`p-6 rounded-2xl border ${
-              isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
-            }`}>
+            <div className={`p-6 rounded-2xl border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
+              }`}>
               <h2 className={`text-xl font-semibold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Subject Analysis
               </h2>
-              
+
               <div className="space-y-4">
                 {filteredSubjectData.length > 0 ? filteredSubjectData.map((subject, index) => (
                   <div key={index} className="space-y-2">
@@ -657,7 +645,7 @@ const ReportsAnalytics = () => {
                       </span>
                     </div>
                     <div className={`h-2 rounded-full ${isDarkMode ? 'bg-slate-700' : 'bg-gray-200'}`}>
-                      <div 
+                      <div
                         className={`h-full rounded-full ${subject.color}`}
                         style={{ width: `${(subject.students / 100) * 100}%` }}
                       />
@@ -675,15 +663,14 @@ const ReportsAnalytics = () => {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-            
+
             {/* Daily Attendance Analysis */}
-            <div className={`p-6 rounded-2xl border ${
-              isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
-            }`}>
+            <div className={`p-6 rounded-2xl border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
+              }`}>
               <h2 className={`text-xl font-semibold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Daily Attendance Analysis
               </h2>
-              
+
               <div className="space-y-4">
                 {attendanceAnalysis.map((day, index) => (
                   <div key={index} className="flex items-center justify-between py-2">
@@ -702,13 +689,12 @@ const ReportsAnalytics = () => {
             </div>
 
             {/* Monthly Growth Analysis */}
-            <div className={`p-6 rounded-2xl border ${
-              isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
-            }`}>
+            <div className={`p-6 rounded-2xl border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
+              }`}>
               <h2 className={`text-xl font-semibold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Monthly Growth Analysis
               </h2>
-              
+
               <div className="space-y-4">
                 {growthAnalysis.map((item, index) => (
                   <div key={index} className="space-y-2">
@@ -730,15 +716,14 @@ const ReportsAnalytics = () => {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-            
+
             {/* Financial Summary - Now uses filtered data */}
-            <div className={`p-6 rounded-2xl border ${
-              isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
-            }`}>
+            <div className={`p-6 rounded-2xl border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
+              }`}>
               <h2 className={`text-xl font-semibold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Financial Summary
               </h2>
-              
+
               <div className="space-y-4">
                 {filteredFinancialData.map((item, index) => (
                   <div key={index} className="space-y-1">
@@ -748,9 +733,8 @@ const ReportsAnalytics = () => {
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className={`text-lg font-bold ${
-                        item.label === 'Net Profit' ? 'text-green-500' : isDarkMode ? 'text-white' : 'text-gray-900'
-                      }`}>
+                      <span className={`text-lg font-bold ${item.label === 'Net Profit' ? 'text-green-500' : isDarkMode ? 'text-white' : 'text-gray-900'
+                        }`}>
                         {item.amount}
                       </span>
                     </div>
@@ -763,13 +747,12 @@ const ReportsAnalytics = () => {
             </div>
 
             {/* Expense Breakdown */}
-            <div className={`p-6 rounded-2xl border ${
-              isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
-            }`}>
+            <div className={`p-6 rounded-2xl border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
+              }`}>
               <h2 className={`text-xl font-semibold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Expense Breakdown
               </h2>
-              
+
               <div className="space-y-4">
                 {expenseBreakdown.map((expense, index) => (
                   <div key={index} className="flex items-center justify-between">
@@ -785,13 +768,12 @@ const ReportsAnalytics = () => {
             </div>
 
             {/* Student Retention */}
-            <div className={`p-6 rounded-2xl border ${
-              isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
-            }`}>
+            <div className={`p-6 rounded-2xl border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
+              }`}>
               <h2 className={`text-xl font-semibold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Student Retention
               </h2>
-              
+
               <div className="flex flex-col items-center">
                 <div className="relative w-32 h-32 mb-4">
                   <svg className="w-32 h-32 transform -rotate-90" viewBox="0 0 36 36">
@@ -844,9 +826,8 @@ const ReportsAnalytics = () => {
           </div>
 
           {/* Detailed Class Performance - Now uses filtered data */}
-          <div className={`p-6 rounded-2xl border ${
-            isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
-          }`}>
+          <div className={`p-6 rounded-2xl border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
+            }`}>
             <div className="flex items-center justify-between mb-6">
               <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Detailed Class Performance
@@ -860,7 +841,7 @@ const ReportsAnalytics = () => {
                 <MoreHorizontal size={20} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
               </button>
             </div>
-            
+
             {filteredClassData.length > 0 ? (
               <div className="overflow-x-auto">
                 <table className="w-full">
@@ -911,7 +892,7 @@ const ReportsAnalytics = () => {
                         <td className={`py-4 px-4`}>
                           <div className="flex items-center gap-2">
                             <div className={`w-16 h-2 rounded-full ${isDarkMode ? 'bg-slate-700' : 'bg-gray-200'}`}>
-                              <div 
+                              <div
                                 className="h-full rounded-full bg-green-500"
                                 style={{ width: `${classData.attendance}%` }}
                               />
@@ -939,9 +920,8 @@ const ReportsAnalytics = () => {
               </div>
             ) : (
               <div className="text-center py-12">
-                <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 ${
-                  isDarkMode ? 'bg-slate-700' : 'bg-gray-100'
-                }`}>
+                <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 ${isDarkMode ? 'bg-slate-700' : 'bg-gray-100'
+                  }`}>
                   <BookOpen size={32} className={isDarkMode ? 'text-gray-400' : 'text-gray-500'} />
                 </div>
                 <h3 className={`text-lg font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
@@ -950,7 +930,7 @@ const ReportsAnalytics = () => {
                 <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   No classes match the current filter criteria. Try adjusting your filters.
                 </p>
-                <button 
+                <button
                   onClick={resetFilters}
                   className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
                 >

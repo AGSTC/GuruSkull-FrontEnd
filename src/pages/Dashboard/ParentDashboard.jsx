@@ -250,35 +250,35 @@ const ParentDashboard = () => {
 
       <Sidebar isExpanded={isSidebarExpanded} activeItem="dashboard" />
 
-      <main className={`transition-all duration-300 pt-20 pb-16 min-h-screen ${
-        isSidebarExpanded ? 'ml-64' : 'ml-16'
-      }`}>
-        <div className="w-full h-full px-6 py-6">
+      <main className={`transition-all duration-300 ${
+        isSidebarExpanded ? 'ml-0 md:ml-48 lg:ml-64' : 'ml-0 md:ml-16'
+      } pt-16 md:pt-20 pb-12 md:pb-16 min-h-screen overflow-x-hidden`}>
+        <div className="w-full h-full px-3 sm:px-4 md:px-6 py-4 md:py-6">
             
           {/* Header */}
-          <div className="text-left mb-8">
-            <h1 className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <div className="text-left mb-4 md:mb-6 lg:mb-8">
+            <h1 className={`text-xl sm:text-2xl md:text-3xl font-bold mb-1 md:mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               Dashboard
             </h1>
-            <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
+            <p className={`text-sm md:text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
               Welcome Back, Wolverine. Monitor your child's academic progress and activities
             </p>
           </div>
 
           {/* Select Child */}
-          <div className={`p-6 rounded-2xl border mb-8 ${
+          <div className={`p-4 md:p-6 rounded-xl md:rounded-2xl border mb-6 md:mb-8 ${
             isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'
           }`}>
-            <h2 className={`text-xl font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            <h2 className={`text-lg md:text-xl font-semibold mb-3 md:mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               Select Child
             </h2>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
               {children.map((child, index) => (
                 <div
                   key={child.id}
                   onClick={() => setSelectedChild(index)}
-                  className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                  className={`p-3 md:p-4 rounded-lg md:rounded-xl border-2 cursor-pointer transition-all ${
                     selectedChild === index
                       ? 'border-blue-500 bg-blue-50'
                       : isDarkMode 
@@ -286,31 +286,30 @@ const ParentDashboard = () => {
                         : 'border-gray-200 hover:border-gray-300 bg-white'
                   }`}
                 >
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3 md:gap-4">
                     <div className="relative">
                       <img
                         src={child.image}
                         alt={child.name}
-                        className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm"
+                        className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover border-2 border-white shadow-sm"
                         onError={(e) => {
-                          // Fallback to avatar circle if image fails to load
                           e.target.style.display = 'none';
                           e.target.nextSibling.style.display = 'flex';
                         }}
                       />
                       <div 
-                        className={`w-12 h-12 rounded-full hidden items-center justify-center text-white text-lg font-bold ${child.color}`}
+                        className={`w-10 h-10 md:w-12 md:h-12 rounded-full hidden items-center justify-center text-white text-base md:text-lg font-bold ${child.color}`}
                       >
                         {child.avatar}
                       </div>
                     </div>
-                    <div>
-                      <h3 className={`font-semibold ${
+                    <div className="flex-1 min-w-0">
+                      <h3 className={`font-semibold text-sm md:text-base truncate ${
                         selectedChild === index ? 'text-blue-700' : isDarkMode ? 'text-white' : 'text-gray-900'
                       }`}>
                         {child.name}
                       </h3>
-                      <p className={`text-sm ${
+                      <p className={`text-xs md:text-sm ${
                         selectedChild === index ? 'text-blue-600' : isDarkMode ? 'text-gray-400' : 'text-gray-600'
                       }`}>
                         {child.class}
@@ -323,7 +322,7 @@ const ParentDashboard = () => {
           </div>
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-6 md:mb-8">
             {Object.entries(currentChild.stats).map(([key, stat], index) => {
               const Icon = stat.icon;
               const colors = getStatColor(stat.color);
@@ -335,23 +334,23 @@ const ParentDashboard = () => {
               };
 
               return (
-                <div key={key} className={`p-6 rounded-2xl ${colors.bg} text-white`}>
+                <div key={key} className={`p-4 md:p-6 rounded-xl md:rounded-2xl ${colors.bg} text-white`}>
                   <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-white/80 text-sm font-medium mb-1">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-white/80 text-xs md:text-sm font-medium mb-1 truncate">
                         {titles[key]}
                       </p>
-                      <p className="text-3xl font-bold">
+                      <p className="text-xl md:text-2xl lg:text-3xl font-bold mb-1">
                         {stat.value}
                       </p>
-                      <p className="text-white/80 text-xs mt-1">
+                      <p className="text-white/80 text-xs truncate">
                         {key === 'pendingAssignments' ? 'to complete' : 
                          key === 'testsDue' ? 'this week' : 
                          key === 'overallPerformance' ? 'this semester' : 'current'}
                       </p>
                     </div>
-                    <div className="bg-white/20 p-3 rounded-xl">
-                      <Icon className="w-6 h-6" />
+                    <div className="bg-white/20 p-2 md:p-3 rounded-lg md:rounded-xl flex-shrink-0 ml-3">
+                      <Icon className="w-5 h-5 md:w-6 md:h-6" />
                     </div>
                   </div>
                 </div>
@@ -359,35 +358,35 @@ const ParentDashboard = () => {
             })}
           </div>
 
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-8">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
             
             {/* Attendance Overview */}
-            <div className={`p-6 rounded-2xl border ${
+            <div className={`p-4 md:p-6 rounded-xl md:rounded-2xl border ${
               isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'
             }`}>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 md:mb-6 gap-3 sm:gap-0">
+                <h2 className={`text-lg md:text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Attendance Overview
                 </h2>
-                <div className="text-right">
-                  <div className="text-2xl font-bold text-blue-500">
+                <div className="text-left sm:text-right">
+                  <div className="text-xl md:text-2xl font-bold text-blue-500">
                     {currentChild.attendanceOverview.overall}
                   </div>
-                  <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  <div className={`text-xs md:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                     Overall
                   </div>
                 </div>
               </div>
 
-              <div className="mb-6">
+              <div className="mb-4 md:mb-6">
                 <div className={`text-sm font-medium mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   This Week
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="w-full bg-green-100 rounded-full h-3">
-                    <div className="bg-green-500 h-3 rounded-full" style={{ width: '80%' }}></div>
+                  <div className="w-full bg-green-100 rounded-full h-2 md:h-3">
+                    <div className="bg-green-500 h-2 md:h-3 rounded-full" style={{ width: '80%' }}></div>
                   </div>
-                  <span className={`text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  <span className={`text-xs md:text-sm font-medium whitespace-nowrap ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                     {currentChild.attendanceOverview.thisWeek}
                   </span>
                 </div>
@@ -399,17 +398,17 @@ const ParentDashboard = () => {
                 </div>
                 {currentChild.attendanceOverview.subjects.map((subject, index) => (
                   <div key={index} className="flex items-center justify-between">
-                    <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                    <span className={`text-xs md:text-sm truncate flex-1 mr-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                       {subject.name}
                     </span>
-                    <div className="flex items-center gap-3">
-                      <div className="w-20 bg-gray-200 rounded-full h-2">
+                    <div className="flex items-center gap-2 md:gap-3">
+                      <div className="w-16 md:w-20 bg-gray-200 rounded-full h-2">
                         <div 
                           className="bg-green-500 h-2 rounded-full"
                           style={{ width: `${subject.percentage}%` }}
                         ></div>
                       </div>
-                      <span className={`text-sm font-medium w-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                      <span className={`text-xs md:text-sm font-medium w-6 md:w-8 text-right ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                         {subject.percentage}%
                       </span>
                     </div>
@@ -419,22 +418,21 @@ const ParentDashboard = () => {
             </div>
 
             {/* Upcoming Events */}
-            <div className={`p-6 rounded-2xl border ${
+            <div className={`p-4 md:p-6 rounded-xl md:rounded-2xl border ${
               isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'
             }`}>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <div className="flex items-center justify-between mb-4 md:mb-6">
+                <h2 className={`text-lg md:text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Upcoming Events
                 </h2>
-    
               </div>
               
-              <div className="space-y-4 max-h-80 overflow-y-auto">
+              <div className="space-y-3 md:space-y-4 max-h-80 overflow-y-auto">
                 {currentChild.upcomingEvents.map((event) => (
-                  <div key={event.id} className={`flex items-start gap-4 p-4 rounded-lg border ${
+                  <div key={event.id} className={`flex items-start gap-3 md:gap-4 p-3 md:p-4 rounded-lg border ${
                     isDarkMode ? 'border-slate-600 bg-slate-700' : 'border-gray-200 bg-gray-50'
                   }`}>
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold ${event.color}`}>
+                    <div className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-xs md:text-sm font-bold ${event.color} flex-shrink-0`}>
                       {event.icon}
                     </div>
                     <div className="flex-1 min-w-0">
@@ -445,7 +443,7 @@ const ParentDashboard = () => {
                         {event.date}
                       </p>
                     </div>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap flex-shrink-0 ${
                       event.status === 'Due' ? 'bg-red-100 text-red-700' :
                       event.status === 'Assignment' ? 'bg-blue-100 text-blue-700' :
                       event.status === 'Meeting' ? 'bg-purple-100 text-purple-700' :

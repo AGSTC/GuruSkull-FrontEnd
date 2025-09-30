@@ -40,7 +40,6 @@ const ScheduleManagement = () => {
     setIsSidebarExpanded(!isSidebarExpanded);
   };
 
-  // Weekly Schedule Data with multiple weeks
   const [weeklySchedules, setWeeklySchedules] = useState([
     {
       week: "Week of July 4-10, 2025",
@@ -100,7 +99,6 @@ const ScheduleManagement = () => {
     }
   ]);
 
-  // Events & Activities Data with diverse events
   const [eventsActivities, setEventsActivities] = useState([
     {
       id: 1,
@@ -148,7 +146,6 @@ const ScheduleManagement = () => {
     }
   ]);
 
-  // Room Utilization Data with diverse rooms
   const [roomUtilization, setRoomUtilization] = useState([
     {
       id: 1,
@@ -216,7 +213,6 @@ const ScheduleManagement = () => {
     }
   ]);
 
-  // Teacher Schedule Data with diverse teachers
   const teacherSchedule = [
     {
       id: 1,
@@ -390,7 +386,6 @@ const ScheduleManagement = () => {
     linkElement.click();
   };
 
-  // Modal Components
   const EventModal = () => {
     const [formData, setFormData] = useState(editingEvent || {
       title: '',
@@ -403,8 +398,8 @@ const ScheduleManagement = () => {
     });
 
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className={`rounded-lg p-6 w-full max-w-md mx-4 ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className={`rounded-lg p-6 w-full max-w-md ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>
           <div className="flex items-center justify-between mb-4">
             <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               {editingEvent ? 'Edit Event' : 'Add New Event'}
@@ -486,7 +481,7 @@ const ScheduleManagement = () => {
             />
           </div>
 
-          <div className="flex gap-3 mt-6">
+          <div className="flex flex-col sm:flex-row gap-3 mt-6">
             <button
               onClick={() => handleSaveEvent(formData)}
               className="flex-1 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center gap-2"
@@ -521,8 +516,8 @@ const ScheduleManagement = () => {
     });
 
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className={`rounded-lg p-6 w-full max-w-md mx-4 ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className={`rounded-lg p-6 w-full max-w-md ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>
           <div className="flex items-center justify-between mb-4">
             <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               {editingSchedule ? 'Edit Schedule' : 'Add New Schedule'}
@@ -599,7 +594,7 @@ const ScheduleManagement = () => {
             />
           </div>
 
-          <div className="flex gap-3 mt-6">
+          <div className="flex flex-col sm:flex-row gap-3 mt-6">
             <button
               onClick={() => handleSaveSchedule(formData)}
               className="flex-1 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center gap-2"
@@ -646,8 +641,8 @@ const ScheduleManagement = () => {
     };
 
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className={`rounded-lg p-6 w-full max-w-md mx-4 ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className={`rounded-lg p-6 w-full max-w-md ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>
           <div className="flex items-center justify-between mb-4">
             <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               {editingRoom ? 'Edit Room' : 'Add New Room'}
@@ -673,7 +668,7 @@ const ScheduleManagement = () => {
                 }`}
             />
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Capacity
@@ -718,7 +713,7 @@ const ScheduleManagement = () => {
               </div>
 
               {formData.schedule.map((slot, index) => (
-                <div key={index} className="grid grid-cols-2 gap-2 mb-2">
+                <div key={index} className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-2">
                   <input
                     type="text"
                     placeholder="Time"
@@ -740,7 +735,7 @@ const ScheduleManagement = () => {
             </div>
           </div>
 
-          <div className="flex gap-3 mt-6">
+          <div className="flex flex-col sm:flex-row gap-3 mt-6">
             <button
               onClick={() => handleSaveRoom(formData)}
               className="flex-1 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center gap-2"
@@ -765,8 +760,8 @@ const ScheduleManagement = () => {
   };
 
   const AttendanceModal = () => (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className={`rounded-lg p-6 w-full max-w-md mx-4 ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className={`rounded-lg p-6 w-full max-w-md ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>
         <div className="flex items-center justify-between mb-4">
           <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Mark Today's Attendance</h3>
           <button
@@ -802,7 +797,7 @@ const ScheduleManagement = () => {
           </div>
         </div>
 
-        <div className="flex gap-3 mt-6">
+        <div className="flex flex-col sm:flex-row gap-3 mt-6">
           <button
             onClick={() => {
               alert('Attendance marked successfully!');
@@ -825,8 +820,8 @@ const ScheduleManagement = () => {
   );
 
   const AssignmentModal = () => (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className={`rounded-lg p-6 w-full max-w-md mx-4 ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className={`rounded-lg p-6 w-full max-w-md ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>
         <div className="flex items-center justify-between mb-4">
           <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Create Assignment</h3>
           <button
@@ -876,7 +871,7 @@ const ScheduleManagement = () => {
           />
         </div>
 
-        <div className="flex gap-3 mt-6">
+        <div className="flex flex-col sm:flex-row gap-3 mt-6">
           <button
             onClick={() => {
               alert('Assignment created successfully!');
@@ -900,8 +895,8 @@ const ScheduleManagement = () => {
   );
 
   const ClassUpdateModal = () => (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className={`rounded-lg p-6 w-full max-w-md mx-4 ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className={`rounded-lg p-6 w-full max-w-md ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>
         <div className="flex items-center justify-between mb-4">
           <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Add Class Update</h3>
           <button
@@ -947,7 +942,7 @@ const ScheduleManagement = () => {
           />
         </div>
 
-        <div className="flex gap-3 mt-6">
+        <div className="flex flex-col sm:flex-row gap-3 mt-6">
           <button
             onClick={() => {
               alert('Class update posted successfully!');
@@ -971,30 +966,28 @@ const ScheduleManagement = () => {
 
   const renderWeeklyView = () => (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <button 
+          <button
             onClick={() => navigateWeek('prev')}
             disabled={currentWeekIndex === 0}
-            className={`p-2 rounded-lg ${
-              currentWeekIndex === 0 
-                ? `${isDarkMode ? 'text-gray-500' : 'text-gray-300'} cursor-not-allowed` 
-                : `${isDarkMode ? 'text-gray-300 hover:bg-slate-700' : 'text-gray-600 hover:bg-gray-100'}`
-            }`}
+            className={`p-2 rounded-lg ${currentWeekIndex === 0
+              ? `${isDarkMode ? 'text-gray-500' : 'text-gray-300'} cursor-not-allowed`
+              : `${isDarkMode ? 'text-gray-300 hover:bg-slate-700' : 'text-gray-600 hover:bg-gray-100'}`
+              }`}
           >
             <ChevronLeft size={20} />
           </button>
-          <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <h3 className={`text-lg font-semibold text-center sm:text-left ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
             {currentSchedule.week}
           </h3>
-          <button 
+          <button
             onClick={() => navigateWeek('next')}
             disabled={currentWeekIndex === weeklySchedules.length - 1}
-            className={`p-2 rounded-lg ${
-              currentWeekIndex === weeklySchedules.length - 1 
-                ? `${isDarkMode ? 'text-gray-500' : 'text-gray-300'} cursor-not-allowed` 
-                : `${isDarkMode ? 'text-gray-300 hover:bg-slate-700' : 'text-gray-600 hover:bg-gray-100'}`
-            }`}
+            className={`p-2 rounded-lg ${currentWeekIndex === weeklySchedules.length - 1
+              ? `${isDarkMode ? 'text-gray-500' : 'text-gray-300'} cursor-not-allowed`
+              : `${isDarkMode ? 'text-gray-300 hover:bg-slate-700' : 'text-gray-600 hover:bg-gray-100'}`
+              }`}
           >
             <ChevronRight size={20} />
           </button>
@@ -1002,38 +995,36 @@ const ScheduleManagement = () => {
       </div>
 
       <div className="overflow-x-auto">
-        <div className="min-w-full">
+        <div className="min-w-[800px]">
           <div className="grid grid-cols-7 gap-px bg-gray-300">
-            {/* Header */}
-            <div className={`p-4 text-center font-medium ${isDarkMode ? 'bg-slate-800 text-gray-300' : 'bg-gray-50 text-gray-700'}`}>
+            <div className={`p-3 text-center font-medium ${isDarkMode ? 'bg-slate-800 text-gray-300' : 'bg-gray-50 text-gray-700'}`}>
               Time
             </div>
             {currentSchedule.days.map((day) => (
-              <div key={day.name} className={`p-4 text-center ${isDarkMode ? 'bg-slate-800' : 'bg-gray-50'}`}>
-                <div className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <div key={day.name} className={`p-3 text-center ${isDarkMode ? 'bg-slate-800' : 'bg-gray-50'}`}>
+                <div className={`font-semibold text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   {day.name}
                 </div>
-                <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   {day.date}
                 </div>
               </div>
             ))}
 
-            {/* Time slots */}
             {currentSchedule.timeSlots.map((time) => (
               <React.Fragment key={time}>
-                <div className={`p-4 text-center font-medium ${isDarkMode ? 'bg-slate-800 text-gray-300' : 'bg-gray-50 text-gray-700'}`}>
+                <div className={`p-3 text-center font-medium text-sm ${isDarkMode ? 'bg-slate-800 text-gray-300' : 'bg-gray-50 text-gray-700'}`}>
                   {time}
                 </div>
                 {currentSchedule.days.map((day) => {
                   const classItem = getClassForTimeSlot(day.name, time);
                   return (
-                    <div key={`${day.name}-${time}`} className={`p-2 min-h-[80px] ${isDarkMode ? 'bg-slate-700' : 'bg-white'}`}>
+                    <div key={`${day.name}-${time}`} className={`p-1 min-h-[70px] ${isDarkMode ? 'bg-slate-700' : 'bg-white'}`}>
                       {classItem && (
                         <div className={`p-2 rounded-lg text-xs ${classItem.color} h-full relative group`}>
-                          <div className="font-semibold">{classItem.subject}</div>
-                          <div className="mt-1">{classItem.class}</div>
-                          <div className="mt-1">{classItem.teacher}</div>
+                          <div className="font-semibold truncate">{classItem.subject}</div>
+                          <div className="mt-1 truncate">{classItem.class}</div>
+                          <div className="mt-1 truncate">{classItem.teacher}</div>
                           <div className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
                             <button
                               onClick={(e) => {
@@ -1071,11 +1062,10 @@ const ScheduleManagement = () => {
         </div>
       </div>
 
-      {/* Bottom Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
         <div className={`p-4 rounded-xl ${isDarkMode ? 'bg-slate-800' : 'bg-white border'}`}>
-          <h4 className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>This Week</h4>
-          <div className="space-y-2">
+          <h4 className={`font-semibold mb-2 text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>This Week</h4>
+          <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Total Classes:</span>
               <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{currentSchedule.classes.length}</span>
@@ -1092,8 +1082,8 @@ const ScheduleManagement = () => {
         </div>
 
         <div className={`p-4 rounded-xl ${isDarkMode ? 'bg-slate-800' : 'bg-white border'}`}>
-          <h4 className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Subject Distribution</h4>
-          <div className="space-y-2">
+          <h4 className={`font-semibold mb-2 text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Subject Distribution</h4>
+          <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span className="text-blue-500">Mathematics</span>
               <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{currentSchedule.classes.filter(c => c.subject.includes('Mathematics')).length} Classes</span>
@@ -1110,23 +1100,23 @@ const ScheduleManagement = () => {
         </div>
 
         <div className={`p-4 rounded-xl ${isDarkMode ? 'bg-slate-800' : 'bg-white border'}`}>
-          <h4 className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Quick Actions</h4>
-          <div className="space-y-2">
-            <button 
+          <h4 className={`font-semibold mb-2 text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Quick Actions</h4>
+          <div className="space-y-2 text-sm">
+            <button
               onClick={() => setShowAttendanceModal(true)}
-              className="w-full text-left text-blue-500 hover:text-blue-600 text-sm"
+              className="w-full text-left text-blue-500 hover:text-blue-600"
             >
               → Mark Today's Attendance
             </button>
-            <button 
+            <button
               onClick={() => setShowAssignmentModal(true)}
-              className="w-full text-left text-blue-500 hover:text-blue-600 text-sm"
+              className="w-full text-left text-blue-500 hover:text-blue-600"
             >
               → Create Assignment
             </button>
-            <button 
+            <button
               onClick={() => setShowClassUpdateModal(true)}
-              className="w-full text-left text-blue-500 hover:text-blue-600 text-sm"
+              className="w-full text-left text-blue-500 hover:text-blue-600"
             >
               → Add Class Updates
             </button>
@@ -1138,13 +1128,13 @@ const ScheduleManagement = () => {
 
   const renderEventsActivities = () => (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
           Upcoming Events & Activities
         </h3>
         <button
           onClick={() => setShowEventModal(true)}
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2"
+          className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2 w-full sm:w-auto justify-center"
         >
           <Calendar size={16} />
           Add Event
@@ -1153,11 +1143,11 @@ const ScheduleManagement = () => {
 
       <div className="space-y-4">
         {eventsActivities.map((event) => (
-          <div key={event.id} className={`p-6 rounded-2xl border-l-4 ${event.color} ${isDarkMode ? 'bg-slate-800 border-r border-t border-b border-slate-700' : 'bg-white border-r border-t border-b border-gray-200 shadow-sm'
+          <div key={event.id} className={`p-4 sm:p-6 rounded-2xl border-l-4 ${event.color} ${isDarkMode ? 'bg-slate-800 border-r border-t border-b border-slate-700' : 'bg-white border-r border-t border-b border-gray-200 shadow-sm'
             }`}>
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
               <div className="flex-1">
-                <div className="flex items-start justify-between mb-3">
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between mb-3 gap-2">
                   <h4 className={`font-semibold text-lg ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     {event.title}
                   </h4>
@@ -1170,24 +1160,26 @@ const ScheduleManagement = () => {
                       }`}>
                       {event.status}
                     </span>
-                    <button
-                      onClick={() => handleEditEvent(event)}
-                      className={`p-1 rounded ${isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-gray-100'}`}
-                    >
-                      <Edit size={16} className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`} />
-                    </button>
-                    <button
-                      onClick={() => handleDeleteEvent(event.id)}
-                      className={`p-1 rounded ${isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-gray-100'}`}
-                    >
-                      <Trash2 size={16} className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`} />
-                    </button>
+                    <div className="flex gap-1">
+                      <button
+                        onClick={() => handleEditEvent(event)}
+                        className={`p-1 rounded ${isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-gray-100'}`}
+                      >
+                        <Edit size={16} className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`} />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteEvent(event.id)}
+                        className={`p-1 rounded ${isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-gray-100'}`}
+                      >
+                        <Trash2 size={16} className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`} />
+                      </button>
+                    </div>
                   </div>
                 </div>
 
                 <p className={`text-sm mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>{event.description}</p>
 
-                <div className="flex items-center gap-6 text-sm">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
                   <div className="flex items-center gap-2">
                     <Calendar size={16} className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`} />
                     <span className={`${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
@@ -1223,25 +1215,25 @@ const ScheduleManagement = () => {
 
   const renderClassSchedule = () => (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
           Room Utilization
         </h3>
         <button
           onClick={() => setShowRoomModal(true)}
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2"
+          className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2 w-full sm:w-auto justify-center"
         >
           <Plus size={16} />
           Add Room
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {roomUtilization.map((room) => (
-          <div key={room.id} className={`p-6 rounded-2xl ${isDarkMode ? 'bg-slate-800 border border-slate-700' : 'bg-gray-50 border border-gray-200'
+          <div key={room.id} className={`p-4 rounded-2xl ${isDarkMode ? 'bg-slate-800 border border-slate-700' : 'bg-gray-50 border border-gray-200'
             }`}>
-            <div className="flex items-center justify-between mb-4">
-              <h4 className={`font-semibold text-lg ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-2">
+              <h4 className={`font-semibold text-base ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 {room.room}
               </h4>
               <div className="flex items-center gap-2">
@@ -1262,11 +1254,11 @@ const ScheduleManagement = () => {
 
             <div className="space-y-3 mb-4">
               {room.schedule.map((session, sessionIndex) => (
-                <div key={sessionIndex} className="flex justify-between items-center">
-                  <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                <div key={sessionIndex} className="flex justify-between items-center text-sm">
+                  <span className={`${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                     {session.time}
                   </span>
-                  <span className={`text-sm font-medium ${session.color}`}>
+                  <span className={`font-medium ${session.color}`}>
                     {session.subject}
                   </span>
                 </div>
@@ -1274,11 +1266,11 @@ const ScheduleManagement = () => {
             </div>
 
             <div className={`pt-3 border-t ${isDarkMode ? 'border-slate-600' : 'border-gray-300'}`}>
-              <div className="flex justify-between items-center mb-2">
-                <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <div className="flex justify-between items-center mb-2 text-sm">
+                <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   Utilization: {room.utilization}%
                 </span>
-                <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   Capacity: {room.capacity}
                 </span>
               </div>
@@ -1299,11 +1291,11 @@ const ScheduleManagement = () => {
 
   const renderTeacherSchedule = () => (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
           Teacher Schedule
         </h3>
-        <button className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2">
+        <button className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2 w-full sm:w-auto justify-center">
           <UserPlus size={16} />
           Add Teacher
         </button>
@@ -1311,23 +1303,23 @@ const ScheduleManagement = () => {
 
       <div className="space-y-4">
         {teacherSchedule.map((teacher) => (
-          <div key={teacher.id} className={`p-6 rounded-2xl ${isDarkMode ? 'bg-slate-800 border border-slate-700' : 'bg-white border border-gray-200 shadow-sm'
+          <div key={teacher.id} className={`p-4 rounded-2xl ${isDarkMode ? 'bg-slate-800 border border-slate-700' : 'bg-white border border-gray-200 shadow-sm'
             }`}>
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
               <div className="flex items-center gap-4">
                 <img
                   src={teacher.avatar}
                   alt={teacher.name}
-                  className="w-16 h-16 rounded-full object-cover"
+                  className="w-12 h-12 sm:w-16 sm:h-16 rounded-full object-cover"
                 />
                 <div>
-                  <h4 className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <h4 className={`font-semibold text-base ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     {teacher.name}
                   </h4>
                   <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                     {teacher.subject}
                   </p>
-                  <div className={`flex items-center gap-4 mt-1 text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
+                  <div className={`flex items-center gap-2 mt-1 text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
                     <span>{teacher.experience} experience</span>
                     <span>•</span>
                     <span>{teacher.qualification}</span>
@@ -1335,9 +1327,9 @@ const ScheduleManagement = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-8">
+              <div className="flex items-center justify-between lg:justify-end gap-4 lg:gap-8 flex-1">
                 <div className="text-center">
-                  <div className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <div className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     {teacher.classesWeek}
                   </div>
                   <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -1345,14 +1337,14 @@ const ScheduleManagement = () => {
                   </div>
                 </div>
                 <div className="text-center">
-                  <div className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <div className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     {teacher.hoursWeek}
                   </div>
                   <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                     Hours/Week
                   </div>
                 </div>
-                <div className="text-right">
+                <div className="text-right hidden sm:block">
                   <div className="text-blue-500 text-sm font-medium mb-1">Next Class:</div>
                   <div className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                     {teacher.nextClass}
@@ -1361,6 +1353,12 @@ const ScheduleManagement = () => {
                 <button className={`p-2 rounded-lg ${isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-gray-100'}`}>
                   <Calendar size={20} className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`} />
                 </button>
+              </div>
+            </div>
+            <div className="sm:hidden mt-3 pt-3 border-t border-gray-200 dark:border-slate-600">
+              <div className="text-blue-500 text-sm font-medium mb-1">Next Class:</div>
+              <div className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                {teacher.nextClass}
               </div>
             </div>
           </div>
@@ -1378,86 +1376,83 @@ const ScheduleManagement = () => {
 
       <Sidebar isExpanded={isSidebarExpanded} activeItem="schedule" />
 
-      <main className={`transition-all duration-300 pt-20 pb-16 min-h-screen ${isSidebarExpanded ? 'ml-64' : 'ml-16'
-        }`}>
-        <div className="w-full h-full px-6 py-6">
+      <main className={`transition-all duration-300 ${isSidebarExpanded ? 'ml-0 md:ml-48 lg:ml-64' : 'ml-0 md:ml-16'
+        } pt-16 md:pt-20 pb-12 md:pb-16 min-h-screen overflow-x-hidden`}>
+        <div className="w-full h-full px-3 sm:px-4 md:px-6 py-4 md:py-6">
 
-          {/* Header */}
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h1 className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+            <div className="text-left">
+              <h1 className={`text-2xl sm:text-3xl font-bold mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Schedule Management
               </h1>
-              <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
+              <p className={`text-sm md:text-base ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
                 Manage Classes, Events and Activities
               </p>
             </div>
-            <div className="flex gap-3">
+            <div className="flex gap-2 w-full sm:w-auto">
               <button
                 onClick={() => setShowScheduleModal(true)}
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2"
+                className="flex-1 sm:flex-none bg-blue-500 text-white px-3 md:px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center gap-2 text-sm"
               >
                 <Plus size={16} />
-                Add Schedule
+                <span className="hidden sm:inline">Add Schedule</span>
+                <span className="sm:hidden">Add</span>
               </button>
               <button
                 onClick={exportSchedule}
-                className={`px-4 py-2 rounded-lg border flex items-center gap-2 transition-colors ${isDarkMode ? 'border-slate-600 text-gray-300 hover:bg-slate-700' : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                className={`flex-1 sm:flex-none px-3 md:px-4 py-2 rounded-lg border flex items-center justify-center gap-2 transition-colors text-sm ${isDarkMode ? 'border-slate-600 text-gray-300 hover:bg-slate-700' : 'border-gray-300 text-gray-700 hover:bg-gray-50'
                   }`}
               >
                 <Download size={16} />
-                Export
+                <span className="hidden sm:inline">Export</span>
               </button>
             </div>
           </div>
 
-          {/* Main Content */}
           <div className={`rounded-2xl ${isDarkMode ? 'bg-slate-800 border border-slate-700' : 'bg-white border border-gray-200 shadow-sm'}`}>
 
-            {/* Tabs */}
-            <div className="px-6 pt-6">
-              <div className={`flex gap-8 border-b ${isDarkMode ? 'border-slate-600' : 'border-gray-200'}`}>
+            <div className="px-4 pt-4 md:pt-6">
+              <div className={`flex gap-4 md:gap-8 border-b overflow-x-auto ${isDarkMode ? 'border-slate-600' : 'border-gray-200'}`}>
                 <button
                   onClick={() => setActiveTab('weekly')}
-                  className={`pb-4 px-1 text-sm font-medium border-b-2 transition-colors ${activeTab === 'weekly'
-                    ? 'border-blue-500 text-blue-500'
-                    : `border-transparent ${isDarkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-700'}`
+                  className={`pb-3 md:pb-4 px-1 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${activeTab === 'weekly'
+                      ? 'border-blue-500 text-blue-500'
+                      : `border-transparent ${isDarkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-700'}`
                     }`}
                 >
                   Weekly View
                 </button>
                 <button
                   onClick={() => setActiveTab('events')}
-                  className={`pb-4 px-1 text-sm font-medium border-b-2 transition-colors ${activeTab === 'events'
-                    ? 'border-blue-500 text-blue-500'
-                    : `border-transparent ${isDarkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-700'}`
+                  className={`pb-3 md:pb-4 px-1 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${activeTab === 'events'
+                      ? 'border-blue-500 text-blue-500'
+                      : `border-transparent ${isDarkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-700'}`
                     }`}
                 >
-                  Event & Activities
+                  Events & Activities
                 </button>
                 <button
                   onClick={() => setActiveTab('class')}
-                  className={`pb-4 px-1 text-sm font-medium border-b-2 transition-colors ${activeTab === 'class'
-                    ? 'border-blue-500 text-blue-500'
-                    : `border-transparent ${isDarkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-700'}`
+                  className={`pb-3 md:pb-4 px-1 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${activeTab === 'class'
+                      ? 'border-blue-500 text-blue-500'
+                      : `border-transparent ${isDarkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-700'}`
                     }`}
                 >
                   Class Schedule
                 </button>
                 <button
                   onClick={() => setActiveTab('teacher')}
-                  className={`pb-4 px-1 text-sm font-medium border-b-2 transition-colors ${activeTab === 'teacher'
-                    ? 'border-blue-500 text-blue-500'
-                    : `border-transparent ${isDarkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-700'}`
+                  className={`pb-3 md:pb-4 px-1 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${activeTab === 'teacher'
+                      ? 'border-blue-500 text-blue-500'
+                      : `border-transparent ${isDarkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-700'}`
                     }`}
                 >
-                  Teacher Schedule
+                  Teachers
                 </button>
               </div>
             </div>
 
-            {/* Tab Content */}
-            <div className="p-6">
+            <div className="p-4 md:p-6">
               {activeTab === 'weekly' && renderWeeklyView()}
               {activeTab === 'events' && renderEventsActivities()}
               {activeTab === 'class' && renderClassSchedule()}
@@ -1469,7 +1464,6 @@ const ScheduleManagement = () => {
 
       <Footer isSidebarExpanded={isSidebarExpanded} />
 
-      {/* Modals */}
       {showEventModal && <EventModal />}
       {showAttendanceModal && <AttendanceModal />}
       {showAssignmentModal && <AssignmentModal />}

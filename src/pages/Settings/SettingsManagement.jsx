@@ -3,7 +3,6 @@ import { useTheme } from '../../context/ThemeContext';
 import Header from '../../components/layout/Header';
 import Sidebar from '../../components/layout/Sidebar';
 import Footer from '../../components/layout/Footer';
-
 import {
   Settings as SettingsIcon,
   Monitor,
@@ -67,7 +66,6 @@ const SettingsManagement = () => {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const [activeCategory, setActiveCategory] = useState('general');
   
-  // Form states
   const [generalSettings, setGeneralSettings] = useState({
     centerName: 'GuruSkull Learning Center',
     ownerName: 'Rajesh Kumar Sharma',
@@ -259,8 +257,7 @@ const SettingsManagement = () => {
 
   const renderGeneralSettings = () => (
     <div className="space-y-6">
-      {/* Basic Information */}
-      <div className={`p-6 rounded-2xl border ${
+      <div className={`p-4 sm:p-6 rounded-2xl border ${
         isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'
       }`}>
         <div className="flex items-center gap-2 mb-4">
@@ -323,8 +320,7 @@ const SettingsManagement = () => {
         </div>
       </div>
 
-      {/* Regional Settings */}
-      <div className={`p-6 rounded-2xl border ${
+      <div className={`p-4 sm:p-6 rounded-2xl border ${
         isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'
       }`}>
         <div className="flex items-center gap-2 mb-4">
@@ -392,8 +388,7 @@ const SettingsManagement = () => {
         </div>
       </div>
 
-      {/* Academic Settings */}
-      <div className={`p-6 rounded-2xl border ${
+      <div className={`p-4 sm:p-6 rounded-2xl border ${
         isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'
       }`}>
         <div className="flex items-center gap-2 mb-4">
@@ -437,8 +432,7 @@ const SettingsManagement = () => {
         </div>
       </div>
 
-      {/* Feature Settings */}
-      <div className={`p-6 rounded-2xl border ${
+      <div className={`p-4 sm:p-6 rounded-2xl border ${
         isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'
       }`}>
         <div className="flex items-center gap-2 mb-4">
@@ -450,10 +444,10 @@ const SettingsManagement = () => {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Online Payments
               </h4>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Allow students to pay fees online
               </p>
             </div>
@@ -464,10 +458,10 @@ const SettingsManagement = () => {
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 SMS Notifications
               </h4>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Send SMS notifications to students and parents
               </p>
             </div>
@@ -478,10 +472,10 @@ const SettingsManagement = () => {
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Auto Backup
               </h4>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Automatically backup data daily
               </p>
             </div>
@@ -497,8 +491,7 @@ const SettingsManagement = () => {
 
   const renderSystemSettings = () => (
     <div className="space-y-6">
-      {/* System Information */}
-      <div className={`p-6 rounded-2xl border ${
+      <div className={`p-4 sm:p-6 rounded-2xl border ${
         isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'
       }`}>
         <div className="flex items-center gap-2 mb-4">
@@ -551,8 +544,7 @@ const SettingsManagement = () => {
         </div>
       </div>
 
-      {/* Performance Settings */}
-      <div className={`p-6 rounded-2xl border ${
+      <div className={`p-4 sm:p-6 rounded-2xl border ${
         isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'
       }`}>
         <div className="flex items-center gap-2 mb-4">
@@ -623,8 +615,7 @@ const SettingsManagement = () => {
         </div>
       </div>
 
-      {/* Security Settings */}
-      <div className={`p-6 rounded-2xl border ${
+      <div className={`p-4 sm:p-6 rounded-2xl border ${
         isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'
       }`}>
         <div className="flex items-center gap-2 mb-4">
@@ -659,8 +650,7 @@ const SettingsManagement = () => {
         </div>
       </div>
 
-      {/* System Status */}
-      <div className={`p-6 rounded-2xl border ${
+      <div className={`p-4 sm:p-6 rounded-2xl border ${
         isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'
       }`}>
         <div className="flex items-center gap-2 mb-4">
@@ -721,8 +711,7 @@ const SettingsManagement = () => {
         </div>
       </div>
 
-      {/* System Controls */}
-      <div className={`p-6 rounded-2xl border ${
+      <div className={`p-4 sm:p-6 rounded-2xl border ${
         isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'
       }`}>
         <div className="flex items-center gap-2 mb-4">
@@ -734,10 +723,10 @@ const SettingsManagement = () => {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Debug Mode
               </h4>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Enable detailed error logging and debugging
               </p>
             </div>
@@ -748,10 +737,10 @@ const SettingsManagement = () => {
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 System Logging
               </h4>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Log system activities and user actions
               </p>
             </div>
@@ -762,10 +751,10 @@ const SettingsManagement = () => {
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Data Compression
               </h4>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Compress data to save storage space
               </p>
             </div>
@@ -781,8 +770,7 @@ const SettingsManagement = () => {
 
   const renderNotificationsSettings = () => (
     <div className="space-y-6">
-      {/* Email Notifications */}
-      <div className={`p-6 rounded-2xl border ${
+      <div className={`p-4 sm:p-6 rounded-2xl border ${
         isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'
       }`}>
         <div className="flex items-center gap-2 mb-4">
@@ -794,10 +782,10 @@ const SettingsManagement = () => {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Email Notifications
               </h4>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Receive notifications via email
               </p>
             </div>
@@ -808,10 +796,10 @@ const SettingsManagement = () => {
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Push Notifications
               </h4>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Receive browser push notifications
               </p>
             </div>
@@ -822,10 +810,10 @@ const SettingsManagement = () => {
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 SMS Alerts
               </h4>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Receive important alerts via SMS
               </p>
             </div>
@@ -837,8 +825,7 @@ const SettingsManagement = () => {
         </div>
       </div>
 
-      {/* Academic Notifications */}
-      <div className={`p-6 rounded-2xl border ${
+      <div className={`p-4 sm:p-6 rounded-2xl border ${
         isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'
       }`}>
         <div className="flex items-center gap-2 mb-4">
@@ -917,8 +904,7 @@ const SettingsManagement = () => {
         </div>
       </div>
 
-      {/* System Notifications */}
-      <div className={`p-6 rounded-2xl border ${
+      <div className={`p-4 sm:p-6 rounded-2xl border ${
         isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'
       }`}>
         <div className="flex items-center gap-2 mb-4">
@@ -1019,8 +1005,7 @@ const SettingsManagement = () => {
         </div>
       </div>
 
-      {/* Notification Timing */}
-      <div className={`p-6 rounded-2xl border ${
+      <div className={`p-4 sm:p-6 rounded-2xl border ${
         isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'
       }`}>
         <div className="flex items-center gap-2 mb-4">
@@ -1056,10 +1041,10 @@ const SettingsManagement = () => {
           </div>
           <div className="flex items-center justify-between mt-8">
             <div>
-              <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Silent Hours
               </h4>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 No notifications during sleep hours
               </p>
             </div>
@@ -1075,8 +1060,7 @@ const SettingsManagement = () => {
 
   const renderSecuritySettings = () => (
     <div className="space-y-6">
-      {/* Access Control */}
-      <div className={`p-6 rounded-2xl border ${
+      <div className={`p-4 sm:p-6 rounded-2xl border ${
         isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'
       }`}>
         <div className="flex items-center gap-2 mb-4">
@@ -1088,10 +1072,10 @@ const SettingsManagement = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex items-center justify-between">
             <div>
-              <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Two-Factor Authentication
               </h4>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Secure login with 2FA
               </p>
             </div>
@@ -1102,10 +1086,10 @@ const SettingsManagement = () => {
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Session Timeout
               </h4>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Auto logout inactive users
               </p>
             </div>
@@ -1116,10 +1100,10 @@ const SettingsManagement = () => {
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 IP Whitelist
               </h4>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Restrict access by IP address
               </p>
             </div>
@@ -1130,10 +1114,10 @@ const SettingsManagement = () => {
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Audit Logging
               </h4>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Log all user activities
               </p>
             </div>
@@ -1145,8 +1129,7 @@ const SettingsManagement = () => {
         </div>
       </div>
 
-      {/* Password Policy */}
-      <div className={`p-6 rounded-2xl border ${
+      <div className={`p-4 sm:p-6 rounded-2xl border ${
         isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'
       }`}>
         <div className="flex items-center gap-2 mb-4">
@@ -1158,10 +1141,10 @@ const SettingsManagement = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex items-center justify-between">
             <div>
-              <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Password Policy
               </h4>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Enforce strong password rules
               </p>
             </div>
@@ -1172,10 +1155,10 @@ const SettingsManagement = () => {
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Account Lockout
               </h4>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Lock accounts after failed attempts
               </p>
             </div>
@@ -1187,8 +1170,7 @@ const SettingsManagement = () => {
         </div>
       </div>
 
-      {/* Data Protection */}
-      <div className={`p-6 rounded-2xl border ${
+      <div className={`p-4 sm:p-6 rounded-2xl border ${
         isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'
       }`}>
         <div className="flex items-center gap-2 mb-4">
@@ -1200,10 +1182,10 @@ const SettingsManagement = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex items-center justify-between">
             <div>
-              <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Secure Headers
               </h4>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Add security headers to responses
               </p>
             </div>
@@ -1214,10 +1196,10 @@ const SettingsManagement = () => {
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Data Encryption
               </h4>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Encrypt sensitive data
               </p>
             </div>
@@ -1228,10 +1210,10 @@ const SettingsManagement = () => {
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Backup Encryption
               </h4>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Encrypt backup files
               </p>
             </div>
@@ -1242,10 +1224,10 @@ const SettingsManagement = () => {
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Access Control
               </h4>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Role-based access control
               </p>
             </div>
@@ -1256,10 +1238,10 @@ const SettingsManagement = () => {
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 API Security
               </h4>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Secure API endpoints
               </p>
             </div>
@@ -1270,10 +1252,10 @@ const SettingsManagement = () => {
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Firewall Protection
               </h4>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Enable firewall protection
               </p>
             </div>
@@ -1289,8 +1271,7 @@ const SettingsManagement = () => {
 
   const renderBackupSettings = () => (
     <div className="space-y-6">
-      {/* Storage Overview */}
-      <div className={`p-6 rounded-2xl border ${
+      <div className={`p-4 sm:p-6 rounded-2xl border ${
         isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'
       }`}>
         <div className="flex items-center gap-2 mb-4">
@@ -1335,8 +1316,7 @@ const SettingsManagement = () => {
         </div>
       </div>
 
-      {/* Backup Configuration */}
-      <div className={`p-6 rounded-2xl border ${
+      <div className={`p-4 sm:p-6 rounded-2xl border ${
         isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'
       }`}>
         <div className="flex items-center gap-2 mb-4">
@@ -1348,10 +1328,10 @@ const SettingsManagement = () => {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Automatic Backups
               </h4>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Automatically backup data at scheduled intervals
               </p>
             </div>
@@ -1403,8 +1383,7 @@ const SettingsManagement = () => {
         </div>
       </div>
 
-      {/* Backup Options */}
-      <div className={`p-6 rounded-2xl border ${
+      <div className={`p-4 sm:p-6 rounded-2xl border ${
         isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'
       }`}>
         <div className="flex items-center gap-2 mb-4">
@@ -1416,10 +1395,10 @@ const SettingsManagement = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex items-center justify-between">
             <div>
-              <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Cloud Backup
               </h4>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Store backups in cloud storage
               </p>
             </div>
@@ -1430,10 +1409,10 @@ const SettingsManagement = () => {
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Local Backup
               </h4>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Store backups on local server
               </p>
             </div>
@@ -1444,10 +1423,10 @@ const SettingsManagement = () => {
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Encrypt Backups
               </h4>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Encrypt backup files for security
               </p>
             </div>
@@ -1458,10 +1437,10 @@ const SettingsManagement = () => {
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Compress Backups
               </h4>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Compress backup files to save space
               </p>
             </div>
@@ -1473,8 +1452,7 @@ const SettingsManagement = () => {
         </div>
       </div>
 
-      {/* Manual Backup Options */}
-      <div className={`p-6 rounded-2xl border ${
+      <div className={`p-4 sm:p-6 rounded-2xl border ${
         isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'
       }`}>
         <div className="flex items-center gap-2 mb-4">
@@ -1486,24 +1464,23 @@ const SettingsManagement = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <button className="flex flex-col items-center p-4 rounded-lg bg-green-500 hover:bg-green-600 text-white transition-colors">
             <CloudDownload size={24} className="mb-2" />
-            <span className="font-medium">Full Backup</span>
+            <span className="font-medium text-sm">Full Backup</span>
             <span className="text-xs opacity-90">Complete system backup</span>
           </button>
           <button className="flex flex-col items-center p-4 rounded-lg bg-blue-500 hover:bg-blue-600 text-white transition-colors">
             <Database size={24} className="mb-2" />
-            <span className="font-medium">Data Only</span>
+            <span className="font-medium text-sm">Data Only</span>
             <span className="text-xs opacity-90">Backup only data files</span>
           </button>
           <button className="flex flex-col items-center p-4 rounded-lg bg-purple-500 hover:bg-purple-600 text-white transition-colors">
             <FileText size={24} className="mb-2" />
-            <span className="font-medium">Settings Only</span>
+            <span className="font-medium text-sm">Settings Only</span>
             <span className="text-xs opacity-90">Backup configuration only</span>
           </button>
         </div>
       </div>
 
-      {/* Backup History */}
-      <div className={`p-6 rounded-2xl border ${
+      <div className={`p-4 sm:p-6 rounded-2xl border ${
         isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'
       }`}>
         <div className="flex items-center justify-between mb-4">
@@ -1570,8 +1547,7 @@ const SettingsManagement = () => {
 
   const renderIntegrationsSettings = () => (
     <div className="space-y-6">
-      {/* Third-party Integrations */}
-      <div className={`p-6 rounded-2xl border ${
+      <div className={`p-4 sm:p-6 rounded-2xl border ${
         isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'
       }`}>
         <div className="flex items-center gap-2 mb-4">
@@ -1588,7 +1564,7 @@ const SettingsManagement = () => {
                   <Mail className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     Email Service
                   </h4>
                   <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -1610,7 +1586,7 @@ const SettingsManagement = () => {
                   <MessageSquare className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     SMS Service
                   </h4>
                   <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -1632,7 +1608,7 @@ const SettingsManagement = () => {
                   <DollarSign className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     Payment Gateway
                   </h4>
                   <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -1654,7 +1630,7 @@ const SettingsManagement = () => {
                   <Calendar className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     Google Calendar
                   </h4>
                   <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -1676,7 +1652,7 @@ const SettingsManagement = () => {
                   <Video className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     Zoom Meeting
                   </h4>
                   <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -1698,7 +1674,7 @@ const SettingsManagement = () => {
                   <Phone className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     WhatsApp Service
                   </h4>
                   <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -1715,8 +1691,7 @@ const SettingsManagement = () => {
         </div>
       </div>
 
-      {/* Webhooks */}
-      <div className={`p-6 rounded-2xl border ${
+      <div className={`p-4 sm:p-6 rounded-2xl border ${
         isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'
       }`}>
         <div className="flex items-center gap-2 mb-4">
@@ -1728,22 +1703,21 @@ const SettingsManagement = () => {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Configure Webhooks
               </h4>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Send real-time data to external services
               </p>
             </div>
-            <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+            <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm">
               Add Webhook
             </button>
           </div>
         </div>
       </div>
 
-      {/* API Settings */}
-      <div className={`p-6 rounded-2xl border ${
+      <div className={`p-4 sm:p-6 rounded-2xl border ${
         isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'
       }`}>
         <div className="flex items-center gap-2 mb-4">
@@ -1755,10 +1729,10 @@ const SettingsManagement = () => {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Enable API Access
               </h4>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Allow external applications to access data
               </p>
             </div>
@@ -1769,10 +1743,10 @@ const SettingsManagement = () => {
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Third-party Integrations
               </h4>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Allow integration with external services
               </p>
             </div>
@@ -1784,8 +1758,7 @@ const SettingsManagement = () => {
         </div>
       </div>
 
-      {/* Import/Export Data */}
-      <div className={`p-6 rounded-2xl border ${
+      <div className={`p-4 sm:p-6 rounded-2xl border ${
         isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'
       }`}>
         <div className="flex items-center gap-2 mb-4">
@@ -1797,12 +1770,12 @@ const SettingsManagement = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <button className="flex flex-col items-center p-4 rounded-lg bg-blue-500 hover:bg-blue-600 text-white transition-colors">
             <Upload size={24} className="mb-2" />
-            <span className="font-medium">Import Data</span>
+            <span className="font-medium text-sm">Import Data</span>
             <span className="text-xs opacity-90">Import from CSV/Excel files</span>
           </button>
           <button className="flex flex-col items-center p-4 rounded-lg bg-green-500 hover:bg-green-600 text-white transition-colors">
             <Download size={24} className="mb-2" />
-            <span className="font-medium">Export Data</span>
+            <span className="font-medium text-sm">Export Data</span>
             <span className="text-xs opacity-90">Export to CSV/Excel files</span>
           </button>
         </div>
@@ -1838,56 +1811,54 @@ const SettingsManagement = () => {
 
       <Sidebar isExpanded={isSidebarExpanded} activeItem="settings" />
 
-      <main className={`transition-all duration-300 pt-20 pb-16 min-h-screen ${
-        isSidebarExpanded ? 'ml-64' : 'ml-16'
-      }`}>
-        <div className="w-full h-full px-6 py-6">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h1 className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+      <main className={`transition-all duration-300 ${isSidebarExpanded ? 'ml-0 md:ml-48 lg:ml-64' : 'ml-0 md:ml-16'
+        } pt-16 md:pt-20 pb-12 md:pb-16 min-h-screen overflow-x-hidden`}>
+        <div className="w-full h-full px-3 sm:px-4 md:px-6 py-4 md:py-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+            <div className="text-left">
+              <h1 className={`text-2xl sm:text-3xl font-bold mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Settings
               </h1>
-              <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
+              <p className={`text-sm md:text-base ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
                 Manage your tuition center and preferences
               </p>
             </div>
-            <div className="flex gap-3">
+            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
               <button
                 onClick={handleExport}
-                className={`px-4 py-2 border rounded-lg flex items-center gap-2 transition-colors ${
-                  isDarkMode 
+                className={`px-3 md:px-4 py-2 border rounded-lg flex items-center justify-center gap-2 transition-colors text-sm ${isDarkMode 
                     ? 'border-slate-600 text-gray-300 hover:bg-slate-700' 
                     : 'border-gray-300 text-gray-700 hover:bg-gray-50'
                 }`}
               >
                 <Download size={16} />
-                Export Settings
+                <span className="hidden sm:inline">Export Settings</span>
+                <span className="sm:hidden">Export</span>
               </button>
               <button
                 onClick={handleReset}
-                className={`px-4 py-2 border rounded-lg flex items-center gap-2 transition-colors ${
-                  isDarkMode 
+                className={`px-3 md:px-4 py-2 border rounded-lg flex items-center justify-center gap-2 transition-colors text-sm ${isDarkMode 
                     ? 'border-slate-600 text-gray-300 hover:bg-slate-700' 
                     : 'border-gray-300 text-gray-700 hover:bg-gray-50'
                 }`}
               >
                 <RotateCcw size={16} />
-                Reset to Default
+                <span className="hidden sm:inline">Reset to Default</span>
+                <span className="sm:hidden">Reset</span>
               </button>
               <button
                 onClick={handleSave}
-                className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2"
+                className="px-3 md:px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center gap-2 text-sm"
               >
                 <Save size={16} />
-                Save All Changes
+                <span className="hidden sm:inline">Save All Changes</span>
+                <span className="sm:hidden">Save</span>
               </button>
             </div>
           </div>
 
-          <div className="flex flex-col lg:flex-row gap-6">
-            {/* Settings Categories Sidebar */}
-            <div className={`w-full lg:w-64 p-6 rounded-2xl border ${
+          <div className="flex flex-col lg:flex-row gap-4 md:gap-6">
+            <div className={`w-full lg:w-64 p-4 sm:p-6 rounded-2xl border ${
               isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'
             }`}>
               <h2 className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
@@ -1909,14 +1880,13 @@ const SettingsManagement = () => {
                       }`}
                     >
                       <Icon size={18} />
-                      <span className="font-medium">{category.label}</span>
+                      <span className="font-medium text-sm">{category.label}</span>
                     </button>
                   );
                 })}
               </nav>
             </div>
 
-            {/* Settings Content */}
             <div className="flex-1">
               {renderCurrentCategory()}
             </div>

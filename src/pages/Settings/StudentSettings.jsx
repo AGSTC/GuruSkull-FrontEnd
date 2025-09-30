@@ -160,7 +160,7 @@ const StudentSettings = () => {
     <button
       onClick={onToggle}
       disabled={disabled}
-      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+      className={`relative inline-flex h-5 w-9 md:h-6 md:w-11 items-center rounded-full transition-colors ${
         isOn 
           ? 'bg-blue-500' 
           : isDarkMode 
@@ -169,8 +169,8 @@ const StudentSettings = () => {
       } ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
     >
       <span
-        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-          isOn ? 'translate-x-6' : 'translate-x-1'
+        className={`inline-block h-3 w-3 md:h-4 md:w-4 transform rounded-full bg-white transition-transform ${
+          isOn ? 'translate-x-4 md:translate-x-6' : 'translate-x-1'
         }`}
       />
     </button>
@@ -180,17 +180,17 @@ const StudentSettings = () => {
     if (!saveStatus) return null;
 
     return (
-      <div className={`flex items-center gap-2 p-3 rounded-lg mb-4 ${
+      <div className={`flex items-center gap-2 p-2 md:p-3 rounded-lg mb-3 md:mb-4 ${
         saveStatus === 'success' 
           ? 'bg-green-100 text-green-800 border border-green-200' 
           : 'bg-red-100 text-red-800 border border-red-200'
       }`}>
         {saveStatus === 'success' ? (
-          <Check size={16} className="text-green-600" />
+          <Check size={14} className="md:w-4 md:h-4 text-green-600" />
         ) : (
-          <X size={16} className="text-red-600" />
+          <X size={14} className="md:w-4 md:h-4 text-red-600" />
         )}
-        <span className="text-sm font-medium">
+        <span className="text-xs md:text-sm font-medium">
           {saveStatus === 'success' 
             ? 'Notification settings saved successfully!' 
             : 'Failed to save settings. Please try again.'
@@ -209,23 +209,23 @@ const StudentSettings = () => {
 
       <Sidebar isExpanded={isSidebarExpanded} activeItem="settings" />
 
-      <main className={`transition-all duration-300 pt-20 pb-16 min-h-screen ${
-        isSidebarExpanded ? 'ml-64' : 'ml-16'
-      }`}>
-        <div className="w-full h-full px-6 py-6">
+      <main className={`transition-all duration-300 ${
+        isSidebarExpanded ? 'ml-0 md:ml-48 lg:ml-64' : 'ml-0 md:ml-16'
+      } pt-16 md:pt-20 pb-12 md:pb-16 min-h-screen overflow-x-hidden`}>
+        <div className="w-full h-full px-3 sm:px-4 md:px-6 py-4 md:py-6">
           
           {/* Header */}
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 md:mb-6 lg:mb-8 gap-3 sm:gap-0">
             <div className="text-left">
-              <h1 className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h1 className={`text-xl sm:text-2xl md:text-3xl font-bold mb-1 md:mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Settings
               </h1>
-              <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
+              <p className={`text-sm md:text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
                 Manage your account preferences
               </p>
             </div>
-            <div className="text-right">
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+            <div className="text-left sm:text-right">
+              <p className={`text-xs sm:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Student ID: ST20240001
               </p>
               <p className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
@@ -234,21 +234,21 @@ const StudentSettings = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 xl:grid-cols-4 gap-4 md:gap-6">
             
             {/* Settings Sidebar */}
             <div className="xl:col-span-1">
-              <div className={`p-6 rounded-2xl border ${
+              <div className={`p-4 md:p-6 rounded-xl md:rounded-2xl border ${
                 isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'
               }`}>
-                <h3 className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <h3 className={`text-base md:text-lg font-semibold mb-3 md:mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Security Settings
                 </h3>
                 
-                <div className="space-y-4">
+                <div className="space-y-3 md:space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className={`text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <div className={`text-xs md:text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                         Two-factor authentication
                       </div>
                       <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -263,7 +263,7 @@ const StudentSettings = () => {
 
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className={`text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <div className={`text-xs md:text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                         Login Alerts
                       </div>
                       <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -278,7 +278,7 @@ const StudentSettings = () => {
 
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className={`text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <div className={`text-xs md:text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                         Show Ranking
                       </div>
                       <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -292,13 +292,13 @@ const StudentSettings = () => {
                   </div>
 
                   <div className="pt-2">
-                    <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    <label className={`block text-xs md:text-sm font-medium mb-1 md:mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                       Theme Preference
                     </label>
                     <select 
                       value={themePreference}
                       onChange={handleThemeChange}
-                      className={`w-full px-3 py-2 rounded-lg border text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
+                      className={`w-full px-2 py-1 md:px-3 md:py-2 rounded-lg border text-xs md:text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
                         isDarkMode 
                           ? 'bg-slate-700 border-slate-600 text-white hover:bg-slate-600' 
                           : 'bg-white border-gray-300 text-gray-900 hover:border-gray-400'
@@ -314,13 +314,13 @@ const StudentSettings = () => {
                   </div>
 
                   <div>
-                    <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    <label className={`block text-xs md:text-sm font-medium mb-1 md:mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                       Language
                     </label>
                     <select 
                       value={language}
                       onChange={handleLanguageChange}
-                      className={`w-full px-3 py-2 rounded-lg border text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
+                      className={`w-full px-2 py-1 md:px-3 md:py-2 rounded-lg border text-xs md:text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
                         isDarkMode 
                           ? 'bg-slate-700 border-slate-600 text-white hover:bg-slate-600' 
                           : 'bg-white border-gray-300 text-gray-900 hover:border-gray-400'
@@ -340,17 +340,17 @@ const StudentSettings = () => {
             </div>
 
             {/* Main Settings Content */}
-            <div className="xl:col-span-3 space-y-6">
+            <div className="xl:col-span-3 space-y-4 md:space-y-6">
               
 
               {/* Notification Preferences */}
-              <div className={`p-6 rounded-2xl border ${
+              <div className={`p-4 md:p-6 rounded-xl md:rounded-2xl border ${
                 isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'
               }`}>
-                <h3 className={`text-xl font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <h3 className={`text-lg md:text-xl font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Notification Preferences
                 </h3>
-                <p className={`text-sm mb-6 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                <p className={`text-xs md:text-sm mb-4 md:mb-6 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   Choose how you want to be notified
                 </p>
 
@@ -358,21 +358,21 @@ const StudentSettings = () => {
                 <SaveStatusMessage />
 
                 {/* Delivery Methods */}
-                <div className="mb-8">
-                  <h4 className={`text-lg font-medium mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <div className="mb-6 md:mb-8">
+                  <h4 className={`text-base md:text-lg font-medium mb-3 md:mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     Delivery Methods
                   </h4>
-                  <div className="space-y-4">
-                    <div className={`flex items-center justify-between p-4 rounded-lg border ${
+                  <div className="space-y-3 md:space-y-4">
+                    <div className={`flex items-center justify-between p-3 md:p-4 rounded-lg border ${
                       isDarkMode ? 'border-slate-600' : 'border-gray-200'
                     }`}>
-                      <div className="flex items-center gap-3">
-                        <Mail size={20} className="text-blue-500" />
+                      <div className="flex items-center gap-2 md:gap-3">
+                        <Mail size={16} className="md:w-5 md:h-5 text-blue-500" />
                         <div>
-                          <div className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          <div className={`font-medium text-xs md:text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                             Email Notifications
                           </div>
-                          <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                          <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                             Receive notifications via email
                           </div>
                         </div>
@@ -383,16 +383,16 @@ const StudentSettings = () => {
                       />
                     </div>
 
-                    <div className={`flex items-center justify-between p-4 rounded-lg border ${
+                    <div className={`flex items-center justify-between p-3 md:p-4 rounded-lg border ${
                       isDarkMode ? 'border-slate-600' : 'border-gray-200'
                     }`}>
-                      <div className="flex items-center gap-3">
-                        <Phone size={20} className="text-green-500" />
+                      <div className="flex items-center gap-2 md:gap-3">
+                        <Phone size={16} className="md:w-5 md:h-5 text-green-500" />
                         <div>
-                          <div className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          <div className={`font-medium text-xs md:text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                             SMS Notifications
                           </div>
-                          <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                          <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                             Receive notifications via SMS
                           </div>
                         </div>
@@ -403,16 +403,16 @@ const StudentSettings = () => {
                       />
                     </div>
 
-                    <div className={`flex items-center justify-between p-4 rounded-lg border ${
+                    <div className={`flex items-center justify-between p-3 md:p-4 rounded-lg border ${
                       isDarkMode ? 'border-slate-600' : 'border-gray-200'
                     }`}>
-                      <div className="flex items-center gap-3">
-                        <Bell size={20} className="text-purple-500" />
+                      <div className="flex items-center gap-2 md:gap-3">
+                        <Bell size={16} className="md:w-5 md:h-5 text-purple-500" />
                         <div>
-                          <div className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          <div className={`font-medium text-xs md:text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                             Push Notifications
                           </div>
-                          <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                          <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                             Receive push notifications on browser
                           </div>
                         </div>
@@ -427,20 +427,20 @@ const StudentSettings = () => {
 
                 {/* Content Types */}
                 <div>
-                  <h4 className={`text-lg font-medium mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <h4 className={`text-base md:text-lg font-medium mb-3 md:mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     Content Types
                   </h4>
-                  <div className="space-y-4">
-                    <div className={`flex items-center justify-between p-4 rounded-lg border ${
+                  <div className="space-y-3 md:space-y-4">
+                    <div className={`flex items-center justify-between p-3 md:p-4 rounded-lg border ${
                       isDarkMode ? 'border-slate-600' : 'border-gray-200'
                     }`}>
-                      <div className="flex items-center gap-3">
-                        <Bell size={20} className="text-blue-500" />
+                      <div className="flex items-center gap-2 md:gap-3">
+                        <Bell size={16} className="md:w-5 md:h-5 text-blue-500" />
                         <div>
-                          <div className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          <div className={`font-medium text-xs md:text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                             Announcements
                           </div>
-                          <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                          <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                             School and class announcements
                           </div>
                         </div>
@@ -451,16 +451,16 @@ const StudentSettings = () => {
                       />
                     </div>
 
-                    <div className={`flex items-center justify-between p-4 rounded-lg border ${
+                    <div className={`flex items-center justify-between p-3 md:p-4 rounded-lg border ${
                       isDarkMode ? 'border-slate-600' : 'border-gray-200'
                     }`}>
-                      <div className="flex items-center gap-3">
-                        <User size={20} className="text-green-500" />
+                      <div className="flex items-center gap-2 md:gap-3">
+                        <User size={16} className="md:w-5 md:h-5 text-green-500" />
                         <div>
-                          <div className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          <div className={`font-medium text-xs md:text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                             Assignments
                           </div>
-                          <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                          <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                             New assignments and due dates
                           </div>
                         </div>
@@ -471,16 +471,16 @@ const StudentSettings = () => {
                       />
                     </div>
 
-                    <div className={`flex items-center justify-between p-4 rounded-lg border ${
+                    <div className={`flex items-center justify-between p-3 md:p-4 rounded-lg border ${
                       isDarkMode ? 'border-slate-600' : 'border-gray-200'
                     }`}>
-                      <div className="flex items-center gap-3">
-                        <Globe size={20} className="text-purple-500" />
+                      <div className="flex items-center gap-2 md:gap-3">
+                        <Globe size={16} className="md:w-5 md:h-5 text-purple-500" />
                         <div>
-                          <div className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          <div className={`font-medium text-xs md:text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                             Grades
                           </div>
-                          <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                          <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                             Test scores and report cards
                           </div>
                         </div>
@@ -491,16 +491,16 @@ const StudentSettings = () => {
                       />
                     </div>
 
-                    <div className={`flex items-center justify-between p-4 rounded-lg border ${
+                    <div className={`flex items-center justify-between p-3 md:p-4 rounded-lg border ${
                       isDarkMode ? 'border-slate-600' : 'border-gray-200'
                     }`}>
-                      <div className="flex items-center gap-3">
-                        <User size={20} className="text-orange-500" />
+                      <div className="flex items-center gap-2 md:gap-3">
+                        <User size={16} className="md:w-5 md:h-5 text-orange-500" />
                         <div>
-                          <div className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          <div className={`font-medium text-xs md:text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                             Attendance
                           </div>
-                          <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                          <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                             Attendance reports and alerts
                           </div>
                         </div>
@@ -511,16 +511,16 @@ const StudentSettings = () => {
                       />
                     </div>
 
-                    <div className={`flex items-center justify-between p-4 rounded-lg border ${
+                    <div className={`flex items-center justify-between p-3 md:p-4 rounded-lg border ${
                       isDarkMode ? 'border-slate-600' : 'border-gray-200'
                     }`}>
-                      <div className="flex items-center gap-3">
-                        <Calendar size={20} className="text-red-500" />
+                      <div className="flex items-center gap-2 md:gap-3">
+                        <Calendar size={16} className="md:w-5 md:h-5 text-red-500" />
                         <div>
-                          <div className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          <div className={`font-medium text-xs md:text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                             Events
                           </div>
-                          <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                          <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                             School events and activities
                           </div>
                         </div>
@@ -531,16 +531,16 @@ const StudentSettings = () => {
                       />
                     </div>
 
-                    <div className={`flex items-center justify-between p-4 rounded-lg border ${
+                    <div className={`flex items-center justify-between p-3 md:p-4 rounded-lg border ${
                       isDarkMode ? 'border-slate-600' : 'border-gray-200'
                     }`}>
-                      <div className="flex items-center gap-3">
-                        <Bell size={20} className="text-yellow-500" />
+                      <div className="flex items-center gap-2 md:gap-3">
+                        <Bell size={16} className="md:w-5 md:h-5 text-yellow-500" />
                         <div>
-                          <div className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          <div className={`font-medium text-xs md:text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                             Reminders
                           </div>
-                          <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                          <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                             Due date reminders
                           </div>
                         </div>
@@ -554,11 +554,11 @@ const StudentSettings = () => {
                 </div>
 
                 {/* Save Button */}
-                <div className={`mt-8 pt-6 border-t ${isDarkMode ? 'border-slate-600' : 'border-gray-200'}`}>
-                  <div className="flex items-center justify-between mb-3">
+                <div className={`mt-6 md:mt-8 pt-4 md:pt-6 border-t ${isDarkMode ? 'border-slate-600' : 'border-gray-200'}`}>
+                  <div className="flex items-center justify-between mb-2 md:mb-3">
                     <div>
                       {hasUnsavedChanges() && (
-                        <div className={`text-sm ${isDarkMode ? 'text-yellow-400' : 'text-yellow-600'}`}>
+                        <div className={`text-xs md:text-sm ${isDarkMode ? 'text-yellow-400' : 'text-yellow-600'}`}>
                           You have unsaved changes
                         </div>
                       )}
@@ -568,7 +568,7 @@ const StudentSettings = () => {
                   <button 
                     onClick={handleSaveNotificationSettings}
                     disabled={isLoading || !hasUnsavedChanges()}
-                    className={`w-full py-3 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
+                    className={`w-full py-2 md:py-3 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 text-xs md:text-sm ${
                       isLoading 
                         ? 'bg-gray-400 cursor-not-allowed text-white'
                         : hasUnsavedChanges()
@@ -578,7 +578,7 @@ const StudentSettings = () => {
                   >
                     {isLoading ? (
                       <>
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        <div className="w-3 h-3 md:w-4 md:h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                         Saving...
                       </>
                     ) : (

@@ -155,30 +155,6 @@ const TeacherAssignmentManagement = () => {
         graded: false,
         submissionContent: 'Assignment submitted on time. All questions attempted.',
         feedback: ''
-      },
-      {
-        id: 3,
-        studentName: 'Sneha Verma',
-        rollNo: 'A003',
-        submittedAt: '2024-12-12 11:45 AM',
-        status: 'submitted',
-        score: 42,
-        maxScore: 50,
-        graded: true,
-        submissionContent: 'Good attempt with minor calculation errors in question 3.',
-        feedback: 'Good work, but check your calculations in problem 3.'
-      },
-      {
-        id: 4,
-        studentName: 'Arjun Patel',
-        rollNo: 'A004',
-        submittedAt: null,
-        status: 'pending',
-        score: null,
-        maxScore: 50,
-        graded: false,
-        submissionContent: '',
-        feedback: ''
       }
     ]
   });
@@ -363,7 +339,6 @@ const TeacherAssignmentManagement = () => {
 
     setAssignments(prev => {
       const newAssignments = { ...prev };
-      // Find which category the assignment belongs to
       Object.keys(newAssignments).forEach(category => {
         const index = newAssignments[category].findIndex(a => a.id === editForm.id);
         if (index !== -1) {
@@ -379,7 +354,6 @@ const TeacherAssignmentManagement = () => {
 
   const handleGradeSubmit = (e) => {
     e.preventDefault();
-    // Update the submission data
     setSubmissionData(prev => ({
       ...prev,
       submissions: prev.submissions.map(sub => 
@@ -408,38 +382,39 @@ const TeacherAssignmentManagement = () => {
       <Sidebar isExpanded={isSidebarExpanded} activeItem="assignments" />
 
       <main className={`transition-all duration-300 pt-20 pb-16 min-h-screen ${
-        isSidebarExpanded ? 'ml-64' : 'ml-16'
+        isSidebarExpanded ? 'lg:ml-64' : 'lg:ml-16'
       }`}>
-        <div className="w-full h-full px-6 py-6">
+        <div className="w-full h-full px-4 sm:px-6 py-6">
           
           {/* Header */}
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8">
             <div className="text-left">
-              <h1 className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h1 className={`text-2xl sm:text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Assignment Management
               </h1>
-              <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
+              <p className={`text-base sm:text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
                 Manage and track student assignments
               </p>
             </div>
             <button 
               onClick={handleCreateAssignment}
-              className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg flex items-center gap-2 transition-colors"
+              className="bg-blue-500 hover:bg-blue-600 text-white px-4 sm:px-6 py-3 rounded-lg flex items-center gap-2 transition-colors text-sm sm:text-base"
             >
-              <Plus size={20} />
-              Create Assignment
+              <Plus size={18} className="sm:w-5 sm:h-5" />
+              <span className="hidden sm:inline">Create Assignment</span>
+              <span className="sm:hidden">Create</span>
             </button>
           </div>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
             {stats.map((stat, index) => {
               const Icon = stat.icon;
               const colorClasses = getColorClasses(stat.color);
               return (
                 <div
                   key={index}
-                  className={`p-6 rounded-2xl border ${
+                  className={`p-4 sm:p-6 rounded-xl sm:rounded-2xl border ${
                     isDarkMode 
                       ? 'bg-slate-800 border-slate-700' 
                       : 'bg-white border-gray-300 shadow-sm'
@@ -447,15 +422,15 @@ const TeacherAssignmentManagement = () => {
                 >
                   <div className="flex justify-between items-start">
                     <div className="text-left">
-                      <h3 className={`text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      <h3 className={`text-xs sm:text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                         {stat.title}
                       </h3>
-                      <p className={`text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <p className={`text-xl sm:text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                         {stat.value}
                       </p>
                     </div>
-                    <div className={`p-3 rounded-xl ${colorClasses.iconBg}`}>
-                      <Icon className={`w-6 h-6 ${colorClasses.iconColor}`} />
+                    <div className={`p-2 sm:p-3 rounded-lg ${colorClasses.iconBg}`}>
+                      <Icon className={`w-5 h-5 sm:w-6 sm:h-6 ${colorClasses.iconColor}`} />
                     </div>
                   </div>
                 </div>
@@ -464,17 +439,17 @@ const TeacherAssignmentManagement = () => {
           </div>
 
           {/* Assignment Tabs and Content */}
-          <div className={`p-6 rounded-2xl border ${
+          <div className={`p-4 sm:p-6 rounded-xl sm:rounded-2xl border ${
             isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
           }`}>
             
             {/* Tabs */}
-            <div className={`flex border-b mb-6 ${isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}>
+            <div className={`flex overflow-x-auto gap-1 sm:gap-2 mb-4 sm:mb-6 p-1 ${isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}>
               {tabs.map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors ${
+                  className={`px-3 py-2 sm:px-4 sm:py-2 font-medium text-xs sm:text-sm border-b-2 transition-colors whitespace-nowrap ${
                     activeTab === tab
                       ? 'border-blue-500 text-blue-600'
                       : `border-transparent ${isDarkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-800'}`
@@ -491,21 +466,21 @@ const TeacherAssignmentManagement = () => {
                 assignments[activeTab].map((assignment) => (
                   <div
                     key={assignment.id}
-                    className={`p-6 rounded-xl border ${
+                    className={`p-4 sm:p-6 rounded-lg sm:rounded-xl border ${
                       isDarkMode ? 'border-slate-600 bg-slate-700' : 'border-gray-200 bg-gray-50'
                     }`}
                   >
-                    <div className="flex items-start justify-between mb-4">
+                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4 mb-3 sm:mb-4">
                       <div className="text-left flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
+                          <h3 className={`text-base sm:text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                             {assignment.title}
                           </h3>
-                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(assignment.status)}`}>
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(assignment.status)} self-start sm:self-auto`}>
                             {assignment.status}
                           </span>
                         </div>
-                        <div className="flex items-center gap-4 text-sm mb-2">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-xs sm:text-sm mb-2">
                           <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                             📚 {assignment.subject}
                           </span>
@@ -517,18 +492,18 @@ const TeacherAssignmentManagement = () => {
                             📅 Due {formatDate(assignment.dueDate)}
                           </span>
                         </div>
-                        <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                        <p className={`text-xs sm:text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                           {assignment.description}
                         </p>
                       </div>
                     </div>
 
-                    <div className="mb-4">
+                    <div className="mb-3 sm:mb-4">
                       <div className="flex items-center justify-between mb-2">
-                        <span className={`text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                        <span className={`text-xs sm:text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                           Progress
                         </span>
-                        <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                        <span className={`text-xs sm:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                           {assignment.submitted}/{assignment.totalStudents} ({assignment.progress}%)
                         </span>
                       </div>
@@ -540,8 +515,8 @@ const TeacherAssignmentManagement = () => {
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4 text-sm">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+                      <div className="flex items-center gap-3 sm:gap-4 text-xs sm:text-sm">
                         <span className={`flex items-center gap-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                           <Users size={12} />
                           {assignment.totalStudents} students
@@ -554,26 +529,27 @@ const TeacherAssignmentManagement = () => {
                       <div className="flex items-center gap-2">
                         <button 
                           onClick={() => handleViewSubmissions(assignment)}
-                          className="text-blue-500 hover:text-blue-600 text-sm font-medium transition-colors flex items-center gap-1"
+                          className="text-blue-500 hover:text-blue-600 text-xs sm:text-sm font-medium transition-colors flex items-center gap-1"
                         >
-                          <Eye size={14} />
-                          View Submissions
+                          <Eye size={12} className="sm:w-4 sm:h-4" />
+                          <span className="hidden sm:inline">View Submissions</span>
+                          <span className="sm:hidden">View</span>
                         </button>
                         <button 
                           onClick={() => handleEditAssignment(assignment)}
-                          className="text-gray-500 hover:text-gray-600 text-sm font-medium transition-colors flex items-center gap-1"
+                          className="text-gray-500 hover:text-gray-600 text-xs sm:text-sm font-medium transition-colors flex items-center gap-1"
                         >
-                          <Edit size={14} />
-                          Edit
+                          <Edit size={12} className="sm:w-4 sm:h-4" />
+                          <span className="hidden sm:inline">Edit</span>
                         </button>
                       </div>
                     </div>
                   </div>
                 ))
               ) : (
-                <div className={`text-center py-12 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  <FileText size={48} className="mx-auto mb-4 opacity-50" />
-                  <p>No assignments in this category</p>
+                <div className={`text-center py-8 sm:py-12 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  <FileText size={32} className="sm:w-12 sm:h-12 mx-auto mb-4 opacity-50" />
+                  <p className="text-sm sm:text-base">No assignments in this category</p>
                 </div>
               )}
             </div>
@@ -584,17 +560,17 @@ const TeacherAssignmentManagement = () => {
       {/* Create Assignment Modal */}
       {showCreateModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className={`max-w-2xl w-full max-h-[90vh] overflow-hidden rounded-2xl ${
+          <div className={`max-w-2xl w-full max-h-[90vh] overflow-hidden rounded-xl sm:rounded-2xl ${
             isDarkMode ? 'bg-slate-800' : 'bg-white'
           }`}>
             
             {/* Modal Header */}
-            <div className={`flex items-center justify-between p-6 border-b ${isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}>
+            <div className={`flex items-center justify-between p-4 sm:p-6 border-b ${isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}>
               <div className="text-left">
-                <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <h2 className={`text-lg sm:text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Create New Assignment
                 </h2>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                <p className={`text-xs sm:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   Fill in the details to create a new assignment
                 </p>
               </div>
@@ -602,14 +578,14 @@ const TeacherAssignmentManagement = () => {
                 onClick={closeAllModals}
                 className={`text-gray-500 hover:text-gray-700 ${isDarkMode ? 'hover:text-gray-300' : ''}`}
               >
-                <XCircle size={24} />
+                <XCircle size={20} className="sm:w-6 sm:h-6" />
               </button>
             </div>
 
             {/* Form */}
             <div className="max-h-[70vh] overflow-y-auto">
-              <form onSubmit={handleCreateSubmit} className="p-6 space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <form onSubmit={handleCreateSubmit} className="p-4 sm:p-6 space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                       Assignment Title *
@@ -619,7 +595,7 @@ const TeacherAssignmentManagement = () => {
                       required
                       value={createForm.title}
                       onChange={(e) => setCreateForm({...createForm, title: e.target.value})}
-                      className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                      className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm ${
                         isDarkMode 
                           ? 'bg-slate-700 border-slate-600 text-white' 
                           : 'bg-white border-gray-300 text-gray-900'
@@ -635,7 +611,7 @@ const TeacherAssignmentManagement = () => {
                       required
                       value={createForm.subject}
                       onChange={(e) => setCreateForm({...createForm, subject: e.target.value})}
-                      className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                      className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm ${
                         isDarkMode 
                           ? 'bg-slate-700 border-slate-600 text-white' 
                           : 'bg-white border-gray-300 text-gray-900'
@@ -646,13 +622,11 @@ const TeacherAssignmentManagement = () => {
                       <option value="Physics">Physics</option>
                       <option value="Chemistry">Chemistry</option>
                       <option value="Biology">Biology</option>
-                      <option value="English">English</option>
-                      <option value="History">History</option>
                     </select>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                       Class *
@@ -661,21 +635,17 @@ const TeacherAssignmentManagement = () => {
                       required
                       value={createForm.class}
                       onChange={(e) => setCreateForm({...createForm, class: e.target.value})}
-                      className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                      className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm ${
                         isDarkMode 
                           ? 'bg-slate-700 border-slate-600 text-white' 
                           : 'bg-white border-gray-300 text-gray-900'
                       }`}
                     >
                       <option value="">Select Class</option>
-                      <option value="Grade 9A">Grade 9A</option>
-                      <option value="Grade 9B">Grade 9B</option>
                       <option value="Grade 10A">Grade 10A</option>
                       <option value="Grade 10B">Grade 10B</option>
                       <option value="Grade 11A">Grade 11A</option>
                       <option value="Grade 11B">Grade 11B</option>
-                      <option value="Grade 12A">Grade 12A</option>
-                      <option value="Grade 12B">Grade 12B</option>
                     </select>
                   </div>
                   <div>
@@ -687,7 +657,7 @@ const TeacherAssignmentManagement = () => {
                       required
                       value={createForm.dueDate}
                       onChange={(e) => setCreateForm({...createForm, dueDate: e.target.value})}
-                      className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                      className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm ${
                         isDarkMode 
                           ? 'bg-slate-700 border-slate-600 text-white' 
                           : 'bg-white border-gray-300 text-gray-900'
@@ -706,7 +676,7 @@ const TeacherAssignmentManagement = () => {
                     min="1"
                     value={createForm.maxMarks}
                     onChange={(e) => setCreateForm({...createForm, maxMarks: e.target.value})}
-                    className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                    className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm ${
                       isDarkMode 
                         ? 'bg-slate-700 border-slate-600 text-white' 
                         : 'bg-white border-gray-300 text-gray-900'
@@ -724,7 +694,7 @@ const TeacherAssignmentManagement = () => {
                     rows={3}
                     value={createForm.description}
                     onChange={(e) => setCreateForm({...createForm, description: e.target.value})}
-                    className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                    className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm ${
                       isDarkMode 
                         ? 'bg-slate-700 border-slate-600 text-white' 
                         : 'bg-white border-gray-300 text-gray-900'
@@ -738,10 +708,10 @@ const TeacherAssignmentManagement = () => {
                     Instructions
                   </label>
                   <textarea
-                    rows={3}
+                    rows={2}
                     value={createForm.instructions}
                     onChange={(e) => setCreateForm({...createForm, instructions: e.target.value})}
-                    className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                    className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm ${
                       isDarkMode 
                         ? 'bg-slate-700 border-slate-600 text-white' 
                         : 'bg-white border-gray-300 text-gray-900'
@@ -750,11 +720,11 @@ const TeacherAssignmentManagement = () => {
                   />
                 </div>
 
-                <div className="flex justify-end gap-3 pt-4">
+                <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4">
                   <button
                     type="button"
                     onClick={closeAllModals}
-                    className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                    className={`px-4 py-2 rounded-lg font-medium transition-colors text-sm ${
                       isDarkMode 
                         ? 'bg-slate-600 text-gray-300 hover:bg-slate-500' 
                         : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -764,7 +734,7 @@ const TeacherAssignmentManagement = () => {
                   </button>
                   <button
                     type="submit"
-                    className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors"
+                    className="bg-blue-500 hover:bg-blue-600 text-white px-4 sm:px-6 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors text-sm"
                   >
                     <Save size={16} />
                     Create Assignment
@@ -776,215 +746,20 @@ const TeacherAssignmentManagement = () => {
         </div>
       )}
 
-      {/* Edit Assignment Modal */}
-      {showEditModal && selectedAssignment && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className={`max-w-2xl w-full max-h-[90vh] overflow-hidden rounded-2xl ${
-            isDarkMode ? 'bg-slate-800' : 'bg-white'
-          }`}>
-            
-            {/* Modal Header */}
-            <div className={`flex items-center justify-between p-6 border-b ${isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}>
-              <div className="text-left">
-                <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  Edit Assignment
-                </h2>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  Update assignment details
-                </p>
-              </div>
-              <button 
-                onClick={closeAllModals}
-                className={`text-gray-500 hover:text-gray-700 ${isDarkMode ? 'hover:text-gray-300' : ''} transition-colors`}
-              >
-                <XCircle size={24} />
-              </button>
-            </div>
-
-            {/* Form */}
-            <div className="max-h-[70vh] overflow-y-auto">
-              <form onSubmit={handleEditSubmit} className="p-6 space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                      Assignment Title *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={editForm.title}
-                      onChange={(e) => setEditForm({...editForm, title: e.target.value})}
-                      className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                        isDarkMode 
-                          ? 'bg-slate-700 border-slate-600 text-white' 
-                          : 'bg-white border-gray-300 text-gray-900'
-                      }`}
-                      placeholder="Enter assignment title"
-                    />
-                  </div>
-                  <div>
-                    <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                      Subject *
-                    </label>
-                    <select
-                      required
-                      value={editForm.subject}
-                      onChange={(e) => setEditForm({...editForm, subject: e.target.value})}
-                      className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                        isDarkMode 
-                          ? 'bg-slate-700 border-slate-600 text-white' 
-                          : 'bg-white border-gray-300 text-gray-900'
-                      }`}
-                    >
-                      <option value="">Select Subject</option>
-                      <option value="Mathematics">Mathematics</option>
-                      <option value="Physics">Physics</option>
-                      <option value="Chemistry">Chemistry</option>
-                      <option value="Biology">Biology</option>
-                      <option value="English">English</option>
-                      <option value="History">History</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                      Class *
-                    </label>
-                    <select
-                      required
-                      value={editForm.class}
-                      onChange={(e) => setEditForm({...editForm, class: e.target.value})}
-                      className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                        isDarkMode 
-                          ? 'bg-slate-700 border-slate-600 text-white' 
-                          : 'bg-white border-gray-300 text-gray-900'
-                      }`}
-                    >
-                      <option value="">Select Class</option>
-                      <option value="Grade 9A">Grade 9A</option>
-                      <option value="Grade 9B">Grade 9B</option>
-                      <option value="Grade 10A">Grade 10A</option>
-                      <option value="Grade 10B">Grade 10B</option>
-                      <option value="Grade 11A">Grade 11A</option>
-                      <option value="Grade 11B">Grade 11B</option>
-                      <option value="Grade 12A">Grade 12A</option>
-                      <option value="Grade 12B">Grade 12B</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                      Due Date *
-                    </label>
-                    <input
-                      type="datetime-local"
-                      required
-                      value={editForm.dueDate}
-                      onChange={(e) => setEditForm({...editForm, dueDate: e.target.value})}
-                      className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                        isDarkMode 
-                          ? 'bg-slate-700 border-slate-600 text-white' 
-                          : 'bg-white border-gray-300 text-gray-900'
-                      }`}
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                    Max Marks *
-                  </label>
-                  <input
-                    type="number"
-                    required
-                    min="1"
-                    value={editForm.maxMarks}
-                    onChange={(e) => setEditForm({...editForm, maxMarks: e.target.value})}
-                    className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                      isDarkMode 
-                        ? 'bg-slate-700 border-slate-600 text-white' 
-                        : 'bg-white border-gray-300 text-gray-900'
-                    }`}
-                    placeholder="Enter maximum marks"
-                  />
-                </div>
-
-                <div>
-                  <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                    Description *
-                  </label>
-                  <textarea
-                    required
-                    rows={3}
-                    value={editForm.description}
-                    onChange={(e) => setEditForm({...editForm, description: e.target.value})}
-                    className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                      isDarkMode 
-                        ? 'bg-slate-700 border-slate-600 text-white' 
-                        : 'bg-white border-gray-300 text-gray-900'
-                    }`}
-                    placeholder="Enter assignment description"
-                  />
-                </div>
-
-                <div>
-                  <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                    Instructions
-                  </label>
-                  <textarea
-                    rows={3}
-                    value={editForm.instructions}
-                    onChange={(e) => setEditForm({...editForm, instructions: e.target.value})}
-                    className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                      isDarkMode 
-                        ? 'bg-slate-700 border-slate-600 text-white' 
-                        : 'bg-white border-gray-300 text-gray-900'
-                    }`}
-                    placeholder="Enter additional instructions for students"
-                  />
-                </div>
-
-                <div className="flex justify-end gap-3 pt-4">
-                  <button
-                    type="button"
-                    onClick={closeAllModals}
-                    className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                      isDarkMode 
-                        ? 'bg-slate-600 text-gray-300 hover:bg-slate-500' 
-                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                    }`}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors"
-                  >
-                    <Save size={16} />
-                    Update Assignment
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Submission Modal */}
       {showSubmissionModal && selectedAssignment && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className={`max-w-4xl w-full max-h-[80vh] overflow-hidden rounded-2xl ${
+          <div className={`max-w-4xl w-full max-h-[80vh] overflow-hidden rounded-xl sm:rounded-2xl ${
             isDarkMode ? 'bg-slate-800' : 'bg-white'
           }`}>
             
             {/* Modal Header */}
-            <div className={`flex items-center justify-between p-6 border-b ${isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}>
+            <div className={`flex items-center justify-between p-4 sm:p-6 border-b ${isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}>
               <div className="text-left">
-                <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <h2 className={`text-lg sm:text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   {selectedAssignment.title}
                 </h2>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                <p className={`text-xs sm:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   {selectedAssignment.subject} • {selectedAssignment.class}
                 </p>
               </div>
@@ -992,239 +767,112 @@ const TeacherAssignmentManagement = () => {
                 onClick={closeAllModals}
                 className={`text-gray-500 hover:text-gray-700 ${isDarkMode ? 'hover:text-gray-300' : ''} transition-colors`}
               >
-                <XCircle size={24} />
+                <XCircle size={20} className="sm:w-6 sm:h-6" />
               </button>
             </div>
 
             {/* Modal Stats */}
-            <div className={`p-6 border-b ${isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}>
+            <div className={`p-4 sm:p-6 border-b ${isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}>
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div>
-                  <div className={`text-2xl font-bold text-blue-600`}>
+                  <div className={`text-xl sm:text-2xl font-bold text-blue-600`}>
                     {submissionData.totalSubmissions}
                   </div>
-                  <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  <div className={`text-xs sm:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                     Total Submissions
                   </div>
                 </div>
                 <div>
-                  <div className={`text-2xl font-bold text-orange-600`}>
+                  <div className={`text-xl sm:text-2xl font-bold text-orange-600`}>
                     {submissionData.pendingSubmissions}
                   </div>
-                  <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  <div className={`text-xs sm:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                     Pending
                   </div>
                 </div>
                 <div>
-                  <div className={`text-2xl font-bold text-green-600`}>
+                  <div className={`text-xl sm:text-2xl font-bold text-green-600`}>
                     {submissionData.completionRate}%
                   </div>
-                  <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  <div className={`text-xs sm:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                     Completion Rate
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Student Submission Header */}
-            <div className={`p-4 border-b ${isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}>
-              <h3 className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            {/* Submissions List */}
+            <div className="max-h-96 overflow-y-auto p-4 sm:p-6">
+              <h3 className={`font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Student Submissions
               </h3>
-            </div>
-
-            {/* Submissions List */}
-            <div className="max-h-96 overflow-y-auto">
-              {submissionData.submissions.map((submission) => (
-                <div 
-                  key={submission.id} 
-                  className={`flex items-center justify-between p-4 border-b transition-colors ${
-                    isDarkMode 
-                      ? 'border-slate-600 hover:bg-slate-700' 
-                      : 'border-gray-100 hover:bg-gray-50'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                      submission.status === 'submitted' 
-                        ? 'bg-green-100 text-green-700' 
-                        : 'bg-orange-100 text-orange-700'
-                    }`}>
-                      {submission.studentName.charAt(0)}
-                    </div>
-                    <div className="text-left">
-                      <div className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                        {submission.studentName}
-                      </div>
-                      <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        {submission.rollNo} • {submission.submittedAt || 'Not submitted'}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    {submission.graded && submission.score !== null && (
-                      <div className="text-right">
-                        <div className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                          {submission.score}/{submission.maxScore}
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Star size={12} className="text-yellow-400 fill-yellow-400" />
-                          <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                            Graded
-                          </span>
-                        </div>
-                      </div>
-                    )}
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      submission.status === 'submitted' 
-                        ? 'bg-green-100 text-green-700' 
-                        : 'bg-orange-100 text-orange-700'
-                    }`}>
-                      {submission.status === 'submitted' ? 'Submitted' : 'Pending'}
-                    </span>
-                    {submission.status === 'submitted' && (
-                      <div className="flex items-center gap-2">
-                        <button 
-                          onClick={() => handleViewSubmission(submission)}
-                          className="text-blue-500 hover:text-blue-600 text-xs font-medium px-2 py-1 border border-blue-300 rounded transition-colors"
-                        >
-                          View
-                        </button>
-                        <button 
-                          onClick={() => handleGradeStudent(submission)}
-                          className="text-green-500 hover:text-green-600 text-xs font-medium px-2 py-1 border border-green-300 rounded transition-colors"
-                        >
-                          {submission.graded ? 'Edit Grade' : 'Grade'}
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* View Submission Modal */}
-      {showViewModal && selectedStudent && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className={`max-w-3xl w-full max-h-[80vh] overflow-hidden rounded-2xl ${
-            isDarkMode ? 'bg-slate-800' : 'bg-white'
-          }`}>
-            
-            {/* Modal Header */}
-            <div className={`flex items-center justify-between p-6 border-b ${isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}>
-              <div className="text-left">
-                <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  View Submission
-                </h2>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  {selectedStudent.studentName} ({selectedStudent.rollNo})
-                </p>
-              </div>
-              <button 
-                onClick={closeAllModals}
-                className={`text-gray-500 hover:text-gray-700 ${isDarkMode ? 'hover:text-gray-300' : ''} transition-colors`}
-              >
-                <XCircle size={24} />
-              </button>
-            </div>
-
-            {/* Submission Details */}
-            <div className="max-h-[60vh] overflow-y-auto p-6">
-              <div className="space-y-4">
-                <div>
-                  <h3 className={`font-medium text-sm mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                    Submission Status
-                  </h3>
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    selectedStudent.status === 'submitted' 
-                      ? 'bg-green-100 text-green-700' 
-                      : 'bg-orange-100 text-orange-700'
-                  }`}>
-                    {selectedStudent.status === 'submitted' ? 'Submitted' : 'Pending'}
-                  </span>
-                </div>
-
-                {selectedStudent.submittedAt && (
-                  <div>
-                    <h3 className={`font-medium text-sm mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                      Submitted At
-                    </h3>
-                    <p className={`${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                      {selectedStudent.submittedAt}
-                    </p>
-                  </div>
-                )}
-
-                <div>
-                  <h3 className={`font-medium text-sm mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                    Submission Content
-                  </h3>
-                  <div className={`p-4 rounded-lg border ${
-                    isDarkMode 
-                      ? 'bg-slate-700 border-slate-600' 
-                      : 'bg-gray-50 border-gray-200'
-                  }`}>
-                    <p className={`${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                      {selectedStudent.submissionContent || 'No content available'}
-                    </p>
-                  </div>
-                </div>
-
-                {selectedStudent.graded && (
-                  <div>
-                    <h3 className={`font-medium text-sm mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                      Grade & Feedback
-                    </h3>
-                    <div className={`p-4 rounded-lg border ${
+              <div className="space-y-3">
+                {submissionData.submissions.map((submission) => (
+                  <div 
+                    key={submission.id} 
+                    className={`flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-lg border transition-colors ${
                       isDarkMode 
-                        ? 'bg-slate-700 border-slate-600' 
-                        : 'bg-gray-50 border-gray-200'
-                    }`}>
-                      <div className="flex items-center gap-2 mb-2">
-                        <Star size={16} className="text-yellow-400 fill-yellow-400" />
-                        <span className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                          Score: {selectedStudent.score}/{selectedStudent.maxScore}
-                        </span>
+                        ? 'border-slate-600 bg-slate-700 hover:bg-slate-600' 
+                        : 'border-gray-200 bg-gray-50 hover:bg-gray-100'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3 mb-2 sm:mb-0">
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                        submission.status === 'submitted' 
+                          ? 'bg-green-100 text-green-700' 
+                          : 'bg-orange-100 text-orange-700'
+                      }`}>
+                        {submission.studentName.charAt(0)}
                       </div>
-                      {selectedStudent.feedback && (
-                        <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                          Feedback: {selectedStudent.feedback}
-                        </p>
+                      <div className="text-left">
+                        <div className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          {submission.studentName}
+                        </div>
+                        <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                          {submission.rollNo} • {submission.submittedAt || 'Not submitted'}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      {submission.graded && submission.score !== null && (
+                        <div className="text-right">
+                          <div className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                            {submission.score}/{submission.maxScore}
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Star size={12} className="text-yellow-400 fill-yellow-400" />
+                            <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                              Graded
+                            </span>
+                          </div>
+                        </div>
+                      )}
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        submission.status === 'submitted' 
+                          ? 'bg-green-100 text-green-700' 
+                          : 'bg-orange-100 text-orange-700'
+                      }`}>
+                        {submission.status === 'submitted' ? 'Submitted' : 'Pending'}
+                      </span>
+                      {submission.status === 'submitted' && (
+                        <div className="flex items-center gap-2">
+                          <button 
+                            onClick={() => handleViewSubmission(submission)}
+                            className="text-blue-500 hover:text-blue-600 text-xs font-medium px-2 py-1 border border-blue-300 rounded transition-colors"
+                          >
+                            View
+                          </button>
+                          <button 
+                            onClick={() => handleGradeStudent(submission)}
+                            className="text-green-500 hover:text-green-600 text-xs font-medium px-2 py-1 border border-green-300 rounded transition-colors"
+                          >
+                            {submission.graded ? 'Edit' : 'Grade'}
+                          </button>
+                        </div>
                       )}
                     </div>
                   </div>
-                )}
-              </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className={`p-6 border-t ${isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}>
-              <div className="flex justify-end gap-3">
-                <button
-                  onClick={closeAllModals}
-                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                    isDarkMode 
-                      ? 'bg-slate-600 text-gray-300 hover:bg-slate-500' 
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  }`}
-                >
-                  Close
-                </button>
-                {selectedStudent.status === 'submitted' && (
-                  <button
-                    onClick={() => {
-                      setShowViewModal(false);
-                      handleGradeStudent(selectedStudent);
-                    }}
-                    className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors"
-                  >
-                    <Star size={16} />
-                    {selectedStudent.graded ? 'Edit Grade' : 'Grade'}
-                  </button>
-                )}
+                ))}
               </div>
             </div>
           </div>
@@ -1234,17 +882,17 @@ const TeacherAssignmentManagement = () => {
       {/* Grade Modal */}
       {showGradeModal && selectedStudent && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className={`max-w-md w-full rounded-2xl ${
+          <div className={`max-w-md w-full rounded-xl sm:rounded-2xl ${
             isDarkMode ? 'bg-slate-800' : 'bg-white'
           }`}>
             
             {/* Modal Header */}
-            <div className={`flex items-center justify-between p-6 border-b ${isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}>
+            <div className={`flex items-center justify-between p-4 sm:p-6 border-b ${isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}>
               <div className="text-left">
-                <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <h2 className={`text-lg sm:text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Grade Student
                 </h2>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                <p className={`text-xs sm:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   {selectedStudent.studentName} ({selectedStudent.rollNo})
                 </p>
               </div>
@@ -1252,12 +900,12 @@ const TeacherAssignmentManagement = () => {
                 onClick={closeAllModals}
                 className={`text-gray-500 hover:text-gray-700 ${isDarkMode ? 'hover:text-gray-300' : ''} transition-colors`}
               >
-                <XCircle size={24} />
+                <XCircle size={20} className="sm:w-6 sm:h-6" />
               </button>
             </div>
 
             {/* Form */}
-            <form onSubmit={handleGradeSubmit} className="p-6 space-y-4">
+            <form onSubmit={handleGradeSubmit} className="p-4 sm:p-6 space-y-4">
               <div>
                 <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Marks (out of {selectedStudent.maxScore}) *
@@ -1269,7 +917,7 @@ const TeacherAssignmentManagement = () => {
                   max={selectedStudent.maxScore}
                   value={gradeForm.marks}
                   onChange={(e) => setGradeForm({...gradeForm, marks: e.target.value})}
-                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm ${
                     isDarkMode 
                       ? 'bg-slate-700 border-slate-600 text-white' 
                       : 'bg-white border-gray-300 text-gray-900'
@@ -1283,10 +931,10 @@ const TeacherAssignmentManagement = () => {
                   Feedback (Optional)
                 </label>
                 <textarea
-                  rows={4}
+                  rows={3}
                   value={gradeForm.feedback}
                   onChange={(e) => setGradeForm({...gradeForm, feedback: e.target.value})}
-                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm ${
                     isDarkMode 
                       ? 'bg-slate-700 border-slate-600 text-white' 
                       : 'bg-white border-gray-300 text-gray-900'
@@ -1295,11 +943,11 @@ const TeacherAssignmentManagement = () => {
                 />
               </div>
 
-              <div className="flex justify-end gap-3 pt-4">
+              <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4">
                 <button
                   type="button"
                   onClick={closeAllModals}
-                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                  className={`px-4 py-2 rounded-lg font-medium transition-colors text-sm ${
                     isDarkMode 
                       ? 'bg-slate-600 text-gray-300 hover:bg-slate-500' 
                       : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -1309,7 +957,7 @@ const TeacherAssignmentManagement = () => {
                 </button>
                 <button
                   type="submit"
-                  className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors"
+                  className="bg-green-500 hover:bg-green-600 text-white px-4 sm:px-6 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors text-sm"
                 >
                   <Star size={16} />
                   {selectedStudent.graded ? 'Update Grade' : 'Submit Grade'}

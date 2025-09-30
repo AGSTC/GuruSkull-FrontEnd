@@ -308,50 +308,54 @@ const StudentAssignments = () => {
       <Sidebar isExpanded={isSidebarExpanded} activeItem="assignments" />
 
       <main className={`transition-all duration-300 pt-20 pb-16 min-h-screen ${
-        isSidebarExpanded ? 'ml-64' : 'ml-16'
+        isSidebarExpanded ? 'lg:ml-64' : 'lg:ml-16'
       }`}>
-        <div className="w-full h-full px-6 py-6">
+        <div className="w-full h-full px-4 sm:px-6 py-6">
           
           {/* Header */}
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8">
             <div className="text-left">
-              <h1 className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h1 className={`text-2xl sm:text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Assignments
               </h1>
-              <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
+              <p className={`text-base sm:text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
                 View and submit your assignments
               </p>
             </div>
-            <div className="flex items-center gap-2">
-              <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                Due This Week: 
-              </span>
-              <span className="bg-orange-100 text-orange-700 px-2 py-1 rounded-full text-sm font-medium">
-                {quickStats[0].value}
-              </span>
-              <span className={`text-sm ml-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                Completed: 
-              </span>
-              <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-sm font-medium">
-                {quickStats[2].value}
-              </span>
+            <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
+              <div className="flex items-center gap-1 sm:gap-2">
+                <span className={`text-xs sm:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  Due This Week: 
+                </span>
+                <span className="bg-orange-100 text-orange-700 px-2 py-1 rounded-full text-xs font-medium">
+                  {quickStats[0].value}
+                </span>
+              </div>
+              <div className="flex items-center gap-1 sm:gap-2">
+                <span className={`text-xs sm:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  Completed: 
+                </span>
+                <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-medium">
+                  {quickStats[2].value}
+                </span>
+              </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 xl:grid-cols-4 gap-4 sm:gap-6">
             
             {/* Sidebar Filter */}
             <div className="xl:col-span-1">
-              <div className={`p-6 rounded-2xl border ${
+              <div className={`p-4 sm:p-6 rounded-xl sm:rounded-2xl border ${
                 isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'
               }`}>
-                <h3 className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <h3 className={`text-base sm:text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Filter Assignments
                 </h3>
                 
                 <div className="space-y-4">
                   <div>
-                    <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    <label className={`block text-xs sm:text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                       Subject
                     </label>
                     <select 
@@ -370,7 +374,7 @@ const StudentAssignments = () => {
                   </div>
 
                   <div>
-                    <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    <label className={`block text-xs sm:text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                       Status
                     </label>
                     <select 
@@ -391,7 +395,7 @@ const StudentAssignments = () => {
                   </div>
 
                   <div>
-                    <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    <label className={`block text-xs sm:text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                       Due Date
                     </label>
                     <select 
@@ -412,26 +416,28 @@ const StudentAssignments = () => {
               </div>
 
               {/* Quick Stats */}
-              <div className={`mt-6 p-6 rounded-2xl border ${
+              <div className={`mt-4 sm:mt-6 p-4 sm:p-6 rounded-xl sm:rounded-2xl border ${
                 isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'
               }`}>
-                <h3 className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <h3 className={`text-base sm:text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Quick Stats
                 </h3>
-                <div className="space-y-3">
+                <div className="grid grid-cols-2 gap-3 sm:gap-4">
                   {quickStats.map((stat, index) => (
-                    <div key={index} className="flex items-center justify-between">
-                      <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                    <div key={index} className={`p-3 rounded-lg ${
+                      isDarkMode ? 'bg-slate-700' : 'bg-gray-50'
+                    }`}>
+                      <div className={`text-xs sm:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                         {stat.label}
-                      </span>
-                      <span className={`font-semibold ${
+                      </div>
+                      <div className={`text-lg sm:text-xl font-bold mt-1 ${
                         stat.color === 'red' ? 'text-red-600' :
                         stat.color === 'green' ? 'text-green-600' :
                         stat.color === 'orange' ? 'text-orange-600' :
                         'text-blue-600'
                       }`}>
                         {stat.value}
-                      </span>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -443,23 +449,23 @@ const StudentAssignments = () => {
               <div className="space-y-4">
                 {filteredAssignments.length > 0 ? (
                   filteredAssignments.map((assignment) => (
-                    <div key={assignment.id} className={`p-6 rounded-2xl border ${
+                    <div key={assignment.id} className={`p-4 sm:p-6 rounded-xl sm:rounded-2xl border ${
                       isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'
                     }`}>
                       
-                      <div className="flex items-start justify-between mb-4">
+                      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4 mb-4">
                         <div className="flex-1">
-                          <div className="flex items-center gap-3 mb-2">
-                            <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
+                            <h3 className={`text-base sm:text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                               {assignment.title}
                             </h3>
-                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(assignment.status)}`}>
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(assignment.status)} self-start sm:self-auto`}>
                               {assignment.status}
                             </span>
                           </div>
                           
-                          <div className="flex items-center gap-6 text-sm mb-3">
-                            <div className="flex items-center gap-2">
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-xs sm:text-sm mb-3">
+                            <div className="flex items-center gap-1 sm:gap-2">
                               <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                                 {assignment.subject}
                               </span>
@@ -470,22 +476,22 @@ const StudentAssignments = () => {
                             </div>
                           </div>
 
-                          <p className={`text-sm mb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                          <p className={`text-xs sm:text-sm mb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'} line-clamp-2`}>
                             {assignment.description}
                           </p>
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-6 text-sm">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 text-xs sm:text-sm">
                           <div className="flex items-center gap-2">
-                            <Calendar size={16} className={isDarkMode ? 'text-gray-400' : 'text-gray-500'} />
+                            <Calendar size={14} className={isDarkMode ? 'text-gray-400' : 'text-gray-500'} />
                             <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                               Assigned: {assignment.assignedDate}
                             </span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <Clock size={16} className={isDarkMode ? 'text-gray-400' : 'text-gray-500'} />
+                            <Clock size={14} className={isDarkMode ? 'text-gray-400' : 'text-gray-500'} />
                             <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                               Due: {assignment.dueDate}
                             </span>
@@ -495,42 +501,42 @@ const StudentAssignments = () => {
                           </div>
                         </div>
                         
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2 sm:gap-3">
                           {assignment.status === 'submitted' ? (
                             <button
                               disabled
-                              className="px-4 py-2 bg-green-100 text-green-700 rounded-lg font-medium text-sm cursor-not-allowed"
+                              className="px-3 sm:px-4 py-2 bg-green-100 text-green-700 rounded-lg font-medium text-xs sm:text-sm cursor-not-allowed"
                             >
                               ✓ Submitted
                             </button>
                           ) : (
                             <button
                               onClick={() => handleSubmitClick(assignment)}
-                              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium text-sm"
+                              className="px-3 sm:px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium text-xs sm:text-sm"
                             >
-                              Submit Assignment
+                              Submit
                             </button>
                           )}
                           
                           <button 
                             onClick={() => handleDetailsClick(assignment)}
-                            className={`p-2 rounded-lg border ${
+                            className={`p-2 rounded-lg border text-xs sm:text-sm ${
                               isDarkMode 
                                 ? 'border-slate-600 text-gray-400 hover:bg-slate-700' 
                                 : 'border-gray-300 text-gray-600 hover:bg-gray-50'
                             }`}
                           >
-                            View Details
+                            Details
                           </button>
                         </div>
                       </div>
                     </div>
                   ))
                 ) : (
-                  <div className={`text-center py-12 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                    <FileText size={48} className="mx-auto mb-4 opacity-50" />
-                    <p className="text-lg font-medium mb-2">No assignments found</p>
-                    <p className="text-sm">Try adjusting your filter criteria</p>
+                  <div className={`text-center py-8 sm:py-12 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                    <FileText size={32} className="sm:w-12 sm:h-12 mx-auto mb-4 opacity-50" />
+                    <p className="text-sm sm:text-base font-medium mb-2">No assignments found</p>
+                    <p className="text-xs sm:text-sm">Try adjusting your filter criteria</p>
                   </div>
                 )}
               </div>
@@ -544,21 +550,21 @@ const StudentAssignments = () => {
       {/* Assignment Details Modal */}
       {showDetailsModal && selectedAssignment && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className={`max-w-3xl w-full max-h-[90vh] overflow-y-auto rounded-2xl ${
+          <div className={`max-w-3xl w-full max-h-[90vh] overflow-y-auto rounded-xl sm:rounded-2xl ${
             isDarkMode ? 'bg-slate-800' : 'bg-white'
           }`}>
             
             {/* Modal Header */}
-            <div className="flex items-center justify-between p-6 border-b border-gray-200">
-              <div>
-                <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            <div className={`flex items-center justify-between p-4 sm:p-6 border-b ${isDarkMode ? 'border-slate-600' : 'border-gray-200'}`}>
+              <div className="text-left">
+                <h2 className={`text-lg sm:text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Assignment Details
                 </h2>
                 <div className="flex items-center gap-2 mt-2">
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(selectedAssignment.status)}`}>
                     {selectedAssignment.status}
                   </span>
-                  <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  <span className={`text-xs sm:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                     {selectedAssignment.points} Points
                   </span>
                 </div>
@@ -567,63 +573,63 @@ const StudentAssignments = () => {
                 onClick={handleCloseModal}
                 className={`p-2 rounded-lg hover:bg-gray-100 ${isDarkMode ? 'text-gray-400 hover:bg-slate-700' : 'text-gray-600'}`}
               >
-                <X size={20} />
+                <X size={20} className="sm:w-6 sm:h-6" />
               </button>
             </div>
 
             {/* Modal Content */}
-            <div className="p-6 space-y-6">
+            <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
               
               {/* Basic Information */}
               <div>
-                <h3 className={`text-lg font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <h3 className={`text-base sm:text-lg font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   {selectedAssignment.title}
                 </h3>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4">
                   <div className="flex items-center gap-3">
-                    <BookOpen size={20} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
+                    <BookOpen size={18} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
                     <div>
-                      <p className={`text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <p className={`text-xs sm:text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                         Subject
                       </p>
-                      <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      <p className={`text-xs sm:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                         {selectedAssignment.subject}
                       </p>
                     </div>
                   </div>
                   
                   <div className="flex items-center gap-3">
-                    <User size={20} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
+                    <User size={18} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
                     <div>
-                      <p className={`text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <p className={`text-xs sm:text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                         Teacher
                       </p>
-                      <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      <p className={`text-xs sm:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                         {selectedAssignment.teacher}
                       </p>
                     </div>
                   </div>
                   
                   <div className="flex items-center gap-3">
-                    <Calendar size={20} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
+                    <Calendar size={18} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
                     <div>
-                      <p className={`text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <p className={`text-xs sm:text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                         Assigned Date
                       </p>
-                      <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      <p className={`text-xs sm:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                         {selectedAssignment.assignedDate}
                       </p>
                     </div>
                   </div>
                   
                   <div className="flex items-center gap-3">
-                    <Clock size={20} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
+                    <Clock size={18} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
                     <div>
-                      <p className={`text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <p className={`text-xs sm:text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                         Due Date
                       </p>
-                      <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      <p className={`text-xs sm:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                         {selectedAssignment.dueDate}
                       </p>
                     </div>
@@ -633,42 +639,42 @@ const StudentAssignments = () => {
 
               {/* Description */}
               <div>
-                <h4 className={`text-md font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <h4 className={`text-sm sm:text-md font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Description
                 </h4>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                <p className={`text-xs sm:text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   {selectedAssignment.description}
                 </p>
               </div>
 
               {/* Instructions */}
               <div>
-                <h4 className={`text-md font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <h4 className={`text-sm sm:text-md font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Instructions
                 </h4>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                <p className={`text-xs sm:text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   {selectedAssignment.instructions}
                 </p>
               </div>
 
               {/* Submission Format */}
               <div>
-                <h4 className={`text-md font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <h4 className={`text-sm sm:text-md font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Submission Format
                 </h4>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                <p className={`text-xs sm:text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   {selectedAssignment.submissionFormat}
                 </p>
               </div>
 
               {/* Resources */}
               <div>
-                <h4 className={`text-md font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <h4 className={`text-sm sm:text-md font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Resources
                 </h4>
                 <div className="space-y-2">
                   {selectedAssignment.resources?.map((resource, index) => (
-                    <div key={index} className={`flex items-center gap-2 text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    <div key={index} className={`flex items-center gap-2 text-xs sm:text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                       <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                       {resource}
                     </div>
@@ -677,17 +683,17 @@ const StudentAssignments = () => {
               </div>
 
               {/* Assignment Type and Points */}
-              <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-                <div className="flex items-center gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between pt-4 border-t border-gray-200">
+                <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-0">
                   <div className="flex items-center gap-2">
-                    <FileText size={20} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
-                    <span className={`text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    <FileText size={18} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
+                    <span className={`text-xs sm:text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                       Type: {selectedAssignment.type}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Award size={20} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
-                    <span className={`text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    <Award size={18} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
+                    <span className={`text-xs sm:text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                       Points: {selectedAssignment.points}
                     </span>
                   </div>
@@ -696,10 +702,10 @@ const StudentAssignments = () => {
             </div>
 
             {/* Modal Actions */}
-            <div className="flex items-center justify-end gap-3 p-6 border-t border-gray-200">
+            <div className="flex flex-col sm:flex-row items-center justify-end gap-3 p-4 sm:p-6 border-t border-gray-200">
               <button
                 onClick={handleCloseModal}
-                className={`px-4 py-2 rounded-lg font-medium ${
+                className={`px-4 py-2 rounded-lg font-medium text-sm w-full sm:w-auto ${
                   isDarkMode 
                     ? 'text-gray-300 hover:bg-slate-700' 
                     : 'text-gray-700 hover:bg-gray-100'
@@ -713,7 +719,7 @@ const StudentAssignments = () => {
                     setShowDetailsModal(false);
                     handleSubmitClick(selectedAssignment);
                   }}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
+                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium text-sm w-full sm:w-auto"
                 >
                   Submit Assignment
                 </button>
@@ -726,17 +732,17 @@ const StudentAssignments = () => {
       {/* Submit Assignment Modal */}
       {showSubmitModal && selectedAssignment && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className={`max-w-2xl w-full max-h-[90vh] overflow-y-auto rounded-2xl ${
+          <div className={`max-w-2xl w-full max-h-[90vh] overflow-y-auto rounded-xl sm:rounded-2xl ${
             isDarkMode ? 'bg-slate-800' : 'bg-white'
           }`}>
             
             {/* Modal Header */}
-            <div className="flex items-center justify-between p-6 border-b border-gray-200">
-              <div>
-                <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            <div className={`flex items-center justify-between p-4 sm:p-6 border-b ${isDarkMode ? 'border-slate-600' : 'border-gray-200'}`}>
+              <div className="text-left">
+                <h2 className={`text-lg sm:text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Submit Assignment
                 </h2>
-                <p className={`text-sm mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                <p className={`text-xs sm:text-sm mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   {selectedAssignment.title}
                 </p>
               </div>
@@ -744,32 +750,32 @@ const StudentAssignments = () => {
                 onClick={handleCloseModal}
                 className={`p-2 rounded-lg hover:bg-gray-100 ${isDarkMode ? 'text-gray-400 hover:bg-slate-700' : 'text-gray-600'}`}
               >
-                <X size={20} />
+                <X size={20} className="sm:w-6 sm:h-6" />
               </button>
             </div>
 
             {/* Modal Content */}
-            <div className="p-6">
+            <div className="p-4 sm:p-6">
               
               {/* Assignment Details */}
-              <div className="mb-6">
-                <div className="flex items-center gap-4 text-sm mb-3">
+              <div className="mb-4 sm:mb-6">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-xs sm:text-sm mb-3">
                   <span className={`${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                     {selectedAssignment.subject} • {selectedAssignment.teacher}
                   </span>
-                  <span className={`${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>•</span>
+                  <span className={`hidden sm:inline ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>•</span>
                   <span className={`${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                     Due: {selectedAssignment.dueDate}
                   </span>
                 </div>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                <p className={`text-xs sm:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   {selectedAssignment.description}
                 </p>
               </div>
 
               {/* Assignment Response */}
-              <div className="mb-6">
-                <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <div className="mb-4 sm:mb-6">
+                <label className={`block text-xs sm:text-sm font-medium mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Assignment Response
                 </label>
                 <textarea
@@ -777,7 +783,7 @@ const StudentAssignments = () => {
                   onChange={(e) => setAssignmentResponse(e.target.value)}
                   placeholder="Write your response here..."
                   rows={6}
-                  className={`w-full px-4 py-3 rounded-lg border resize-none ${
+                  className={`w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg border resize-none text-sm ${
                     isDarkMode 
                       ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-400' 
                       : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
@@ -786,13 +792,13 @@ const StudentAssignments = () => {
               </div>
 
               {/* File Upload */}
-              <div className="mb-6">
-                <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <div className="mb-4 sm:mb-6">
+                <label className={`block text-xs sm:text-sm font-medium mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Attach Files
                 </label>
                 
                 <div
-                  className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+                  className={`relative border-2 border-dashed rounded-lg p-4 sm:p-8 text-center transition-colors ${
                     dragActive
                       ? 'border-blue-500 bg-blue-50'
                       : isDarkMode
@@ -811,11 +817,11 @@ const StudentAssignments = () => {
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                   />
                   
-                  <Upload size={32} className={`mx-auto mb-3 ${
+                  <Upload size={24} className={`sm:w-8 sm:h-8 mx-auto mb-2 sm:mb-3 ${
                     dragActive ? 'text-blue-500' : isDarkMode ? 'text-gray-400' : 'text-gray-500'
                   }`} />
                   
-                  <p className={`text-sm font-medium mb-1 ${
+                  <p className={`text-xs sm:text-sm font-medium mb-1 ${
                     dragActive ? 'text-blue-600' : isDarkMode ? 'text-white' : 'text-gray-900'
                   }`}>
                     Click to upload files
@@ -830,8 +836,8 @@ const StudentAssignments = () => {
 
               {/* Attached Files */}
               {attachedFiles.length > 0 && (
-                <div className="mb-6">
-                  <label className={`block text-sm font-medium mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <div className="mb-4 sm:mb-6">
+                  <label className={`block text-xs sm:text-sm font-medium mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     Attached Files
                   </label>
                   <div className="space-y-2">
@@ -841,10 +847,10 @@ const StudentAssignments = () => {
                       }`}>
                         <div className="flex items-center gap-3">
                           <div className="p-2 bg-blue-100 rounded-lg">
-                            <Paperclip size={16} className="text-blue-600" />
+                            <Paperclip size={14} className="text-blue-600" />
                           </div>
                           <div>
-                            <p className={`text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                            <p className={`text-xs sm:text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                               {file.name}
                             </p>
                             <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -856,7 +862,7 @@ const StudentAssignments = () => {
                           onClick={() => removeFile(file.id)}
                           className="p-1 text-red-500 hover:bg-red-50 rounded"
                         >
-                          <X size={16} />
+                          <X size={14} />
                         </button>
                       </div>
                     ))}
@@ -865,10 +871,10 @@ const StudentAssignments = () => {
               )}
 
               {/* Modal Actions */}
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
+              <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-4 border-t border-gray-200">
                 <button
                   onClick={handleCloseModal}
-                  className={`px-4 py-2 rounded-lg font-medium ${
+                  className={`px-4 py-2 rounded-lg font-medium text-sm w-full sm:w-auto ${
                     isDarkMode 
                       ? 'text-gray-300 hover:bg-slate-700' 
                       : 'text-gray-700 hover:bg-gray-100'
@@ -879,7 +885,7 @@ const StudentAssignments = () => {
                 <button
                   onClick={handleSubmitAssignment}
                   disabled={!canSubmit}
-                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                  className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors w-full sm:w-auto ${
                     canSubmit
                       ? 'bg-green-500 text-white hover:bg-green-600'
                       : 'bg-gray-300 text-gray-500 cursor-not-allowed'

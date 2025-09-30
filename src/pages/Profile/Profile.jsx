@@ -55,7 +55,6 @@ const Profile = () => {
     notifications: false
   });
 
-  // Initialize state with data from localStorage or defaults
   const getStoredData = (key, defaultValue) => {
     try {
       const userData = JSON.parse(localStorage.getItem('user') || '{}');
@@ -146,21 +145,18 @@ const Profile = () => {
     confirm: ''
   });
 
-  // Load profile photo from localStorage on component mount
   useEffect(() => {
     const loadProfileData = () => {
       try {
         const userData = JSON.parse(localStorage.getItem('user') || '{}');
         const profileData = JSON.parse(localStorage.getItem('userProfile') || '{}');
         
-        // Load profile photo
         if (profileData.profilePhotoUrl) {
           setProfilePhoto(profileData.profilePhotoUrl);
         } else if (userData.profilePhotoUrl) {
           setProfilePhoto(userData.profilePhotoUrl);
         }
         
-        // Update personal info from stored data
         setPersonalInfo(prev => ({
           ...prev,
           firstName: profileData.firstName || userData.firstName || prev.firstName,
@@ -171,7 +167,6 @@ const Profile = () => {
           gender: profileData.gender || prev.gender
         }));
 
-        // Set name from user data if available
         if (userData.name) {
           const nameParts = userData.name.split(' ');
           setPersonalInfo(prev => ({ 
@@ -188,14 +183,12 @@ const Profile = () => {
     loadProfileData();
   }, []);
 
-  // Save all profile data to localStorage
   const saveProfileData = (data) => {
     try {
       const existingProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
       const updatedProfile = { ...existingProfile, ...data };
       localStorage.setItem('userProfile', JSON.stringify(updatedProfile));
       
-      // Also update user data for immediate sync
       const userData = JSON.parse(localStorage.getItem('user') || '{}');
       const updatedUserData = { ...userData, ...data };
       localStorage.setItem('user', JSON.stringify(updatedUserData));
@@ -334,7 +327,6 @@ const Profile = () => {
   };
 
   const cancelEdit = (section) => {
-    // Reload data from localStorage to cancel changes
     const profileData = JSON.parse(localStorage.getItem('userProfile') || '{}');
     
     switch (section) {
@@ -464,8 +456,8 @@ const Profile = () => {
 
   const PhotoModal = () => (
     showPhotoModal && (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className={`p-6 rounded-lg max-w-md w-full mx-4 ${isDarkMode ? 'bg-slate-800 text-white' : 'bg-white text-gray-900'}`}>
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className={`p-6 rounded-lg max-w-md w-full ${isDarkMode ? 'bg-slate-800 text-white' : 'bg-white text-gray-900'}`}>
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-semibold">Change Profile Photo</h3>
             <button
@@ -487,7 +479,7 @@ const Profile = () => {
           <div className="space-y-3">
             <button
               onClick={triggerFileInput}
-              className="w-full flex items-center justify-center gap-2 p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              className="w-full flex items-center justify-center gap-2 p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
             >
               <Upload size={18} />
               Upload New Photo
@@ -495,7 +487,7 @@ const Profile = () => {
 
             <button
               onClick={handleRemovePhoto}
-              className={`w-full flex items-center justify-center gap-2 p-3 rounded-lg border ${isDarkMode ? 'border-slate-600 hover:bg-slate-700' : 'border-gray-300 hover:bg-gray-50'}`}
+              className={`w-full flex items-center justify-center gap-2 p-3 rounded-lg border text-sm ${isDarkMode ? 'border-slate-600 hover:bg-slate-700' : 'border-gray-300 hover:bg-gray-50'}`}
             >
               <Trash2 size={18} />
               Remove Photo
@@ -516,14 +508,14 @@ const Profile = () => {
 
   const renderPersonalInfo = () => (
     <div className="space-y-6">
-      <div className={`p-6 rounded-lg border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'}`}>
-        <div className="flex items-center justify-between mb-6">
+      <div className={`p-4 sm:p-6 rounded-lg border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'}`}>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div className="flex items-center gap-4">
             <div className="relative">
               <img
                 src={profilePhoto}
                 alt="Profile"
-                className="w-28 h-28 rounded-full"
+                className="w-20 h-20 sm:w-28 sm:h-28 rounded-full"
               />
               <button
                 onClick={() => setShowPhotoModal(true)}
@@ -533,19 +525,19 @@ const Profile = () => {
               </button>
             </div>
             <div>
-              <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h2 className={`text-xl sm:text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 {personalInfo.firstName} {personalInfo.lastName}
               </h2>
-              <p className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>Tuition Owner</p>
+              <p className={`text-sm sm:text-base ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Tuition Owner</p>
               <div className="flex items-center gap-2 mt-2">
                 <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                <span className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>4.8 (124 reviews)</span>
+                <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>4.8 (124 reviews)</span>
               </div>
             </div>
           </div>
           <button
             onClick={() => editStates.personal ? saveSection('personal') : toggleEditState('personal')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg ${isDarkMode ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-blue-100 text-blue-700 hover:bg-blue-200'}`}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm sm:text-base ${isDarkMode ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-blue-100 text-blue-700 hover:bg-blue-200'}`}
           >
             {editStates.personal ? <Save size={18} /> : <Edit size={18} />}
             {editStates.personal ? 'Save Changes' : 'Edit Profile'}
@@ -553,8 +545,8 @@ const Profile = () => {
         </div>
       </div>
 
-      <div className={`p-6 rounded-lg border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'}`}>
-        <div className="flex items-center justify-between mb-6">
+      <div className={`p-4 sm:p-6 rounded-lg border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'}`}>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div className="flex items-center gap-2">
             <User className={`w-5 h-5 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`} />
             <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
@@ -571,7 +563,7 @@ const Profile = () => {
         </div>
 
         <form onSubmit={handleSavePersonalInfo}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             <div>
               <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                 First Name
@@ -581,7 +573,7 @@ const Profile = () => {
                 value={personalInfo.firstName}
                 onChange={(e) => handlePersonalInfoChange('firstName', e.target.value)}
                 disabled={!editStates.personal}
-                className={`w-full p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.personal ? 'opacity-70' : ''}`}
+                className={`w-full p-3 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.personal ? 'opacity-70' : ''}`}
               />
             </div>
 
@@ -594,7 +586,7 @@ const Profile = () => {
                 value={personalInfo.lastName}
                 onChange={(e) => handlePersonalInfoChange('lastName', e.target.value)}
                 disabled={!editStates.personal}
-                className={`w-full p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.personal ? 'opacity-70' : ''}`}
+                className={`w-full p-3 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.personal ? 'opacity-70' : ''}`}
               />
             </div>
 
@@ -607,7 +599,7 @@ const Profile = () => {
                 value={personalInfo.email}
                 onChange={(e) => handlePersonalInfoChange('email', e.target.value)}
                 disabled={!editStates.personal}
-                className={`w-full p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.personal ? 'opacity-70' : ''}`}
+                className={`w-full p-3 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.personal ? 'opacity-70' : ''}`}
               />
             </div>
 
@@ -620,7 +612,7 @@ const Profile = () => {
                 value={personalInfo.phone}
                 onChange={(e) => handlePersonalInfoChange('phone', e.target.value)}
                 disabled={!editStates.personal}
-                className={`w-full p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.personal ? 'opacity-70' : ''}`}
+                className={`w-full p-3 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.personal ? 'opacity-70' : ''}`}
               />
             </div>
 
@@ -633,7 +625,7 @@ const Profile = () => {
                 value={personalInfo.dateOfBirth}
                 onChange={(e) => handlePersonalInfoChange('dateOfBirth', e.target.value)}
                 disabled={!editStates.personal}
-                className={`w-full p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.personal ? 'opacity-70' : ''}`}
+                className={`w-full p-3 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.personal ? 'opacity-70' : ''}`}
               />
             </div>
 
@@ -645,7 +637,7 @@ const Profile = () => {
                 value={personalInfo.gender}
                 onChange={(e) => handlePersonalInfoChange('gender', e.target.value)}
                 disabled={!editStates.personal}
-                className={`w-full p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.personal ? 'opacity-70' : ''}`}
+                className={`w-full p-3 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.personal ? 'opacity-70' : ''}`}
               >
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
@@ -655,17 +647,17 @@ const Profile = () => {
           </div>
 
           {editStates.personal && (
-            <div className="flex justify-end gap-4 mt-6">
+            <div className="flex flex-col sm:flex-row justify-end gap-4 mt-6">
               <button
                 type="button"
                 onClick={() => cancelEdit('personal')}
-                className={`px-4 py-2 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white hover:bg-slate-600' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'}`}
+                className={`px-4 py-2 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white hover:bg-slate-600' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'}`}
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
               >
                 Save Changes
               </button>
@@ -674,8 +666,8 @@ const Profile = () => {
         </form>
       </div>
 
-      <div className={`p-6 rounded-lg border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'}`}>
-        <div className="flex items-center justify-between mb-6">
+      <div className={`p-4 sm:p-6 rounded-lg border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'}`}>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div className="flex items-center gap-2">
             <MapPin className={`w-5 h-5 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`} />
             <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
@@ -691,8 +683,8 @@ const Profile = () => {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="md:col-span-2">
+        <div className="grid grid-cols-1 gap-4 sm:gap-6">
+          <div>
             <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
               Street Address
             </label>
@@ -701,61 +693,63 @@ const Profile = () => {
               value={addressInfo.street}
               onChange={(e) => handleAddressInfoChange('street', e.target.value)}
               disabled={!editStates.address}
-              className={`w-full p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.address ? 'opacity-70' : ''}`}
+              className={`w-full p-3 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.address ? 'opacity-70' : ''}`}
             />
           </div>
 
-          <div>
-            <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              City
-            </label>
-            <input
-              type="text"
-              value={addressInfo.city}
-              onChange={(e) => handleAddressInfoChange('city', e.target.value)}
-              disabled={!editStates.address}
-              className={`w-full p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.address ? 'opacity-70' : ''}`}
-            />
-          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+            <div>
+              <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                City
+              </label>
+              <input
+                type="text"
+                value={addressInfo.city}
+                onChange={(e) => handleAddressInfoChange('city', e.target.value)}
+                disabled={!editStates.address}
+                className={`w-full p-3 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.address ? 'opacity-70' : ''}`}
+              />
+            </div>
 
-          <div>
-            <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              State
-            </label>
-            <input
-              type="text"
-              value={addressInfo.state}
-              onChange={(e) => handleAddressInfoChange('state', e.target.value)}
-              disabled={!editStates.address}
-              className={`w-full p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.address ? 'opacity-70' : ''}`}
-            />
-          </div>
+            <div>
+              <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                State
+              </label>
+              <input
+                type="text"
+                value={addressInfo.state}
+                onChange={(e) => handleAddressInfoChange('state', e.target.value)}
+                disabled={!editStates.address}
+                className={`w-full p-3 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.address ? 'opacity-70' : ''}`}
+              />
+            </div>
 
-          <div>
-            <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              PIN Code
-            </label>
-            <input
-              type="text"
-              value={addressInfo.pinCode}
-              onChange={(e) => handleAddressInfoChange('pinCode', e.target.value)}
-              disabled={!editStates.address}
-              className={`w-full p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.address ? 'opacity-70' : ''}`}
-            />
+            <div>
+              <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                PIN Code
+              </label>
+              <input
+                type="text"
+                value={addressInfo.pinCode}
+                onChange={(e) => handleAddressInfoChange('pinCode', e.target.value)}
+                disabled={!editStates.address}
+                className={`w-full p-3 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.address ? 'opacity-70' : ''}`}
+              />
+            </div>
           </div>
         </div>
 
         {editStates.address && (
-          <div className="flex justify-end gap-4 mt-6">
+          <div className="flex flex-col sm:flex-row justify-end gap-4 mt-6">
             <button
               onClick={() => cancelEdit('address')}
-              className={`px-4 py-2 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white hover:bg-slate-600' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'}`}
+              className={`px-4 py-2 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white hover:bg-slate-600' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'}`}
             >
               Cancel
             </button>
             <button
               onClick={() => saveSection('address')}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
             >
               Save Changes
             </button>
@@ -763,8 +757,8 @@ const Profile = () => {
         )}
       </div>
 
-      <div className={`p-6 rounded-lg border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'}`}>
-        <div className="flex items-center justify-between mb-6">
+      <div className={`p-4 sm:p-6 rounded-lg border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'}`}>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div className="flex items-center gap-2">
             <Phone className={`w-5 h-5 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`} />
             <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
@@ -780,7 +774,7 @@ const Profile = () => {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           <div>
             <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
               Alternate Phone
@@ -790,7 +784,7 @@ const Profile = () => {
               value={contactInfo.alternatePhone}
               onChange={(e) => handleContactInfoChange('alternatePhone', e.target.value)}
               disabled={!editStates.contact}
-              className={`w-full p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.contact ? 'opacity-70' : ''}`}
+              className={`w-full p-3 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.contact ? 'opacity-70' : ''}`}
             />
           </div>
 
@@ -803,7 +797,7 @@ const Profile = () => {
               value={contactInfo.emergencyContactName}
               onChange={(e) => handleContactInfoChange('emergencyContactName', e.target.value)}
               disabled={!editStates.contact}
-              className={`w-full p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.contact ? 'opacity-70' : ''}`}
+              className={`w-full p-3 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.contact ? 'opacity-70' : ''}`}
             />
           </div>
 
@@ -816,22 +810,22 @@ const Profile = () => {
               value={contactInfo.emergencyContactPhone}
               onChange={(e) => handleContactInfoChange('emergencyContactPhone', e.target.value)}
               disabled={!editStates.contact}
-              className={`w-full p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.contact ? 'opacity-70' : ''}`}
+              className={`w-full p-3 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.contact ? 'opacity-70' : ''}`}
             />
           </div>
         </div>
 
         {editStates.contact && (
-          <div className="flex justify-end gap-4 mt-6">
+          <div className="flex flex-col sm:flex-row justify-end gap-4 mt-6">
             <button
               onClick={() => cancelEdit('contact')}
-              className={`px-4 py-2 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white hover:bg-slate-600' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'}`}
+              className={`px-4 py-2 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white hover:bg-slate-600' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'}`}
             >
               Cancel
             </button>
             <button
               onClick={() => saveSection('contact')}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
             >
               Save Changes
             </button>
@@ -839,8 +833,8 @@ const Profile = () => {
         )}
       </div>
 
-      <div className={`p-6 rounded-lg border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'}`}>
-        <div className="flex items-center justify-between mb-6">
+      <div className={`p-4 sm:p-6 rounded-lg border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'}`}>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div className="flex items-center gap-2">
             <GraduationCap className={`w-5 h-5 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`} />
             <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
@@ -856,7 +850,7 @@ const Profile = () => {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 gap-6">
+        <div className="grid grid-cols-1 gap-4 sm:gap-6">
           <div>
             <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
               Position/Qualifications
@@ -866,7 +860,7 @@ const Profile = () => {
               value={professionalInfo.position}
               onChange={(e) => handleProfessionalInfoChange('position', e.target.value)}
               disabled={!editStates.professional}
-              className={`w-full p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.professional ? 'opacity-70' : ''}`}
+              className={`w-full p-3 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.professional ? 'opacity-70' : ''}`}
             />
           </div>
 
@@ -879,7 +873,7 @@ const Profile = () => {
               value={professionalInfo.experience}
               onChange={(e) => handleProfessionalInfoChange('experience', e.target.value)}
               disabled={!editStates.professional}
-              className={`w-full p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.professional ? 'opacity-70' : ''}`}
+              className={`w-full p-3 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.professional ? 'opacity-70' : ''}`}
             />
           </div>
 
@@ -892,22 +886,22 @@ const Profile = () => {
               onChange={(e) => handleProfessionalInfoChange('bio', e.target.value)}
               disabled={!editStates.professional}
               rows={4}
-              className={`w-full p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.professional ? 'opacity-70' : ''}`}
+              className={`w-full p-3 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.professional ? 'opacity-70' : ''}`}
             />
           </div>
         </div>
 
         {editStates.professional && (
-          <div className="flex justify-end gap-4 mt-6">
+          <div className="flex flex-col sm:flex-row justify-end gap-4 mt-6">
             <button
               onClick={() => cancelEdit('professional')}
-              className={`px-4 py-2 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white hover:bg-slate-600' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'}`}
+              className={`px-4 py-2 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white hover:bg-slate-600' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'}`}
             >
               Cancel
             </button>
             <button
               onClick={() => saveSection('professional')}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
             >
               Save Changes
             </button>
@@ -919,8 +913,8 @@ const Profile = () => {
 
   const renderTuitionDetails = () => (
     <div className="space-y-6">
-      <div className={`p-6 rounded-lg border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'}`}>
-        <div className="flex items-center justify-between mb-6">
+      <div className={`p-4 sm:p-6 rounded-lg border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'}`}>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div className="flex items-center gap-2">
             <BookOpen className={`w-5 h-5 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`} />
             <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
@@ -937,8 +931,8 @@ const Profile = () => {
         </div>
 
         <form onSubmit={handleSaveTuitionDetails}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="md:col-span-2">
+          <div className="grid grid-cols-1 gap-4 sm:gap-6">
+            <div>
               <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                 Institute Name
               </label>
@@ -947,76 +941,78 @@ const Profile = () => {
                 value={tuitionDetails.instituteName}
                 onChange={(e) => handleTuitionDetailsChange('instituteName', e.target.value)}
                 disabled={!editStates.tuition}
-                className={`w-full p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.tuition ? 'opacity-70' : ''}`}
+                className={`w-full p-3 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.tuition ? 'opacity-70' : ''}`}
               />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+              <div>
+                <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Established Year
+                </label>
+                <input
+                  type="text"
+                  value={tuitionDetails.establishedYear}
+                  onChange={(e) => handleTuitionDetailsChange('establishedYear', e.target.value)}
+                  disabled={!editStates.tuition}
+                  className={`w-full p-3 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.tuition ? 'opacity-70' : ''}`}
+                />
+              </div>
+
+              <div>
+                <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Registration Number
+                </label>
+                <input
+                  type="text"
+                  value={tuitionDetails.registrationNumber}
+                  onChange={(e) => handleTuitionDetailsChange('registrationNumber', e.target.value)}
+                  disabled={!editStates.tuition}
+                  className={`w-full p-3 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.tuition ? 'opacity-70' : ''}`}
+                />
+              </div>
+
+              <div>
+                <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Phone Number
+                </label>
+                <input
+                  type="tel"
+                  value={tuitionDetails.phoneNumber}
+                  onChange={(e) => handleTuitionDetailsChange('phoneNumber', e.target.value)}
+                  disabled={!editStates.tuition}
+                  className={`w-full p-3 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.tuition ? 'opacity-70' : ''}`}
+                />
+              </div>
+
+              <div>
+                <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Email
+                </label>
+                <input
+                  type="email"
+                  value={tuitionDetails.email}
+                  onChange={(e) => handleTuitionDetailsChange('email', e.target.value)}
+                  disabled={!editStates.tuition}
+                  className={`w-full p-3 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.tuition ? 'opacity-70' : ''}`}
+                />
+              </div>
+
+              <div>
+                <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Website
+                </label>
+                <input
+                  type="url"
+                  value={tuitionDetails.website}
+                  onChange={(e) => handleTuitionDetailsChange('website', e.target.value)}
+                  disabled={!editStates.tuition}
+                  className={`w-full p-3 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.tuition ? 'opacity-70' : ''}`}
+                />
+              </div>
             </div>
 
             <div>
-              <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Established Year
-              </label>
-              <input
-                type="text"
-                value={tuitionDetails.establishedYear}
-                onChange={(e) => handleTuitionDetailsChange('establishedYear', e.target.value)}
-                disabled={!editStates.tuition}
-                className={`w-full p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.tuition ? 'opacity-70' : ''}`}
-              />
-            </div>
-
-            <div>
-              <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Registration Number
-              </label>
-              <input
-                type="text"
-                value={tuitionDetails.registrationNumber}
-                onChange={(e) => handleTuitionDetailsChange('registrationNumber', e.target.value)}
-                disabled={!editStates.tuition}
-                className={`w-full p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.tuition ? 'opacity-70' : ''}`}
-              />
-            </div>
-
-            <div>
-              <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Phone Number
-              </label>
-              <input
-                type="tel"
-                value={tuitionDetails.phoneNumber}
-                onChange={(e) => handleTuitionDetailsChange('phoneNumber', e.target.value)}
-                disabled={!editStates.tuition}
-                className={`w-full p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.tuition ? 'opacity-70' : ''}`}
-              />
-            </div>
-
-            <div>
-              <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Email
-              </label>
-              <input
-                type="email"
-                value={tuitionDetails.email}
-                onChange={(e) => handleTuitionDetailsChange('email', e.target.value)}
-                disabled={!editStates.tuition}
-                className={`w-full p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.tuition ? 'opacity-70' : ''}`}
-              />
-            </div>
-
-            <div>
-              <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Website
-              </label>
-              <input
-                type="url"
-                value={tuitionDetails.website}
-                onChange={(e) => handleTuitionDetailsChange('website', e.target.value)}
-                disabled={!editStates.tuition}
-                className={`w-full p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.tuition ? 'opacity-70' : ''}`}
-              />
-            </div>
-
-            <div className="md:col-span-2">
               <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                 Address
               </label>
@@ -1025,11 +1021,11 @@ const Profile = () => {
                 value={tuitionDetails.address}
                 onChange={(e) => handleTuitionDetailsChange('address', e.target.value)}
                 disabled={!editStates.tuition}
-                className={`w-full p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.tuition ? 'opacity-70' : ''}`}
+                className={`w-full p-3 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.tuition ? 'opacity-70' : ''}`}
               />
             </div>
 
-            <div className="md:col-span-2">
+            <div>
               <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                 Description
               </label>
@@ -1038,11 +1034,11 @@ const Profile = () => {
                 onChange={(e) => handleTuitionDetailsChange('description', e.target.value)}
                 disabled={!editStates.tuition}
                 rows={3}
-                className={`w-full p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.tuition ? 'opacity-70' : ''}`}
+                className={`w-full p-3 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.tuition ? 'opacity-70' : ''}`}
               />
             </div>
 
-            <div className="md:col-span-2">
+            <div>
               <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                 Specializations
               </label>
@@ -1051,11 +1047,11 @@ const Profile = () => {
                 value={tuitionDetails.specializations}
                 onChange={(e) => handleTuitionDetailsChange('specializations', e.target.value)}
                 disabled={!editStates.tuition}
-                className={`w-full p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.tuition ? 'opacity-70' : ''}`}
+                className={`w-full p-3 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.tuition ? 'opacity-70' : ''}`}
               />
             </div>
 
-            <div className="md:col-span-2">
+            <div>
               <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                 Facilities Available
               </label>
@@ -1064,101 +1060,103 @@ const Profile = () => {
                 onChange={(e) => handleTuitionDetailsChange('facilitiesAvailable', e.target.value)}
                 disabled={!editStates.tuition}
                 rows={3}
-                className={`w-full p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.tuition ? 'opacity-70' : ''}`}
+                className={`w-full p-3 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.tuition ? 'opacity-70' : ''}`}
               />
             </div>
 
-            <div>
-              <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Working Hours
-              </label>
-              <input
-                type="text"
-                value={tuitionDetails.workingHours}
-                onChange={(e) => handleTuitionDetailsChange('workingHours', e.target.value)}
-                disabled={!editStates.tuition}
-                className={`w-full p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.tuition ? 'opacity-70' : ''}`}
-              />
-            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+              <div>
+                <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Working Hours
+                </label>
+                <input
+                  type="text"
+                  value={tuitionDetails.workingHours}
+                  onChange={(e) => handleTuitionDetailsChange('workingHours', e.target.value)}
+                  disabled={!editStates.tuition}
+                  className={`w-full p-3 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.tuition ? 'opacity-70' : ''}`}
+                />
+              </div>
 
-            <div>
-              <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Working Days
-              </label>
-              <input
-                type="text"
-                value={tuitionDetails.workingDays}
-                onChange={(e) => handleTuitionDetailsChange('workingDays', e.target.value)}
-                disabled={!editStates.tuition}
-                className={`w-full p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.tuition ? 'opacity-70' : ''}`}
-              />
-            </div>
+              <div>
+                <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Working Days
+                </label>
+                <input
+                  type="text"
+                  value={tuitionDetails.workingDays}
+                  onChange={(e) => handleTuitionDetailsChange('workingDays', e.target.value)}
+                  disabled={!editStates.tuition}
+                  className={`w-full p-3 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.tuition ? 'opacity-70' : ''}`}
+                />
+              </div>
 
-            <div>
-              <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Maximum Capacity
-              </label>
-              <input
-                type="number"
-                value={tuitionDetails.maximumCapacity}
-                onChange={(e) => handleTuitionDetailsChange('maximumCapacity', e.target.value)}
-                disabled={!editStates.tuition}
-                className={`w-full p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.tuition ? 'opacity-70' : ''}`}
-              />
-            </div>
+              <div>
+                <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Maximum Capacity
+                </label>
+                <input
+                  type="number"
+                  value={tuitionDetails.maximumCapacity}
+                  onChange={(e) => handleTuitionDetailsChange('maximumCapacity', e.target.value)}
+                  disabled={!editStates.tuition}
+                  className={`w-full p-3 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.tuition ? 'opacity-70' : ''}`}
+                />
+              </div>
 
-            <div>
-              <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Current Students
-              </label>
-              <input
-                type="number"
-                value={tuitionDetails.currentStudents}
-                onChange={(e) => handleTuitionDetailsChange('currentStudents', e.target.value)}
-                disabled={!editStates.tuition}
-                className={`w-full p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.tuition ? 'opacity-70' : ''}`}
-              />
-            </div>
+              <div>
+                <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Current Students
+                </label>
+                <input
+                  type="number"
+                  value={tuitionDetails.currentStudents}
+                  onChange={(e) => handleTuitionDetailsChange('currentStudents', e.target.value)}
+                  disabled={!editStates.tuition}
+                  className={`w-full p-3 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.tuition ? 'opacity-70' : ''}`}
+                />
+              </div>
 
-            <div>
-              <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Total Teachers
-              </label>
-              <input
-                type="number"
-                value={tuitionDetails.totalTeachers}
-                onChange={(e) => handleTuitionDetailsChange('totalTeachers', e.target.value)}
-                disabled={!editStates.tuition}
-                className={`w-full p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.tuition ? 'opacity-70' : ''}`}
-              />
-            </div>
+              <div>
+                <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Total Teachers
+                </label>
+                <input
+                  type="number"
+                  value={tuitionDetails.totalTeachers}
+                  onChange={(e) => handleTuitionDetailsChange('totalTeachers', e.target.value)}
+                  disabled={!editStates.tuition}
+                  className={`w-full p-3 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.tuition ? 'opacity-70' : ''}`}
+                />
+              </div>
 
-            <div>
-              <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Total Staff
-              </label>
-              <input
-                type="number"
-                value={tuitionDetails.totalStaff}
-                onChange={(e) => handleTuitionDetailsChange('totalStaff', e.target.value)}
-                disabled={!editStates.tuition}
-                className={`w-full p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.tuition ? 'opacity-70' : ''}`}
-              />
+              <div>
+                <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Total Staff
+                </label>
+                <input
+                  type="number"
+                  value={tuitionDetails.totalStaff}
+                  onChange={(e) => handleTuitionDetailsChange('totalStaff', e.target.value)}
+                  disabled={!editStates.tuition}
+                  className={`w-full p-3 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.tuition ? 'opacity-70' : ''}`}
+                />
+              </div>
             </div>
           </div>
 
           {editStates.tuition && (
-            <div className="flex justify-end gap-4 mt-6">
+            <div className="flex flex-col sm:flex-row justify-end gap-4 mt-6">
               <button
                 type="button"
                 onClick={() => cancelEdit('tuition')}
-                className={`px-4 py-2 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white hover:bg-slate-600' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'}`}
+                className={`px-4 py-2 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white hover:bg-slate-600' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'}`}
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
               >
                 Save Changes
               </button>
@@ -1171,8 +1169,8 @@ const Profile = () => {
 
   const renderSecurity = () => (
     <div className="space-y-6">
-      <div className={`p-6 rounded-lg border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'}`}>
-        <div className="flex items-center justify-between mb-6">
+      <div className={`p-4 sm:p-6 rounded-lg border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'}`}>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div className="flex items-center gap-2">
             <Shield className={`w-5 h-5 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`} />
             <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
@@ -1189,7 +1187,7 @@ const Profile = () => {
         </div>
 
         <form onSubmit={handleUpdatePassword}>
-          <div className="grid grid-cols-1 gap-6">
+          <div className="grid grid-cols-1 gap-4 sm:gap-6">
             <div>
               <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                 Current Password
@@ -1200,7 +1198,7 @@ const Profile = () => {
                   value={passwords.current}
                   onChange={(e) => handlePasswordChange('current', e.target.value)}
                   disabled={!editStates.security}
-                  className={`w-full p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.security ? 'opacity-70' : ''}`}
+                  className={`w-full p-3 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.security ? 'opacity-70' : ''}`}
                 />
                 <button
                   type="button"
@@ -1223,7 +1221,7 @@ const Profile = () => {
                   value={passwords.new}
                   onChange={(e) => handlePasswordChange('new', e.target.value)}
                   disabled={!editStates.security}
-                  className={`w-full p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.security ? 'opacity-70' : ''}`}
+                  className={`w-full p-3 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.security ? 'opacity-70' : ''}`}
                 />
                 <button
                   type="button"
@@ -1246,7 +1244,7 @@ const Profile = () => {
                   value={passwords.confirm}
                   onChange={(e) => handlePasswordChange('confirm', e.target.value)}
                   disabled={!editStates.security}
-                  className={`w-full p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.security ? 'opacity-70' : ''}`}
+                  className={`w-full p-3 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.security ? 'opacity-70' : ''}`}
                 />
                 <button
                   type="button"
@@ -1261,17 +1259,17 @@ const Profile = () => {
           </div>
 
           {editStates.security && (
-            <div className="flex justify-end gap-4 mt-6">
+            <div className="flex flex-col sm:flex-row justify-end gap-4 mt-6">
               <button
                 type="button"
                 onClick={() => cancelEdit('security')}
-                className={`px-4 py-2 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white hover:bg-slate-600' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'}`}
+                className={`px-4 py-2 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white hover:bg-slate-600' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'}`}
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
               >
                 Update Password
               </button>
@@ -1280,8 +1278,8 @@ const Profile = () => {
         </form>
       </div>
 
-      <div className={`p-6 rounded-lg border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'}`}>
-        <div className="flex items-center justify-between mb-6">
+      <div className={`p-4 sm:p-6 rounded-lg border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'}`}>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div className="flex items-center gap-2">
             <SettingsIcon className={`w-5 h-5 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`} />
             <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
@@ -1300,10 +1298,10 @@ const Profile = () => {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Two-Factor Authentication
               </h4>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Add an extra layer of security to your account
               </p>
             </div>
@@ -1324,10 +1322,10 @@ const Profile = () => {
 
           <div className="flex items-center justify-between">
             <div>
-              <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Session Timeout
               </h4>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Automatically log out after 30 minutes of inactivity
               </p>
             </div>
@@ -1348,16 +1346,16 @@ const Profile = () => {
         </div>
 
         {editStates.security && (
-          <div className="flex justify-end gap-4 mt-6">
+          <div className="flex flex-col sm:flex-row justify-end gap-4 mt-6">
             <button
               onClick={() => cancelEdit('security')}
-              className={`px-4 py-2 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white hover:bg-slate-600' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'}`}
+              className={`px-4 py-2 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white hover:bg-slate-600' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'}`}
             >
               Cancel
             </button>
             <button
               onClick={() => saveSection('security')}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
             >
               Save Changes
             </button>
@@ -1365,7 +1363,7 @@ const Profile = () => {
         )}
       </div>
 
-      <div className={`p-6 rounded-lg border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'}`}>
+      <div className={`p-4 sm:p-6 rounded-lg border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'}`}>
         <div className="flex items-center gap-2 mb-6">
           <Monitor className={`w-5 h-5 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`} />
           <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
@@ -1378,13 +1376,13 @@ const Profile = () => {
             <div className="flex items-center gap-3">
               <Monitor className={`w-5 h-5 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`} />
               <div className="flex-1">
-                <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   MacBook Pro
                 </h4>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   Safari • Mumbai, India - 192.168.1.100
                 </p>
-                <p className={`text-sm ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>
+                <p className={`text-xs ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>
                   Current Session
                 </p>
               </div>
@@ -1398,13 +1396,13 @@ const Profile = () => {
             <div className="flex items-center gap-3">
               <Smartphone className={`w-5 h-5 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`} />
               <div className="flex-1">
-                <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   iPhone 14
                 </h4>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   Safari Mobile • Mumbai, India - 192.168.1.101
                 </p>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   Last Active 5 minutes ago
                 </p>
               </div>
@@ -1418,13 +1416,13 @@ const Profile = () => {
             <div className="flex items-center gap-3">
               <Monitor className={`w-5 h-5 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`} />
               <div className="flex-1">
-                <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Chrome Browser
                 </h4>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   Chrome • Mumbai, India - 192.168.1.102
                 </p>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   Last Active 2 hours ago
                 </p>
               </div>
@@ -1434,18 +1432,14 @@ const Profile = () => {
             </div>
           </div>
         </div>
-
-        {/* <button className={`w-full mt-4 py-2 text-center rounded-lg border ${isDarkMode ? 'border-slate-600 text-white hover:bg-slate-700' : 'border-gray-300 text-gray-700 hover:bg-gray-100'}`}>
-          View All Sessions
-        </button> */}
       </div>
     </div>
   );
 
   const renderNotifications = () => (
     <div className="space-y-6">
-      <div className={`p-6 rounded-lg border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'}`}>
-        <div className="flex items-center justify-between mb-6">
+      <div className={`p-4 sm:p-6 rounded-lg border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'}`}>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div className="flex items-center gap-2">
             <Bell className={`w-5 h-5 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`} />
             <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
@@ -1462,7 +1456,7 @@ const Profile = () => {
         </div>
 
         <div className="mb-6">
-          <h4 className={`font-medium mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <h4 className={`font-medium mb-4 text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
             Email Notifications
           </h4>
           <div className="space-y-4">
@@ -1475,10 +1469,10 @@ const Profile = () => {
             ].map((item) => (
               <div key={item.id} className="flex items-center justify-between">
                 <div>
-                  <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     {item.label}
                   </h4>
-                  <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                     {item.description}
                   </p>
                 </div>
@@ -1498,7 +1492,7 @@ const Profile = () => {
         </div>
 
         <div className="mb-6">
-          <h4 className={`font-medium mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <h4 className={`font-medium mb-4 text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
             SMS Notifications
           </h4>
           <div className="space-y-4">
@@ -1510,10 +1504,10 @@ const Profile = () => {
             ].map((item) => (
               <div key={item.id} className="flex items-center justify-between">
                 <div>
-                  <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     {item.label}
                   </h4>
-                  <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                     {item.description}
                   </p>
                 </div>
@@ -1533,7 +1527,7 @@ const Profile = () => {
         </div>
 
         <div className="mb-6">
-          <h4 className={`font-medium mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <h4 className={`font-medium mb-4 text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
             Push Notifications
           </h4>
           <div className="space-y-4">
@@ -1545,10 +1539,10 @@ const Profile = () => {
             ].map((item) => (
               <div key={item.id} className="flex items-center justify-between">
                 <div>
-                  <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     {item.label}
                   </h4>
-                  <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                     {item.description}
                   </p>
                 </div>
@@ -1568,16 +1562,16 @@ const Profile = () => {
         </div>
 
         <div>
-          <h4 className={`font-medium mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <h4 className={`font-medium mb-4 text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
             Notification Preferences
           </h4>
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <div>
-                <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Quiet Hours
                 </h4>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   Do not disturb during specified hours
                 </p>
               </div>
@@ -1607,7 +1601,7 @@ const Profile = () => {
                       quietStart: e.target.value
                     }))}
                     disabled={!editStates.notifications}
-                    className={`w-full p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.notifications ? 'opacity-70' : ''}`}
+                    className={`w-full p-3 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.notifications ? 'opacity-70' : ''}`}
                   />
                 </div>
 
@@ -1623,7 +1617,7 @@ const Profile = () => {
                       quietEnd: e.target.value
                     }))}
                     disabled={!editStates.notifications}
-                    className={`w-full p-3 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.notifications ? 'opacity-70' : ''}`}
+                    className={`w-full p-3 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} ${!editStates.notifications ? 'opacity-70' : ''}`}
                   />
                 </div>
               </div>
@@ -1631,10 +1625,10 @@ const Profile = () => {
 
             <div className="flex items-center justify-between">
               <div>
-                <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Weekend Notifications
                 </h4>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   Receive notifications on weekends
                 </p>
               </div>
@@ -1653,16 +1647,16 @@ const Profile = () => {
         </div>
 
         {editStates.notifications && (
-          <div className="flex justify-end gap-4 mt-6">
+          <div className="flex flex-col sm:flex-row justify-end gap-4 mt-6">
             <button
               onClick={() => cancelEdit('notifications')}
-              className={`px-4 py-2 rounded-lg border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white hover:bg-slate-600' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'}`}
+              className={`px-4 py-2 rounded-lg border text-sm ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white hover:bg-slate-600' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'}`}
             >
               Cancel
             </button>
             <button
               onClick={() => saveSection('notifications')}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
             >
               Save Changes
             </button>
@@ -1681,19 +1675,20 @@ const Profile = () => {
 
       <Sidebar isExpanded={isSidebarExpanded} activeItem="profile" />
 
-      <main className={`transition-all duration-300 pt-20 pb-16 min-h-screen ${isSidebarExpanded ? 'ml-64' : 'ml-16'}`}>
-        <div className="w-full h-full px-6 py-6">
-          <div className="text-left mb-8">
-            <h1 className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+      <main className={`transition-all duration-300 ${isSidebarExpanded ? 'ml-0 md:ml-48 lg:ml-64' : 'ml-0 md:ml-16'
+        } pt-16 md:pt-20 pb-12 md:pb-16 min-h-screen overflow-x-hidden`}>
+        <div className="w-full h-full px-3 sm:px-4 md:px-6 py-4 md:py-6">
+          <div className="text-left mb-6">
+            <h1 className={`text-2xl sm:text-3xl font-bold mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               Profile Settings
             </h1>
-            <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
+            <p className={`text-sm md:text-base ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
               Manage your profile information and account settings
             </p>
           </div>
 
-          <div className={`mb-8 rounded-lg border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'}`}>
-            <div className="flex flex-wrap border-b">
+          <div className={`mb-6 rounded-lg border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'}`}>
+            <div className="flex overflow-x-auto border-b">
               {tabs.map((tab) => {
                 const Icon = tab.icon;
                 const isActive = activeTab === tab.id;
@@ -1702,7 +1697,7 @@ const Profile = () => {
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center gap-2 px-6 py-4 text-sm font-medium border-b-2 transition-colors ${isActive
+                    className={`flex items-center gap-2 px-4 sm:px-6 py-3 sm:py-4 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${isActive
                         ? 'border-blue-500 text-blue-600'
                         : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                       } ${isDarkMode && isActive ? '!text-blue-400' : ''} ${isDarkMode && !isActive ? '!text-gray-400 hover:!text-gray-300' : ''}`}
@@ -1714,7 +1709,7 @@ const Profile = () => {
               })}
             </div>
 
-            <div className="p-6">
+            <div className="p-4 sm:p-6">
               {activeTab === 'personal' && renderPersonalInfo()}
               {activeTab === 'tuition' && renderTuitionDetails()}
               {activeTab === 'security' && renderSecurity()}

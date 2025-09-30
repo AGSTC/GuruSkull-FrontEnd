@@ -111,7 +111,6 @@ const TeacherSettings = () => {
 
   const handleLanguageChange = (newLanguage) => {
     setLanguage(newLanguage);
-    // Here you would typically integrate with i18n library
     console.log('Language changed to:', newLanguage);
     
     // Simulate language change effect
@@ -121,9 +120,6 @@ const TeacherSettings = () => {
   const handleTimezoneChange = (newTimezone) => {
     setTimezone(newTimezone);
     console.log('Timezone changed to:', newTimezone);
-    
-    // Here you would update the application's timezone context
-    // For now, we'll just update the state
   };
 
   const handleThemeChange = (newTheme) => {
@@ -134,17 +130,15 @@ const TeacherSettings = () => {
   const handleScheduleViewChange = (newView) => {
     setScheduleView(newView);
     console.log('Default schedule view changed to:', newView);
-    
-    // Here you would update the schedule component's default view
   };
 
   const ToggleSwitch = ({ enabled, onChange, label, description }) => (
     <div className="flex items-center justify-between">
       <div className="flex-1">
-        <p className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+        <p className={`font-medium text-sm sm:text-base ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
           {label}
         </p>
-        <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+        <p className={`text-xs sm:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
           {description}
         </p>
       </div>
@@ -173,47 +167,47 @@ const TeacherSettings = () => {
       <Sidebar isExpanded={isSidebarExpanded} activeItem="settings" />
 
       <main className={`transition-all duration-300 pt-20 pb-16 min-h-screen ${
-        isSidebarExpanded ? 'ml-64' : 'ml-16'
+        isSidebarExpanded ? 'lg:ml-64' : 'lg:ml-16'
       }`}>
-        <div className="w-full h-full px-6 py-6">
+        <div className="w-full h-full px-4 sm:px-6 py-6">
           
           {/* Header */}
-          <div className="text-left mb-8">
-            <h1 className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <div className="text-left mb-6 sm:mb-8">
+            <h1 className={`text-2xl sm:text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               Settings
             </h1>
-            <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
+            <p className={`text-base sm:text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
               Manage your account preferences and configurations
             </p>
           </div>
 
           {/* Success Message */}
           {showSaveSuccess && (
-            <div className={`mb-6 p-4 rounded-lg border ${
+            <div className={`mb-6 p-3 sm:p-4 rounded-lg border ${
               isDarkMode ? 'bg-green-900 border-green-700 text-green-200' : 'bg-green-50 border-green-200 text-green-800'
-            } flex items-center gap-2`}>
-              <Check size={16} />
+            } flex items-center gap-2 text-sm sm:text-base`}>
+              <Check size={16} className="sm:w-5 sm:h-5" />
               <span>Settings saved successfully!</span>
             </div>
           )}
 
           {/* Main Settings Container */}
-          <div className={`p-6 rounded-2xl border ${
+          <div className={`p-4 sm:p-6 rounded-xl sm:rounded-2xl border ${
             isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
-          } mb-8`}>
+          } mb-6 sm:mb-8`}>
             
             {/* Application Preferences Header */}
-            <div className="mb-8">
-              <h2 className={`text-xl font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            <div className="mb-6 sm:mb-8">
+              <h2 className={`text-lg sm:text-xl font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Application Preferences
               </h2>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-xs sm:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Customize your application experience
               </p>
             </div>
 
             {/* Settings Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-6 sm:mb-8">
               
               {/* Language Setting */}
               <div>
@@ -223,7 +217,7 @@ const TeacherSettings = () => {
                 <select
                   value={language}
                   onChange={(e) => handleLanguageChange(e.target.value)}
-                  className={`w-full p-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  className={`w-full p-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base ${
                     isDarkMode 
                       ? 'bg-slate-700 border-slate-600 text-white' 
                       : 'bg-white border-gray-300 text-gray-900'
@@ -249,7 +243,7 @@ const TeacherSettings = () => {
                 <select
                   value={timezone}
                   onChange={(e) => handleTimezoneChange(e.target.value)}
-                  className={`w-full p-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  className={`w-full p-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base ${
                     isDarkMode 
                       ? 'bg-slate-700 border-slate-600 text-white' 
                       : 'bg-white border-gray-300 text-gray-900'
@@ -277,7 +271,7 @@ const TeacherSettings = () => {
                 <select
                   value={theme}
                   onChange={(e) => handleThemeChange(e.target.value)}
-                  className={`w-full p-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  className={`w-full p-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base ${
                     isDarkMode 
                       ? 'bg-slate-700 border-slate-600 text-white' 
                       : 'bg-white border-gray-300 text-gray-900'
@@ -300,7 +294,7 @@ const TeacherSettings = () => {
                 <select
                   value={scheduleView}
                   onChange={(e) => handleScheduleViewChange(e.target.value)}
-                  className={`w-full p-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  className={`w-full p-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base ${
                     isDarkMode 
                       ? 'bg-slate-700 border-slate-600 text-white' 
                       : 'bg-white border-gray-300 text-gray-900'
@@ -318,12 +312,12 @@ const TeacherSettings = () => {
             </div>
 
             {/* Display Options Section */}
-            <div className="mb-8">
-              <h3 className={`text-lg font-semibold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            <div className="mb-6 sm:mb-8">
+              <h3 className={`text-base sm:text-lg font-semibold mb-4 sm:mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Display Options
               </h3>
               
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 {/* Auto-save assignments */}
                 <ToggleSwitch
                   enabled={autoSaveAssignments}
@@ -343,13 +337,13 @@ const TeacherSettings = () => {
             </div>
 
             {/* Current Settings Summary */}
-            <div className={`mb-8 p-4 rounded-lg ${
+            <div className={`mb-6 sm:mb-8 p-3 sm:p-4 rounded-lg ${
               isDarkMode ? 'bg-slate-700 border-slate-600' : 'bg-gray-50 border-gray-200'
             } border`}>
-              <h4 className={`font-medium mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h4 className={`font-medium mb-3 text-sm sm:text-base ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Current Settings Summary
               </h4>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 text-xs sm:text-sm">
                 <div>
                   <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Language:</span>
                   <br />
@@ -376,30 +370,30 @@ const TeacherSettings = () => {
             </div>
 
             {/* Action Buttons */}
-            <div className={`flex items-center gap-4 pt-6 border-t ${
+            <div className={`flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 pt-4 sm:pt-6 border-t ${
               isDarkMode ? 'border-slate-600' : 'border-gray-200'
             }`}>
               <button
                 onClick={handleSavePreferences}
-                className="flex items-center gap-2 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                className="flex items-center justify-center gap-2 px-4 sm:px-6 py-2 sm:py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-sm sm:text-base"
               >
-                <Save size={16} />
+                <Save size={16} className="sm:w-5 sm:h-5" />
                 Save Preferences
               </button>
               
               <button
                 onClick={handleResetToDefault}
-                className={`flex items-center gap-2 px-6 py-3 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                className={`flex items-center justify-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 text-sm sm:text-base ${
                   isDarkMode 
                     ? 'bg-slate-700 text-gray-300 hover:bg-slate-600 focus:ring-slate-500' 
                     : 'bg-gray-200 text-gray-700 hover:bg-gray-300 focus:ring-gray-400'
                 }`}
               >
-                <RotateCcw size={16} />
+                <RotateCcw size={16} className="sm:w-5 sm:h-5" />
                 Reset to Default
               </button>
               
-              <div className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+              <div className={`text-xs text-center sm:text-left ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
                 {localStorage.getItem('teacherSettings') && (
                   <>Last saved: {new Date(JSON.parse(localStorage.getItem('teacherSettings')).savedAt).toLocaleString()}</>
                 )}

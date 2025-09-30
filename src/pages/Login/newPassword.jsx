@@ -20,9 +20,8 @@ const CreateNewPasswordPage = () => {
   
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [step, setStep] = useState(1); // 1: Password form, 2: Success
+  const [step, setStep] = useState(1);
 
-  // Refs for input fields
   const newPasswordRef = useRef(null);
   const confirmPasswordRef = useRef(null);
 
@@ -33,7 +32,6 @@ const CreateNewPasswordPage = () => {
       [name]: value
     }));
     
-    // Clear errors when user starts typing
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -41,7 +39,6 @@ const CreateNewPasswordPage = () => {
       }));
     }
     
-    // Clear password match error when either password changes
     if (errors.passwordMatch && (name === 'newPassword' || name === 'confirmPassword')) {
       setErrors(prev => ({
         ...prev,
@@ -50,16 +47,13 @@ const CreateNewPasswordPage = () => {
     }
   };
 
-  // Handle keyboard navigation
   const handleKeyDown = (e, fieldType) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       
       if (fieldType === 'newPassword') {
-        // Move focus to confirm password field
         confirmPasswordRef.current?.focus();
       } else if (fieldType === 'confirmPassword') {
-        // Submit the form
         handleSubmit(e);
       }
     }
@@ -68,19 +62,16 @@ const CreateNewPasswordPage = () => {
   const validateForm = () => {
     const newErrors = {};
 
-    // Check if new password is provided
     if (!formData.newPassword) {
       newErrors.newPassword = 'New password is required';
     } else if (formData.newPassword.length < 6) {
       newErrors.newPassword = 'Password must be at least 6 characters long';
     }
 
-    // Check if confirm password is provided
     if (!formData.confirmPassword) {
       newErrors.confirmPassword = 'Please confirm your password';
     }
 
-    // Check if passwords match
     if (formData.newPassword && formData.confirmPassword && formData.newPassword !== formData.confirmPassword) {
       newErrors.passwordMatch = 'Passwords do not match';
     }
@@ -96,7 +87,6 @@ const CreateNewPasswordPage = () => {
 
     setIsLoading(true);
 
-    // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 2000));
 
     console.log('Password reset data:', {
@@ -120,15 +110,14 @@ const CreateNewPasswordPage = () => {
   };
 
   return (
-    <div className={`fixed inset-0 w-screen h-screen overflow-hidden font-sans ${isDarkMode
+    <div className={`min-h-screen w-full font-sans overflow-x-hidden ${isDarkMode
         ? 'bg-gradient-to-b from-gray-900 via-gray-900 to-black'
         : 'bg-gradient-to-br from-blue-50 via-white to-cyan-50'
       }`}>
 
-      {/* Animated Stars Background - Only in Dark Mode */}
       {isDarkMode && (
         <div
-          className="absolute inset-0 opacity-60"
+          className="absolute inset-0 opacity-60 pointer-events-none"
           style={{
             background: `
               radial-gradient(2px 2px at 20px 30px, white, transparent),
@@ -153,97 +142,90 @@ const CreateNewPasswordPage = () => {
         ></div>
       )}
 
-      {/* Back to Login Button */}
-      <div className="absolute top-5 left-5 z-50">
+      <div className="fixed top-4 left-4 z-50">
         <button
           onClick={handleBackToLogin}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 ${
+          className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg transition-all duration-300 ${
             isDarkMode
               ? 'text-white/80 hover:text-white hover:bg-white/10'
               : 'text-gray-700 hover:text-gray-900 hover:bg-black/10'
           }`}
           title="Back to Login"
         >
-          <ArrowLeft size={20} />
-          <span className="text-sm font-medium">Back to Login</span>
+          <ArrowLeft size={18} />
+          <span className="text-xs sm:text-sm font-medium">Back to Login</span>
         </button>
       </div>
 
-      {/* Theme Toggle Switch */}
-      <div className="absolute top-5 right-5 z-50">
+      <div className="fixed top-4 right-4 z-50">
         <button
           onClick={toggleTheme}
-          className={`relative w-20 h-10 rounded-full border-0 cursor-pointer transition-all duration-500 ease-in-out ${isDarkMode
+          className={`relative w-16 h-8 rounded-full border-0 cursor-pointer transition-all duration-500 ease-in-out ${isDarkMode
               ? 'bg-white'
               : 'bg-black'
             }`}
           title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
         >
-          <div className={`absolute left-2.5 top-1/2 transform -translate-y-1/2 transition-all duration-300`}>
+          <div className={`absolute left-2 top-1/2 transform -translate-y-1/2 transition-all duration-300`}>
             <Sun
               className={isDarkMode ? 'text-gray-400' : 'text-orange-500'}
-              size={18}
+              size={14}
             />
           </div>
 
-          <div className={`absolute right-2.5 top-1/2 transform -translate-y-1/2 transition-all duration-300`}>
+          <div className={`absolute right-2 top-1/2 transform -translate-y-1/2 transition-all duration-300`}>
             <Moon
               className={isDarkMode ? 'text-blue-300' : 'text-white'}
-              size={18}
+              size={14}
             />
           </div>
 
-          <div className={`absolute top-1 w-8 h-8 rounded-full transition-all duration-500 ease-in-out shadow-md ${isDarkMode
-              ? 'transform translate-x-11 bg-black'
+          <div className={`absolute top-1 w-6 h-6 rounded-full transition-all duration-500 ease-in-out shadow-md ${isDarkMode
+              ? 'transform translate-x-8 bg-black'
               : 'transform translate-x-1 bg-white'
             }`}>
             <div className="absolute inset-0 flex items-center justify-center">
               {isDarkMode ? (
-                <Moon className="text-white" size={14.5} />
+                <Moon className="text-white" size={12} />
               ) : (
-                <Sun className="text-orange-400" size={14.5} />
+                <Sun className="text-orange-400" size={12} />
               )}
             </div>
           </div>
         </button>
       </div>
 
-      {/* Main Content */}
-      <div className="flex w-full h-full items-center justify-center relative z-10">
-        <div className={`w-full max-w-md mx-4 rounded-3xl p-10 backdrop-blur-3xl shadow-2xl ${
+      <div className="flex w-full min-h-screen items-center justify-center relative z-10 px-4 py-20">
+        <div className={`w-full max-w-md rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 backdrop-blur-3xl shadow-2xl ${
           isDarkMode
             ? 'bg-black/40 border border-white/10'
             : 'bg-white/80 border border-black/10'
         }`}>
           
-          {/* Logo */}
-          <div className="flex items-center justify-center mb-0 gap-3 w-100">
-            <img src={isDarkMode ? logoDark : logoLight} alt="GuruSkull Logo" className='w-80'></img>
+          <div className="flex items-center justify-center mb-4 sm:mb-6 gap-3 w-full">
+            <img src={isDarkMode ? logoDark : logoLight} alt="GuruSkull Logo" className='w-48 sm:w-64 md:w-80'/>
           </div>
 
-          {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className={`text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <div className="text-center mb-6 sm:mb-8">
+            <h1 className={`text-2xl sm:text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               Create a New Password
             </h1>
             {step === 1 && (
-              <p className={`text-sm mt-2 ${isDarkMode ? 'text-white/70' : 'text-gray-600'}`}>
+              <p className={`text-xs sm:text-sm mt-2 ${isDarkMode ? 'text-white/70' : 'text-gray-600'}`}>
                 Enter your new password below
               </p>
             )}
             {step === 2 && (
-              <p className={`text-sm mt-2 ${isDarkMode ? 'text-green-400' : 'text-green-600'}`}>
+              <p className={`text-xs sm:text-sm mt-2 ${isDarkMode ? 'text-green-400' : 'text-green-600'}`}>
                 Password successfully updated!
               </p>
             )}
           </div>
 
-          {/* Form */}
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-4 sm:gap-5">
             
             {step === 1 && (
-              <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-                {/* New Password Input */}
+              <form onSubmit={handleSubmit} className="flex flex-col gap-4 sm:gap-5">
                 <div className="relative">
                   <input
                     ref={newPasswordRef}
@@ -252,7 +234,7 @@ const CreateNewPasswordPage = () => {
                     value={formData.newPassword}
                     onChange={handleInputChange}
                     onKeyDown={(e) => handleKeyDown(e, 'newPassword')}
-                    className={`w-full pl-12 pr-12 py-4 rounded-xl text-base transition-all duration-300 outline-none backdrop-blur-md ${
+                    className={`w-full pl-10 sm:pl-12 pr-10 sm:pr-12 py-3 sm:py-4 rounded-xl text-sm sm:text-base transition-all duration-300 outline-none backdrop-blur-md ${
                       errors.newPassword || errors.passwordMatch
                         ? 'border border-red-400 bg-red-50/10'
                         : isDarkMode
@@ -262,26 +244,25 @@ const CreateNewPasswordPage = () => {
                     placeholder="New Password"
                     autoComplete="new-password"
                   />
-                  <Lock className={`absolute left-4 top-1/2 transform -translate-y-1/2 ${
+                  <Lock className={`absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 ${
                     isDarkMode ? 'text-white/50' : 'text-black/50'
-                  }`} size={20} />
+                  }`} size={18} />
                   <button
                     type="button"
                     onClick={() => setShowNewPassword(!showNewPassword)}
-                    className={`absolute right-4 top-1/2 transform -translate-y-1/2 p-1 transition-colors duration-300 ${
+                    className={`absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2 p-1 transition-colors duration-300 ${
                       isDarkMode ? 'text-white/60 hover:text-white/80' : 'text-black/60 hover:text-black/80'
                     }`}
                   >
-                    {showNewPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                    {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
                 </div>
                 {errors.newPassword && (
-                  <p className="text-red-400 text-sm -mt-3">
+                  <p className="text-red-400 text-xs sm:text-sm -mt-2">
                     {errors.newPassword}
                   </p>
                 )}
 
-                {/* Confirm Password Input */}
                 <div className="relative">
                   <input
                     ref={confirmPasswordRef}
@@ -290,7 +271,7 @@ const CreateNewPasswordPage = () => {
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
                     onKeyDown={(e) => handleKeyDown(e, 'confirmPassword')}
-                    className={`w-full pl-12 pr-12 py-4 rounded-xl text-base transition-all duration-300 outline-none backdrop-blur-md ${
+                    className={`w-full pl-10 sm:pl-12 pr-10 sm:pr-12 py-3 sm:py-4 rounded-xl text-sm sm:text-base transition-all duration-300 outline-none backdrop-blur-md ${
                       errors.confirmPassword || errors.passwordMatch
                         ? 'border border-red-400 bg-red-50/10'
                         : isDarkMode
@@ -300,31 +281,30 @@ const CreateNewPasswordPage = () => {
                     placeholder="Confirm New Password"
                     autoComplete="new-password"
                   />
-                  <Lock className={`absolute left-4 top-1/2 transform -translate-y-1/2 ${
+                  <Lock className={`absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 ${
                     isDarkMode ? 'text-white/50' : 'text-black/50'
-                  }`} size={20} />
+                  }`} size={18} />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className={`absolute right-4 top-1/2 transform -translate-y-1/2 p-1 transition-colors duration-300 ${
+                    className={`absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2 p-1 transition-colors duration-300 ${
                       isDarkMode ? 'text-white/60 hover:text-white/80' : 'text-black/60 hover:text-black/80'
                     }`}
                   >
-                    {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                    {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
                 </div>
                 {errors.confirmPassword && (
-                  <p className="text-red-400 text-sm -mt-3">
+                  <p className="text-red-400 text-xs sm:text-sm -mt-2">
                     {errors.confirmPassword}
                   </p>
                 )}
                 {errors.passwordMatch && (
-                  <p className="text-red-400 text-sm -mt-3">
+                  <p className="text-red-400 text-xs sm:text-sm -mt-2">
                     {errors.passwordMatch}
                   </p>
                 )}
 
-                {/* Remember Me Checkbox */}
                 <div className="flex items-center gap-3 mt-2">
                   <label className="flex items-center gap-2 cursor-pointer">
                     <div className="relative">
@@ -355,21 +335,20 @@ const CreateNewPasswordPage = () => {
                         )}
                       </div>
                     </div>
-                    <span className={`text-sm ${isDarkMode ? 'text-white/80' : 'text-gray-700'}`}>
+                    <span className={`text-xs sm:text-sm ${isDarkMode ? 'text-white/80' : 'text-gray-700'}`}>
                       Remember Me
                     </span>
                   </label>
                 </div>
 
-                {/* Submit Button */}
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full bg-gradient-to-r from-cyan-500 to-cyan-600 text-white py-4 rounded-xl font-semibold text-base transition-all duration-300 flex items-center justify-center gap-2 mt-2 hover:from-cyan-600 hover:to-cyan-700 hover:shadow-lg hover:shadow-cyan-500/25 disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="w-full bg-gradient-to-r from-cyan-500 to-cyan-600 text-white py-3 sm:py-4 rounded-xl font-semibold text-sm sm:text-base transition-all duration-300 flex items-center justify-center gap-2 mt-2 hover:from-cyan-600 hover:to-cyan-700 hover:shadow-lg hover:shadow-cyan-500/25 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {isLoading ? (
                     <>
-                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                       Processing...
                     </>
                   ) : (
@@ -379,27 +358,26 @@ const CreateNewPasswordPage = () => {
               </form>
             )}
 
-            {/* Success State */}
             {step === 2 && (
               <div className="text-center">
-                <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 ${
+                <div className={`inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 rounded-full mb-3 sm:mb-4 ${
                   isDarkMode ? 'bg-green-500/20' : 'bg-green-100'
                 }`}>
-                  <CheckCircle className="w-8 h-8 text-green-500" />
+                  <CheckCircle className="w-6 h-6 sm:w-8 sm:h-8 text-green-500" />
                 </div>
-                <p className={`text-base mb-6 ${isDarkMode ? 'text-white/80' : 'text-gray-700'}`}>
+                <p className={`text-sm sm:text-base mb-4 sm:mb-6 ${isDarkMode ? 'text-white/80' : 'text-gray-700'}`}>
                   Your password has been successfully updated. You can now login with your new password.
                 </p>
                 <div className="flex flex-col gap-3">
                   <button
                     onClick={handleBackToLogin}
-                    className="w-full bg-gradient-to-r from-cyan-500 to-cyan-600 text-white py-4 rounded-xl font-semibold text-base transition-all duration-300 flex items-center justify-center gap-2 hover:from-cyan-600 hover:to-cyan-700 hover:shadow-lg hover:shadow-cyan-500/25"
+                    className="w-full bg-gradient-to-r from-cyan-500 to-cyan-600 text-white py-3 sm:py-4 rounded-xl font-semibold text-sm sm:text-base transition-all duration-300 flex items-center justify-center gap-2 hover:from-cyan-600 hover:to-cyan-700 hover:shadow-lg hover:shadow-cyan-500/25"
                   >
                     Go to Login
                   </button>
                   <button
                     onClick={resetToStep1}
-                    className={`text-cyan-500 hover:text-cyan-600 font-medium text-sm transition-colors duration-300`}
+                    className={`text-cyan-500 hover:text-cyan-600 font-medium text-xs sm:text-sm transition-colors duration-300`}
                   >
                     Create another password
                   </button>

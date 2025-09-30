@@ -142,46 +142,6 @@ const ParentAttendanceManagement = () => {
           overallPerformance: 'Exceptional performance with perfect attendance',
           recommendations: 'Consider advanced placement courses for next semester',
           nextReviewDate: '15th Feb, 2024'
-        },
-        {
-          id: 3,
-          title: 'Physics Lab Report',
-          teacher: 'Dr. Wilson',
-          date: '8th Dec, 23',
-          status: 'Good',
-          statusColor: 'bg-blue-100 text-blue-700',
-          comments: 'Good understanding of lab procedures. Needs to improve documentation and report writing skills.',
-          detailedComments: [
-            {
-              subject: 'Physics Lab',
-              grade: 'B+',
-              comment: 'Accurate experimental setup and data collection.',
-              improvement: 'Improve lab report documentation'
-            }
-          ],
-          overallPerformance: 'Good practical skills but needs better documentation',
-          recommendations: 'Practice writing detailed lab reports',
-          nextReviewDate: '15th Jan, 2024'
-        },
-        {
-          id: 4,
-          title: 'Mid Term Progress Report',
-          teacher: 'Mrs. Davis',
-          date: '22nd Nov, 23',
-          status: 'Excellent',
-          statusColor: 'bg-green-100 text-green-700',
-          comments: 'Exceptional work in Chemistry practicals. Shows great curiosity and engagement in experiments.',
-          detailedComments: [
-            {
-              subject: 'Chemistry',
-              grade: 'A+',
-              comment: 'Outstanding performance in practical exams and theoretical knowledge.',
-              improvement: 'None - maintain excellent work'
-            }
-          ],
-          overallPerformance: 'Excellent performance with perfect scores',
-          recommendations: 'Encourage participation in science olympiad',
-          nextReviewDate: '15th Dec, 2023'
         }
       ]
     },
@@ -263,26 +223,6 @@ const ParentAttendanceManagement = () => {
           overallPerformance: 'Consistently excellent performance in all areas',
           recommendations: 'Encourage leadership roles in group activities',
           nextReviewDate: '18th Oct, 2024'
-        },
-        {
-          id: 2,
-          title: 'Science Project Evaluation',
-          teacher: 'Ms. Kumar',
-          date: '10th Aug, 24',
-          status: 'Good',
-          statusColor: 'bg-blue-100 text-blue-700',
-          comments: 'Creative approach to the science project. Shows good understanding of scientific concepts and methodology.',
-          detailedComments: [
-            {
-              subject: 'Science Project',
-              grade: 'A-',
-              comment: 'Innovative project idea with good research methodology.',
-              improvement: 'Improve presentation skills'
-            }
-          ],
-          overallPerformance: 'Good project execution with creative thinking',
-          recommendations: 'Continue exploring scientific research methods',
-          nextReviewDate: '10th Sep, 2024'
         }
       ]
     }
@@ -348,7 +288,7 @@ const ParentAttendanceManagement = () => {
 
     // Empty cells for days before the first day of the month
     for (let i = 0; i < firstDay; i++) {
-      days.push(<div key={`empty-${i}`} className="p-2"></div>);
+      days.push(<div key={`empty-${i}`} className="p-1 md:p-2"></div>);
     }
 
     // Days of the month
@@ -357,8 +297,8 @@ const ParentAttendanceManagement = () => {
       const isWeekend = new Date(currentYear, currentMonth, day).getDay() % 6 === 0;
       
       days.push(
-        <div key={day} className="p-2 text-center">
-          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium mx-auto relative ${
+        <div key={day} className="p-1 md:p-2 text-center">
+          <div className={`w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center text-xs md:text-sm font-medium mx-auto relative ${
             status ? getStatusColor(status) + ' text-white' : 
             isWeekend ? 'bg-gray-200 text-gray-500' : 
             isDarkMode ? 'bg-slate-700 text-gray-300 hover:bg-slate-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -377,81 +317,80 @@ const ParentAttendanceManagement = () => {
     if (!selectedReport) return null;
 
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div className={`rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto ${
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
+        <div className={`rounded-xl md:rounded-2xl w-full max-w-2xl lg:max-w-4xl max-h-[90vh] sm:max-h-[95vh] overflow-y-auto ${
           isDarkMode ? 'bg-slate-800' : 'bg-white'
         }`}>
           {/* Modal Header */}
-          <div className={`p-6 border-b ${
+          <div className={`p-4 md:p-6 border-b flex items-center justify-between ${
             isDarkMode ? 'border-slate-700' : 'border-gray-200'
           }`}>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            <div className="flex-1 min-w-0">
+              <h2 className={`text-lg md:text-xl lg:text-2xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 {selectedReport.title}
               </h2>
-              <button
-                onClick={closeReportDetails}
-                className={`p-2 rounded-lg hover:bg-opacity-20 ${
-                  isDarkMode ? 'hover:bg-white text-white' : 'hover:bg-gray-200 text-gray-600'
-                }`}
-              >
-                <X size={24} />
-              </button>
-            </div>
-            
-            <div className="flex flex-wrap gap-4 text-sm">
-              <div className="flex items-center gap-2">
-                <User size={16} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
-                <span className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>
-                  Teacher: <strong>{selectedReport.teacher}</strong>
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CalendarIcon size={16} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
-                <span className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>
-                  Date: <strong>{selectedReport.date}</strong>
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Star size={16} className={isDarkMode ? 'text-yellow-400' : 'text-yellow-500'} />
-                <span className={`px-3 py-1 rounded-full text-sm font-medium ${selectedReport.statusColor}`}>
-                  {selectedReport.status}
-                </span>
+              <div className="flex flex-wrap gap-3 text-xs md:text-sm">
+                <div className="flex items-center gap-1 md:gap-2">
+                  <User size={14} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
+                  <span className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>
+                    Teacher: <strong>{selectedReport.teacher}</strong>
+                  </span>
+                </div>
+                <div className="flex items-center gap-1 md:gap-2">
+                  <CalendarIcon size={14} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
+                  <span className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>
+                    Date: <strong>{selectedReport.date}</strong>
+                  </span>
+                </div>
+                <div className="flex items-center gap-1 md:gap-2">
+                  <Star size={14} className={isDarkMode ? 'text-yellow-400' : 'text-yellow-500'} />
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${selectedReport.statusColor}`}>
+                    {selectedReport.status}
+                  </span>
+                </div>
               </div>
             </div>
+            <button
+              onClick={closeReportDetails}
+              className={`p-1 md:p-2 rounded-lg hover:bg-opacity-20 flex-shrink-0 ${
+                isDarkMode ? 'hover:bg-white text-white' : 'hover:bg-gray-200 text-gray-600'
+              }`}
+            >
+              <X size={20} className="md:w-6 md:h-6" />
+            </button>
           </div>
 
           {/* Modal Body */}
-          <div className="p-6">
+          <div className="p-4 md:p-6">
             {/* Overall Comments */}
-            <div className="mb-6">
-              <h3 className={`text-lg font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            <div className="mb-4 md:mb-6">
+              <h3 className={`text-base md:text-lg font-semibold mb-2 md:mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Overall Comments
               </h3>
-              <div className={`p-4 rounded-lg ${
+              <div className={`p-3 md:p-4 rounded-lg ${
                 isDarkMode ? 'bg-slate-700' : 'bg-blue-50'
               }`}>
-                <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>
+                <p className={`text-sm md:text-base ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   {selectedReport.comments}
                 </p>
               </div>
             </div>
 
             {/* Subject-wise Performance */}
-            <div className="mb-6">
-              <h3 className={`text-lg font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            <div className="mb-4 md:mb-6">
+              <h3 className={`text-base md:text-lg font-semibold mb-2 md:mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Subject-wise Performance
               </h3>
-              <div className="space-y-4">
+              <div className="space-y-3 md:space-y-4">
                 {selectedReport.detailedComments.map((subject, index) => (
-                  <div key={index} className={`p-4 rounded-lg border ${
+                  <div key={index} className={`p-3 md:p-4 rounded-lg border ${
                     isDarkMode ? 'border-slate-600 bg-slate-700' : 'border-gray-200 bg-gray-50'
                   }`}>
-                    <div className="flex items-center justify-between mb-2">
-                      <h4 className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2 gap-2 sm:gap-0">
+                      <h4 className={`font-semibold text-sm md:text-base ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                         {subject.subject}
                       </h4>
-                      <span className={`px-2 py-1 rounded text-sm font-medium ${
+                      <span className={`px-2 py-1 rounded text-xs font-medium ${
                         subject.grade.includes('A') ? 'bg-green-100 text-green-700' :
                         subject.grade.includes('B') ? 'bg-blue-100 text-blue-700' :
                         'bg-yellow-100 text-yellow-700'
@@ -461,18 +400,18 @@ const ParentAttendanceManagement = () => {
                     </div>
                     <div className="space-y-2">
                       <div>
-                        <span className={`text-sm font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                        <span className={`text-xs md:text-sm font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                           Strengths: 
                         </span>
-                        <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>
+                        <p className={`text-xs md:text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                           {subject.comment}
                         </p>
                       </div>
                       <div>
-                        <span className={`text-sm font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                        <span className={`text-xs md:text-sm font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                           Areas for Improvement: 
                         </span>
-                        <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>
+                        <p className={`text-xs md:text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                           {subject.improvement}
                         </p>
                       </div>
@@ -483,28 +422,28 @@ const ParentAttendanceManagement = () => {
             </div>
 
             {/* Overall Performance & Recommendations */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
               <div>
-                <h3 className={`text-lg font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <h3 className={`text-base md:text-lg font-semibold mb-2 md:mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Overall Performance
                 </h3>
-                <div className={`p-4 rounded-lg ${
+                <div className={`p-3 md:p-4 rounded-lg ${
                   isDarkMode ? 'bg-slate-700' : 'bg-green-50'
                 }`}>
-                  <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>
+                  <p className={`text-sm md:text-base ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                     {selectedReport.overallPerformance}
                   </p>
                 </div>
               </div>
 
               <div>
-                <h3 className={`text-lg font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <h3 className={`text-base md:text-lg font-semibold mb-2 md:mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Recommendations
                 </h3>
-                <div className={`p-4 rounded-lg ${
+                <div className={`p-3 md:p-4 rounded-lg ${
                   isDarkMode ? 'bg-slate-700' : 'bg-purple-50'
                 }`}>
-                  <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>
+                  <p className={`text-sm md:text-base ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                     {selectedReport.recommendations}
                   </p>
                 </div>
@@ -512,12 +451,12 @@ const ParentAttendanceManagement = () => {
             </div>
 
             {/* Next Review Date */}
-            <div className={`mt-6 p-4 rounded-lg ${
+            <div className={`mt-4 md:mt-6 p-3 md:p-4 rounded-lg ${
               isDarkMode ? 'bg-slate-700' : 'bg-orange-50'
             }`}>
               <div className="flex items-center gap-2">
-                <CalendarIcon size={18} className={isDarkMode ? 'text-orange-400' : 'text-orange-500'} />
-                <span className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <CalendarIcon size={16} className={isDarkMode ? 'text-orange-400' : 'text-orange-500'} />
+                <span className={`font-medium text-sm md:text-base ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Next Review Date: {selectedReport.nextReviewDate}
                 </span>
               </div>
@@ -525,13 +464,13 @@ const ParentAttendanceManagement = () => {
           </div>
 
           {/* Modal Footer */}
-          <div className={`p-6 border-t ${
+          <div className={`p-4 md:p-6 border-t ${
             isDarkMode ? 'border-slate-700' : 'border-gray-200'
           }`}>
-            <div className="flex justify-end gap-3">
+            <div className="flex flex-col sm:flex-row justify-end gap-3">
               <button
                 onClick={closeReportDetails}
-                className={`px-6 py-2 rounded-lg font-medium transition-colors ${
+                className={`px-4 md:px-6 py-2 rounded-lg font-medium transition-colors ${
                   isDarkMode 
                     ? 'bg-slate-700 text-white hover:bg-slate-600' 
                     : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -540,7 +479,7 @@ const ParentAttendanceManagement = () => {
                 Close
               </button>
               <button
-                className="px-6 py-2 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 transition-colors"
+                className="px-4 md:px-6 py-2 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 transition-colors"
               >
                 Download Report
               </button>
@@ -560,35 +499,35 @@ const ParentAttendanceManagement = () => {
 
       <Sidebar isExpanded={isSidebarExpanded} activeItem="attendance" />
 
-      <main className={`transition-all duration-300 pt-20 pb-16 min-h-screen ${
-        isSidebarExpanded ? 'ml-64' : 'ml-16'
-      }`}>
-        <div className="w-full h-full px-6 py-6">
+      <main className={`transition-all duration-300 ${
+        isSidebarExpanded ? 'ml-0 md:ml-48 lg:ml-64' : 'ml-0 md:ml-16'
+      } pt-16 md:pt-20 pb-12 md:pb-16 min-h-screen overflow-x-hidden`}>
+        <div className="w-full h-full px-3 sm:px-4 md:px-6 py-4 md:py-6">
           
           {/* Header */}
-          <div className="text-left mb-8">
-            <h1 className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <div className="text-left mb-4 md:mb-6 lg:mb-8">
+            <h1 className={`text-xl sm:text-2xl md:text-3xl font-bold mb-1 md:mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               Attendance
             </h1>
-            <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
+            <p className={`text-sm md:text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
               View your child's attendance records
             </p>
           </div>
 
           {/* Select Child */}
-          <div className={`p-6 rounded-2xl border mb-8 ${
+          <div className={`p-4 md:p-6 rounded-xl md:rounded-2xl border mb-6 md:mb-8 ${
             isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'
           }`}>
-            <h2 className={`text-xl font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            <h2 className={`text-lg md:text-xl font-semibold mb-3 md:mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               Select Child
             </h2>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
               {children.map((child, index) => (
                 <div
                   key={child.id}
                   onClick={() => setSelectedChild(index)}
-                  className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                  className={`p-3 md:p-4 rounded-lg md:rounded-xl border-2 cursor-pointer transition-all ${
                     selectedChild === index
                       ? 'border-blue-500 bg-blue-50'
                       : isDarkMode 
@@ -596,30 +535,30 @@ const ParentAttendanceManagement = () => {
                         : 'border-gray-200 hover:border-gray-300 bg-white'
                   }`}
                 >
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3 md:gap-4">
                     <div className="relative">
                       <img
                         src={child.image}
                         alt={child.name}
-                        className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm"
+                        className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover border-2 border-white shadow-sm"
                         onError={(e) => {
                           e.target.style.display = 'none';
                           e.target.nextSibling.style.display = 'flex';
                         }}
                       />
                       <div 
-                        className={`w-12 h-12 rounded-full hidden items-center justify-center text-white text-lg font-bold ${child.color}`}
+                        className={`w-10 h-10 md:w-12 md:h-12 rounded-full hidden items-center justify-center text-white text-base md:text-lg font-bold ${child.color}`}
                       >
                         {child.avatar}
                       </div>
                     </div>
-                    <div>
-                      <h3 className={`font-semibold ${
+                    <div className="flex-1 min-w-0">
+                      <h3 className={`font-semibold text-sm md:text-base truncate ${
                         selectedChild === index ? 'text-blue-700' : isDarkMode ? 'text-white' : 'text-gray-900'
                       }`}>
                         {child.name}
                       </h3>
-                      <p className={`text-sm ${
+                      <p className={`text-xs md:text-sm ${
                         selectedChild === index ? 'text-blue-600' : isDarkMode ? 'text-gray-400' : 'text-gray-600'
                       }`}>
                         {child.class}
@@ -632,117 +571,117 @@ const ParentAttendanceManagement = () => {
           </div>
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div className="bg-green-500 p-6 rounded-2xl text-white">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-6 md:mb-8">
+            <div className="bg-green-500 p-4 md:p-6 rounded-xl md:rounded-2xl text-white">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-white/80 text-sm font-medium mb-1">
+                <div className="flex-1 min-w-0">
+                  <p className="text-white/80 text-xs md:text-sm font-medium mb-1">
                     Present Days
                   </p>
-                  <p className="text-3xl font-bold">
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold mb-1">
                     {currentChild.stats.attendance.value}
                   </p>
-                  <p className="text-white/80 text-xs mt-1">
+                  <p className="text-white/80 text-xs">
                     22 days classes attended
                   </p>
                 </div>
-                <div className="bg-white/20 p-3 rounded-xl">
-                  <span className="text-2xl">📅</span>
+                <div className="bg-white/20 p-2 md:p-3 rounded-lg md:rounded-xl flex-shrink-0 ml-3">
+                  <span className="text-lg md:text-2xl">📅</span>
                 </div>
               </div>
             </div>
 
-            <div className="bg-blue-500 p-6 rounded-2xl text-white">
+            <div className="bg-blue-500 p-4 md:p-6 rounded-xl md:rounded-2xl text-white">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-white/80 text-sm font-medium mb-1">
+                <div className="flex-1 min-w-0">
+                  <p className="text-white/80 text-xs md:text-sm font-medium mb-1">
                     Total Days
                   </p>
-                  <p className="text-3xl font-bold">
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold mb-1">
                     {currentChild.stats.totalAttendance.value}
                   </p>
-                  <p className="text-white/80 text-xs mt-1">
+                  <p className="text-white/80 text-xs">
                     25 days class periods
                   </p>
                 </div>
-                <div className="bg-white/20 p-3 rounded-xl">
-                  <span className="text-2xl">📊</span>
+                <div className="bg-white/20 p-2 md:p-3 rounded-lg md:rounded-xl flex-shrink-0 ml-3">
+                  <span className="text-lg md:text-2xl">📊</span>
                 </div>
               </div>
             </div>
 
-            <div className="bg-purple-500 p-6 rounded-2xl text-white">
+            <div className="bg-purple-500 p-4 md:p-6 rounded-xl md:rounded-2xl text-white">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-white/80 text-sm font-medium mb-1">
+                <div className="flex-1 min-w-0">
+                  <p className="text-white/80 text-xs md:text-sm font-medium mb-1">
                     Study Hours
                   </p>
-                  <p className="text-3xl font-bold">
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold mb-1">
                     {currentChild.stats.totalStudyTime.value}
                   </p>
-                  <p className="text-white/80 text-xs mt-1">
+                  <p className="text-white/80 text-xs">
                     5h total study time per week
                   </p>
                 </div>
-                <div className="bg-white/20 p-3 rounded-xl">
-                  <span className="text-2xl">⏰</span>
+                <div className="bg-white/20 p-2 md:p-3 rounded-lg md:rounded-xl flex-shrink-0 ml-3">
+                  <span className="text-lg md:text-2xl">⏰</span>
                 </div>
               </div>
             </div>
 
-            <div className="bg-orange-500 p-6 rounded-2xl text-white">
+            <div className="bg-orange-500 p-4 md:p-6 rounded-xl md:rounded-2xl text-white">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-white/80 text-sm font-medium mb-1">
+                <div className="flex-1 min-w-0">
+                  <p className="text-white/80 text-xs md:text-sm font-medium mb-1">
                     Next Class
                   </p>
-                  <p className="text-3xl font-bold">
+                  <p className="text-xl md:text-2xl lg:text-3xl font-bold mb-1">
                     {currentChild.stats.nextClass.value}
                   </p>
-                  <p className="text-white/80 text-xs mt-1">
+                  <p className="text-white/80 text-xs">
                     Next class at 9:00 AM
                   </p>
                 </div>
-                <div className="bg-white/20 p-3 rounded-xl">
-                  <span className="text-2xl">🕘</span>
+                <div className="bg-white/20 p-2 md:p-3 rounded-lg md:rounded-xl flex-shrink-0 ml-3">
+                  <span className="text-lg md:text-2xl">🕘</span>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Attendance Calendar */}
-          <div className={`p-6 rounded-2xl border mb-8 ${
+          <div className={`p-4 md:p-6 rounded-xl md:rounded-2xl border mb-6 md:mb-8 ${
             isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'
           }`}>
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 md:mb-6 gap-3 sm:gap-0">
+              <div className="flex-1 min-w-0">
+                <h2 className={`text-lg md:text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Attendance Calendar
                 </h2>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                <p className={`text-xs md:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   Track daily attendance records
                 </p>
               </div>
-              <div className="text-right">
-                <div className="text-2xl font-bold text-blue-500">
+              <div className="text-left sm:text-right">
+                <div className="text-xl md:text-2xl font-bold text-blue-500">
                   78%
                 </div>
-                <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                <div className={`text-xs md:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   Average Rate
                 </div>
               </div>
             </div>
 
             {/* Calendar Navigation */}
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-4 md:mb-6">
               <button
                 onClick={() => navigateMonth('prev')}
                 className={`p-2 rounded-lg hover:bg-gray-100 ${isDarkMode ? 'hover:bg-slate-700 text-gray-300' : 'text-gray-600'}`}
               >
-                <ChevronLeft className="w-5 h-5" />
+                <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
               </button>
               
-              <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h3 className={`text-base md:text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 {monthNames[currentMonth]} {currentYear}
               </h3>
               
@@ -750,14 +689,14 @@ const ParentAttendanceManagement = () => {
                 onClick={() => navigateMonth('next')}
                 className={`p-2 rounded-lg hover:bg-gray-100 ${isDarkMode ? 'hover:bg-slate-700 text-gray-300' : 'text-gray-600'}`}
               >
-                <ChevronRight className="w-5 h-5" />
+                <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
               </button>
             </div>
 
             {/* Calendar Grid */}
-            <div className="grid grid-cols-7 gap-1 mb-4">
+            <div className="grid grid-cols-7 gap-1 mb-3 md:mb-4">
               {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-                <div key={day} className={`p-3 text-center font-medium text-sm ${
+                <div key={day} className={`p-2 text-center font-medium text-xs md:text-sm ${
                   isDarkMode ? 'text-gray-400' : 'text-gray-600'
                 }`}>
                   {day}
@@ -765,59 +704,59 @@ const ParentAttendanceManagement = () => {
               ))}
             </div>
             
-            <div className="grid grid-cols-7 gap-1 mb-6">
+            <div className="grid grid-cols-7 gap-1 mb-4 md:mb-6">
               {renderCalendar()}
             </div>
 
             {/* Legend */}
-            <div className="flex items-center justify-center gap-6 text-sm">
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 bg-green-500 rounded-full"></div>
+            <div className="flex flex-wrap items-center justify-center gap-3 md:gap-6 text-xs">
+              <div className="flex items-center gap-1 md:gap-2">
+                <div className="w-3 h-3 md:w-4 md:h-4 bg-green-500 rounded-full"></div>
                 <span className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>Present (14)</span>
               </div>
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 bg-red-500 rounded-full"></div>
+              <div className="flex items-center gap-1 md:gap-2">
+                <div className="w-3 h-3 md:w-4 md:h-4 bg-red-500 rounded-full"></div>
                 <span className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>Absent (2)</span>
               </div>
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 bg-yellow-500 rounded-full"></div>
+              <div className="flex items-center gap-1 md:gap-2">
+                <div className="w-3 h-3 md:w-4 md:h-4 bg-yellow-500 rounded-full"></div>
                 <span className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>Late (2)</span>
               </div>
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 bg-blue-500 rounded-full"></div>
+              <div className="flex items-center gap-1 md:gap-2">
+                <div className="w-3 h-3 md:w-4 md:h-4 bg-blue-500 rounded-full"></div>
                 <span className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>Holiday</span>
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-8">
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 md:gap-6 lg:gap-8 mb-6 md:mb-8">
             {/* Performance Trends */}
-            <div className={`p-6 rounded-2xl border ${
+            <div className={`p-4 md:p-6 rounded-xl md:rounded-2xl border ${
               isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'
             }`}>
-              <h2 className={`text-xl font-semibold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h2 className={`text-lg md:text-xl font-semibold mb-4 md:mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Performance Trends
               </h2>
               
-              <div className="space-y-4">
-                <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-slate-700' : 'bg-gray-50'}`}>
+              <div className="space-y-3 md:space-y-4">
+                <div className={`p-3 md:p-4 rounded-lg ${isDarkMode ? 'bg-slate-700' : 'bg-gray-50'}`}>
                   <div className="flex items-center justify-between mb-2">
-                    <span className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    <span className={`font-medium text-sm md:text-base ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                       Overall Trend
                     </span>
-                    <span className="text-green-500 text-sm font-medium">↗ Improving</span>
+                    <span className="text-green-500 text-xs md:text-sm font-medium">↗ Improving</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
                     <div className="bg-green-500 h-2 rounded-full" style={{ width: '78%' }}></div>
                   </div>
                 </div>
 
-                <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-slate-700' : 'bg-gray-50'}`}>
+                <div className={`p-3 md:p-4 rounded-lg ${isDarkMode ? 'bg-slate-700' : 'bg-gray-50'}`}>
                   <div className="flex items-center justify-between mb-2">
-                    <span className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    <span className={`font-medium text-sm md:text-base ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                       Attendance Trends
                     </span>
-                    <span className="text-blue-500 text-sm font-medium">94%</span>
+                    <span className="text-blue-500 text-xs md:text-sm font-medium">94%</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
                     <div className="bg-blue-500 h-2 rounded-full" style={{ width: '94%' }}></div>
@@ -827,31 +766,31 @@ const ParentAttendanceManagement = () => {
             </div>
 
             {/* Subject-wise Analysis */}
-            <div className={`p-6 rounded-2xl border ${
+            <div className={`p-4 md:p-6 rounded-xl md:rounded-2xl border ${
               isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'
             }`}>
-              <h2 className={`text-xl font-semibold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h2 className={`text-lg md:text-xl font-semibold mb-4 md:mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Subject-wise Analysis
               </h2>
               
-              <div className="space-y-4">
+              <div className="space-y-3 md:space-y-4">
                 {currentChild.subjects.map((subject, index) => (
-                  <div key={index} className={`p-4 rounded-lg border ${
+                  <div key={index} className={`p-3 md:p-4 rounded-lg border ${
                     isDarkMode ? 'border-slate-600 bg-slate-700' : 'border-gray-200 bg-gray-50'
                   }`}>
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${subject.color}`}>
+                    <div className="flex items-center gap-2 md:gap-3 mb-2">
+                      <div className={`w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center text-xs md:text-sm font-bold ${subject.color}`}>
                         {subject.icon}
                       </div>
-                      <div className="flex-1">
-                        <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <div className="flex-1 min-w-0">
+                        <h4 className={`font-medium text-sm md:text-base ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                           {subject.name}
                         </h4>
-                        <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                        <p className={`text-xs md:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                           {subject.attendance}% Attendance
                         </p>
                       </div>
-                      <span className="text-sm font-medium text-blue-500">
+                      <span className="text-xs md:text-sm font-medium text-blue-500">
                         A+
                       </span>
                     </div>
@@ -867,27 +806,27 @@ const ParentAttendanceManagement = () => {
             </div>
 
             {/* Grade Distribution */}
-            <div className={`p-6 rounded-2xl border ${
+            <div className={`p-4 md:p-6 rounded-xl md:rounded-2xl border ${
               isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'
             }`}>
-              <h2 className={`text-xl font-semibold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h2 className={`text-lg md:text-xl font-semibold mb-4 md:mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Grade Distribution
               </h2>
               
-              <div className="space-y-4">
+              <div className="space-y-3 md:space-y-4">
                 {currentChild.gradeDistribution.map((grade, index) => (
                   <div key={index} className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 md:gap-3">
                       <div 
-                        className="w-4 h-4 rounded-full"
+                        className="w-3 h-3 rounded-full"
                         style={{ backgroundColor: grade.color }}
                       ></div>
-                      <span className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <span className={`font-medium text-xs md:text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                         Grade {grade.grade}
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <div className="w-16 bg-gray-200 rounded-full h-2">
+                      <div className="w-12 md:w-16 bg-gray-200 rounded-full h-2">
                         <div 
                           className="h-2 rounded-full"
                           style={{ 
@@ -896,16 +835,16 @@ const ParentAttendanceManagement = () => {
                           }}
                         ></div>
                       </div>
-                      <span className={`text-sm font-medium w-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                      <span className={`text-xs md:text-sm font-medium w-4 md:w-6 text-right ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                         {grade.count}
                       </span>
                     </div>
                   </div>
                 ))}
                 
-                <div className="mt-6 text-center">
-                  <div className="text-2xl font-bold text-blue-500">105</div>
-                  <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                <div className="mt-4 md:mt-6 text-center">
+                  <div className="text-xl md:text-2xl font-bold text-blue-500">105</div>
+                  <div className={`text-xs md:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                     Total Grades
                   </div>
                 </div>
@@ -914,40 +853,40 @@ const ParentAttendanceManagement = () => {
           </div>
 
           {/* Progress Reports & Feedback */}
-          <div className={`p-6 rounded-2xl border ${
+          <div className={`p-4 md:p-6 rounded-xl md:rounded-2xl border ${
             isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'
           }`}>
-            <div className="flex items-center justify-between mb-6">
-              <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            <div className="flex items-center justify-between mb-4 md:mb-6">
+              <h2 className={`text-lg md:text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Progress Reports & Feedback
               </h2>
             </div>
             
-            <div className="space-y-4">
+            <div className="space-y-3 md:space-y-4">
               {currentChild.progressReports.map((report) => (
-                <div key={report.id} className={`p-4 rounded-lg border ${
+                <div key={report.id} className={`p-3 md:p-4 rounded-lg border ${
                   isDarkMode ? 'border-slate-600 bg-slate-700' : 'border-gray-200 bg-gray-50'
                 }`}>
-                  <div className="flex items-start justify-between mb-3">
-                    <div>
-                      <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between mb-2 md:mb-3 gap-2 sm:gap-0">
+                    <div className="flex-1 min-w-0">
+                      <h4 className={`font-medium text-sm md:text-base ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                         {report.title}
                       </h4>
-                      <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      <p className={`text-xs md:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                         Teacher's Comment
                       </p>
                     </div>
-                    <div className="text-right">
-                      <div className="text-sm font-medium text-blue-500">{report.date}</div>
+                    <div className="text-left sm:text-right">
+                      <div className="text-xs md:text-sm font-medium text-blue-500">{report.date}</div>
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${report.statusColor}`}>
                         {report.status}
                       </span>
                     </div>
                   </div>
-                  <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                  <p className={`text-xs md:text-sm mb-2 md:mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                     {report.comments}
                   </p>
-                  <div className="mt-3 flex items-center justify-between">
+                  <div className="flex items-center justify-between">
                     <span className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
                       By: {report.teacher}
                     </span>

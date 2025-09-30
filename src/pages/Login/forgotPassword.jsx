@@ -1,21 +1,20 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Sun, Moon, ArrowLeft, Mail, Send } from 'lucide-react';
-import { useTheme } from '../../context/ThemeContext'; // Add this import
+import { useTheme } from '../../context/ThemeContext';
 import logoDark from '../../assets/images/LogoforDark.png';
 import logoLight from '../../assets/images/LogoforLight.png';
 
 const ForgotPasswordPage = () => {
   const navigate = useNavigate();
-
-  const { isDarkMode, toggleTheme } = useTheme(); // Use theme context
+  const { isDarkMode, toggleTheme } = useTheme();
   const [formData, setFormData] = useState({
     email: ''
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [loadingType, setLoadingType] = useState(null); // 'otp' or 'link'
-  const [step, setStep] = useState(1); // 1: Email input, 2: OTP sent, 3: Reset link sent
+  const [loadingType, setLoadingType] = useState(null);
+  const [step, setStep] = useState(1);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -57,7 +56,6 @@ const ForgotPasswordPage = () => {
     setIsLoading(true);
     setLoadingType('otp');
 
-    // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1500));
 
     console.log('Send OTP to:', formData.email);
@@ -75,7 +73,6 @@ const ForgotPasswordPage = () => {
     setIsLoading(true);
     setLoadingType('link');
 
-    // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1500));
 
     console.log('Send Reset Link to:', formData.email);
@@ -87,11 +84,6 @@ const ForgotPasswordPage = () => {
   const handleBackToLogin = () => {
     navigate('/login');
   };
-  
-
-//   const toggleTheme = () => {
-//     setIsDarkMode(!isDarkMode);
-//   };
 
   const resetToStep1 = () => {
     setStep(1);
@@ -100,15 +92,14 @@ const ForgotPasswordPage = () => {
   };
 
   return (
-    <div className={`fixed inset-0 w-screen h-screen overflow-hidden font-sans ${isDarkMode
+    <div className={`min-h-screen w-full font-sans overflow-x-hidden ${isDarkMode
         ? 'bg-gradient-to-b from-gray-900 via-gray-900 to-black'
         : 'bg-gradient-to-br from-blue-50 via-white to-cyan-50'
       }`}>
 
-      {/* Animated Stars Background - Only in Dark Mode */}
       {isDarkMode && (
         <div
-          className="absolute inset-0 opacity-60"
+          className="absolute inset-0 opacity-60 pointer-events-none"
           style={{
             background: `
               radial-gradient(2px 2px at 20px 30px, white, transparent),
@@ -133,100 +124,93 @@ const ForgotPasswordPage = () => {
         ></div>
       )}
 
-      {/* Back to Login Button */}
-      <div className="absolute top-5 left-5 z-50">
+      <div className="fixed top-4 left-4 z-50">
         <button
           onClick={handleBackToLogin}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 ${
+          className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg transition-all duration-300 ${
             isDarkMode
               ? 'text-white/80 hover:text-white hover:bg-white/10'
               : 'text-gray-700 hover:text-gray-900 hover:bg-black/10'
           }`}
           title="Back to Login"
         >
-          <ArrowLeft size={20} />
-          <span className="text-sm font-medium">Back to Login</span>
+          <ArrowLeft size={18} />
+          <span className="text-xs sm:text-sm font-medium">Back to Login</span>
         </button>
       </div>
 
-      {/* Theme Toggle Switch */}
-      <div className="absolute top-5 right-5 z-50">
+      <div className="fixed top-4 right-4 z-50">
         <button
           onClick={toggleTheme}
-          className={`relative w-20 h-10 rounded-full border-0 cursor-pointer transition-all duration-500 ease-in-out ${isDarkMode
+          className={`relative w-16 h-8 rounded-full border-0 cursor-pointer transition-all duration-500 ease-in-out ${isDarkMode
               ? 'bg-white'
               : 'bg-black'
             }`}
           title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
         >
-          <div className={`absolute left-2.5 top-1/2 transform -translate-y-1/2 transition-all duration-300`}>
+          <div className={`absolute left-2 top-1/2 transform -translate-y-1/2 transition-all duration-300`}>
             <Sun
               className={isDarkMode ? 'text-gray-400' : 'text-orange-500'}
-              size={18}
+              size={14}
             />
           </div>
 
-          <div className={`absolute right-2.5 top-1/2 transform -translate-y-1/2 transition-all duration-300`}>
+          <div className={`absolute right-2 top-1/2 transform -translate-y-1/2 transition-all duration-300`}>
             <Moon
               className={isDarkMode ? 'text-blue-300' : 'text-white'}
-              size={18}
+              size={14}
             />
           </div>
 
-          <div className={`absolute top-1 w-8 h-8 rounded-full transition-all duration-500 ease-in-out shadow-md ${isDarkMode
-              ? 'transform translate-x-11 bg-black'
+          <div className={`absolute top-1 w-6 h-6 rounded-full transition-all duration-500 ease-in-out shadow-md ${isDarkMode
+              ? 'transform translate-x-8 bg-black'
               : 'transform translate-x-1 bg-white'
             }`}>
             <div className="absolute inset-0 flex items-center justify-center">
               {isDarkMode ? (
-                <Moon className="text-white" size={14.5} />
+                <Moon className="text-white" size={12} />
               ) : (
-                <Sun className="text-orange-400" size={14.5} />
+                <Sun className="text-orange-400" size={12} />
               )}
             </div>
           </div>
         </button>
       </div>
 
-      {/* Main Content */}
-      <div className="flex w-full h-full items-center justify-center relative z-10">
-        <div className={`w-full max-w-md mx-4 rounded-3xl p-10 backdrop-blur-3xl shadow-2xl ${
+      <div className="flex w-full min-h-screen items-center justify-center relative z-10 px-4 py-20">
+        <div className={`w-full max-w-md rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 backdrop-blur-3xl shadow-2xl ${
           isDarkMode
             ? 'bg-black/40 border border-white/10'
             : 'bg-white/80 border border-black/10'
         }`}>
           
-          {/* Logo */}
-          <div className="flex items-center justify-center mb-0 gap-3 w-100">
-              <img src={isDarkMode ? logoDark : logoLight} alt="GuruSkull Logo" className='w-80'></img>
+          <div className="flex items-center justify-center mb-4 sm:mb-6 gap-3 w-full">
+            <img src={isDarkMode ? logoDark : logoLight} alt="GuruSkull Logo" className='w-48 sm:w-64 md:w-80'/>
           </div>
 
-          {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className={`text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <div className="text-center mb-6 sm:mb-8">
+            <h1 className={`text-2xl sm:text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               Forgot Password
             </h1>
             {step === 1 && (
-              <p className={`text-sm mt-2 ${isDarkMode ? 'text-white/70' : 'text-gray-600'}`}>
+              <p className={`text-xs sm:text-sm mt-2 ${isDarkMode ? 'text-white/70' : 'text-gray-600'}`}>
                 Enter your email address to reset your password
               </p>
             )}
             {step === 2 && (
-              <p className={`text-sm mt-2 ${isDarkMode ? 'text-green-400' : 'text-green-600'}`}>
+              <p className={`text-xs sm:text-sm mt-2 ${isDarkMode ? 'text-green-400' : 'text-green-600'}`}>
                 OTP sent successfully to {formData.email}
               </p>
             )}
             {step === 3 && (
-              <p className={`text-sm mt-2 ${isDarkMode ? 'text-green-400' : 'text-green-600'}`}>
+              <p className={`text-xs sm:text-sm mt-2 ${isDarkMode ? 'text-green-400' : 'text-green-600'}`}>
                 Reset link sent successfully to {formData.email}
               </p>
             )}
           </div>
 
-          {/* Form */}
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-4 sm:gap-5">
             
-            {/* Email Input */}
             <div className="relative">
               <input
                 type="email"
@@ -234,7 +218,7 @@ const ForgotPasswordPage = () => {
                 value={formData.email}
                 onChange={handleInputChange}
                 disabled={step > 1}
-                className={`w-full pl-12 pr-5 py-4 rounded-xl text-base transition-all duration-300 outline-none backdrop-blur-md ${
+                className={`w-full pl-10 sm:pl-12 pr-4 sm:pr-5 py-3 sm:py-4 rounded-xl text-sm sm:text-base transition-all duration-300 outline-none backdrop-blur-md ${
                   errors.email
                     ? 'border border-red-400 bg-red-50/10'
                     : isDarkMode
@@ -243,43 +227,40 @@ const ForgotPasswordPage = () => {
                 } ${step > 1 ? 'opacity-60' : ''}`}
                 placeholder="Email"
               />
-              <Mail className={`absolute left-4 top-1/2 transform -translate-y-1/2 ${
+              <Mail className={`absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 ${
                 isDarkMode ? 'text-white/50' : 'text-black/50'
-              }`} size={20} />
+              }`} size={18} />
             </div>
             {errors.email && (
-              <p className="text-red-400 text-sm -mt-3">
+              <p className="text-red-400 text-xs sm:text-sm -mt-2">
                 {errors.email}
               </p>
             )}
 
-            {/* Action Buttons based on step */}
             {step === 1 && (
-              <div className="flex flex-col gap-3">
-                {/* Send OTP Button */}
+              <div className="flex flex-col gap-2 sm:gap-3">
                 <button
                   onClick={handleSendOTP}
                   disabled={isLoading}
-                  className="w-full bg-gradient-to-r from-cyan-500 to-cyan-600 text-white py-4 rounded-xl font-semibold text-base transition-all duration-300 flex items-center justify-center gap-2 hover:from-cyan-600 hover:to-cyan-700 hover:shadow-lg hover:shadow-cyan-500/25 disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="w-full bg-gradient-to-r from-cyan-500 to-cyan-600 text-white py-3 sm:py-4 rounded-xl font-semibold text-sm sm:text-base transition-all duration-300 flex items-center justify-center gap-2 hover:from-cyan-600 hover:to-cyan-700 hover:shadow-lg hover:shadow-cyan-500/25 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {isLoading && loadingType === 'otp' ? (
                     <>
-                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                       Sending OTP...
                     </>
                   ) : (
                     <>
-                      <Send size={18} />
+                      <Send size={16} />
                       Send OTP to Email
                     </>
                   )}
                 </button>
 
-                {/* Send Reset Link Button */}
                 <button
                   onClick={handleSendResetLink}
                   disabled={isLoading}
-                  className={`w-full py-4 rounded-xl font-semibold text-base transition-all duration-300 flex items-center justify-center gap-2 border ${
+                  className={`w-full py-3 sm:py-4 rounded-xl font-semibold text-sm sm:text-base transition-all duration-300 flex items-center justify-center gap-2 border ${
                     isDarkMode
                       ? 'border-white/20 text-white/80 hover:bg-white/10'
                       : 'border-black/20 text-gray-700 hover:bg-black/10'
@@ -287,14 +268,14 @@ const ForgotPasswordPage = () => {
                 >
                   {isLoading && loadingType === 'link' ? (
                     <>
-                      <div className={`w-5 h-5 border-2 rounded-full animate-spin ${
+                      <div className={`w-4 h-4 sm:w-5 sm:h-5 border-2 rounded-full animate-spin ${
                         isDarkMode ? 'border-white/30 border-t-white' : 'border-gray-400 border-t-gray-700'
                       }`}></div>
                       Sending Link...
                     </>
                   ) : (
                     <>
-                      <Mail size={18} />
+                      <Mail size={16} />
                       Send Reset Link to Email
                     </>
                   )}
@@ -302,17 +283,16 @@ const ForgotPasswordPage = () => {
               </div>
             )}
 
-            {/* Success States */}
             {(step === 2 || step === 3) && (
               <div className="text-center">
-                <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 ${
+                <div className={`inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 rounded-full mb-3 sm:mb-4 ${
                   isDarkMode ? 'bg-green-500/20' : 'bg-green-100'
                 }`}>
-                  <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6 sm:w-8 sm:h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                   </svg>
                 </div>
-                <p className={`text-base mb-6 ${isDarkMode ? 'text-white/80' : 'text-gray-700'}`}>
+                <p className={`text-sm sm:text-base mb-4 sm:mb-6 ${isDarkMode ? 'text-white/80' : 'text-gray-700'}`}>
                   {step === 2 
                     ? 'Please check your email for the OTP code.'
                     : 'Please check your email for the password reset link.'
@@ -320,7 +300,7 @@ const ForgotPasswordPage = () => {
                 </p>
                 <button
                   onClick={resetToStep1}
-                  className={`text-cyan-500 hover:text-cyan-600 font-medium text-sm transition-colors duration-300`}
+                  className={`text-cyan-500 hover:text-cyan-600 font-medium text-xs sm:text-sm transition-colors duration-300`}
                 >
                   Try with different email
                 </button>

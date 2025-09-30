@@ -30,6 +30,7 @@ const StudentDashboard = () => {
   const { isDarkMode } = useTheme();
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const navigate = useNavigate();
+  
   const toggleSidebar = () => {
     setIsSidebarExpanded(!isSidebarExpanded);
   };
@@ -115,39 +116,21 @@ const StudentDashboard = () => {
     },
     {
       id: 2,
-      title: 'Physics Lab Session - Tomorrow',
-      subject: 'Physics',
-      description: 'Physics lab session scheduled for tomorrow at 2:00 PM. Please bring your lab manual and safety goggles.',
-      timeAgo: '09:30 AM',
-      type: 'Medium',
-      tag: 'Physics'
+      title: 'Mathematics Test Rescheduled',
+      subject: 'Mathematics',
+      description: 'The weekly mathematics test has been rescheduled to next Monday.',
+      timeAgo: 'Yesterday',
+      type: 'Important',
+      tag: 'Math'
     },
     {
       id: 3,
-      title: 'Physics Lab Session - Tomorrow',
-      subject: 'Physics',
-      description: 'Physics lab session scheduled for tomorrow at 2:00 PM. Please bring your lab manual and safety goggles.',
-      timeAgo: '09:30 AM',
-      type: 'Medium',
-      tag: 'Physics'
-    },
-    {
-      id: 4,
-      title: 'Physics Lab Session - Tomorrow',
-      subject: 'Physics',
-      description: 'Physics lab session scheduled for tomorrow at 2:00 PM. Please bring your lab manual and safety goggles.',
-      timeAgo: '09:30 AM',
-      type: 'Medium',
-      tag: 'Physics'
-    },
-    {
-      id: 5,
-      title: 'Physics Lab Session - Tomorrow',
-      subject: 'Physics',
-      description: 'Physics lab session scheduled for tomorrow at 2:00 PM. Please bring your lab manual and safety goggles.',
-      timeAgo: '09:30 AM',
-      type: 'Medium',
-      tag: 'Physics'
+      title: 'Holiday Announcement',
+      subject: 'General',
+      description: 'Institute will remain closed next Friday for maintenance work.',
+      timeAgo: '2 days ago',
+      type: 'Information',
+      tag: 'General'
     }
   ];
 
@@ -226,65 +209,65 @@ const StudentDashboard = () => {
 
       <Sidebar isExpanded={isSidebarExpanded} activeItem="dashboard" />
 
-      <main className={`transition-all duration-300 pt-20 pb-16 min-h-screen ${
-        isSidebarExpanded ? 'ml-64' : 'ml-16'
-      }`}>
-        <div className="w-full h-full px-6 py-6">
+      <main className={`transition-all duration-300 ${
+        isSidebarExpanded ? 'ml-0 md:ml-48 lg:ml-64' : 'ml-0 md:ml-16'
+      } pt-16 md:pt-20 pb-12 md:pb-16 min-h-screen overflow-x-hidden`}>
+        <div className="w-full h-full px-3 sm:px-4 md:px-6 py-4 md:py-6">
             
           {/* Header */}
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 md:mb-6 lg:mb-8 gap-3 sm:gap-0">
             <div className="text-left">
-              <h1 className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h1 className={`text-xl sm:text-2xl md:text-3xl font-bold mb-1 md:mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Dashboard
               </h1>
-              <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
+              <p className={`text-sm md:text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
                 Welcome Back, Steve Rogers
               </p>
             </div>
-            <div className="text-right">
-              <div className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            <div className="text-left sm:text-right">
+              <div className={`text-base sm:text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Class 12 - Science
               </div>
-              <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <div className={`text-xs sm:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Student ID: ST2024001
               </div>
             </div>
           </div>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-6 md:mb-8">
             {stats.map((stat, index) => {
               const Icon = stat.icon;
               const colorClasses = getColorClasses(stat.color);
               return (
                 <div
                   key={index}
-                  className={`p-6 rounded-2xl border ${
+                  className={`p-4 md:p-6 rounded-xl md:rounded-2xl border ${
                     isDarkMode 
                       ? 'bg-slate-800 border-slate-700' 
                       : 'bg-white border-gray-300 shadow-sm'
                   }`}
                 >
-                  <div className="flex justify-between items-start mb-4">
+                  <div className="flex justify-between items-start mb-3 md:mb-4">
                     <div className="text-left">
-                      <h3 className={`text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      <h3 className={`text-xs md:text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                         {stat.title}
                       </h3>
-                      <p className={`text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <p className={`text-xl md:text-2xl lg:text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                         {stat.value}
                       </p>
                     </div>
-                    <div className={`p-3 rounded-xl ${colorClasses.iconBg}`}>
-                      <Icon className={`w-6 h-6 ${colorClasses.iconColor}`} />
+                    <div className={`p-2 md:p-3 rounded-lg md:rounded-xl ${colorClasses.iconBg}`}>
+                      <Icon className={`w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 ${colorClasses.iconColor}`} />
                     </div>
                   </div>
                   
-                  <div className={`flex items-center gap-1 text-sm ${
+                  <div className={`flex items-center gap-1 text-xs md:text-sm ${
                     stat.trend === 'up' 
                       ? 'text-green-600' 
                       : 'text-red-600'
                   }`}>
-                    {stat.trend === 'up' ? <ArrowUp size={16} /> : <ArrowDown size={16} />}
+                    {stat.trend === 'up' ? <ArrowUp size={12} className="md:w-4 md:h-4" /> : <ArrowDown size={12} className="md:w-4 md:h-4" />}
                     <span className="font-medium">{stat.change}</span>
                     <span className={`ml-1 ${isDarkMode ? 'text-gray-500' : 'text-gray-600'}`}>
                       {stat.period}
@@ -295,30 +278,30 @@ const StudentDashboard = () => {
             })}
           </div>
 
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
             
             {/* Recent Announcements */}
-            <div className={`p-6 rounded-2xl border ${
+            <div className={`p-4 md:p-6 rounded-xl md:rounded-2xl border ${
               isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
             }`}>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className={`text-xl font-semibold text-left ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <div className="flex items-center justify-between mb-4 md:mb-6">
+                <h2 className={`text-lg md:text-xl font-semibold text-left ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Recent Announcement
                 </h2>
-                <button className="text-blue-500 text-sm font-medium hover:text-blue-600 transition-colors"
+                <button className="text-blue-500 text-xs md:text-sm font-medium hover:text-blue-600 transition-colors"
                 onClick={() => navigate('/TeacherAnnouncements')}>
                   View All
                 </button>
               </div>
               
-              <div className="space-y-4 max-h-96 overflow-y-auto">
+              <div className="space-y-3 md:space-y-4 max-h-80 md:max-h-96 overflow-y-auto">
                 {recentAnnouncements.map((announcement, index) => (
-                  <div key={announcement.id} className={`p-4 rounded-lg border ${
+                  <div key={announcement.id} className={`p-3 md:p-4 rounded-lg border ${
                     isDarkMode ? 'border-slate-600 bg-slate-700' : 'border-gray-200 bg-gray-50'
                   }`}>
                     <div className="flex items-start justify-between mb-2">
                       <div className="text-left">
-                        <h4 className={`font-semibold text-sm mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                        <h4 className={`font-semibold text-xs md:text-sm mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                           {announcement.title}
                         </h4>
                         <span className={`px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-700`}>
@@ -330,7 +313,7 @@ const StudentDashboard = () => {
                       </span>
                     </div>
                     
-                    <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                    <p className={`text-xs md:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                       {announcement.description}
                     </p>
                   </div>
@@ -339,26 +322,26 @@ const StudentDashboard = () => {
             </div>
 
             {/* Today's Classes */}
-            <div className={`p-6 rounded-2xl border ${
+            <div className={`p-4 md:p-6 rounded-xl md:rounded-2xl border ${
               isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
             }`}>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className={`text-xl font-semibold text-left ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <div className="flex items-center justify-between mb-4 md:mb-6">
+                <h2 className={`text-lg md:text-xl font-semibold text-left ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Today's Classes
                 </h2>
               </div>
               
-              <div className="space-y-4">
+              <div className="space-y-3 md:space-y-4">
                 {todaysClasses.map((classItem, index) => (
-                  <div key={classItem.id} className={`p-4 rounded-lg border ${
+                  <div key={classItem.id} className={`p-3 md:p-4 rounded-lg border ${
                     isDarkMode ? 'border-slate-600 bg-slate-700' : 'border-gray-200 bg-gray-50'
                   }`}>
                     <div className="flex items-start justify-between mb-2">
                       <div className="text-left">
-                        <h4 className={`font-semibold text-sm mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                        <h4 className={`font-semibold text-xs md:text-sm mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                           {classItem.subject}
                         </h4>
-                        <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                        <p className={`text-xs md:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                           {classItem.teacher}
                         </p>
                       </div>
@@ -367,9 +350,9 @@ const StudentDashboard = () => {
                       </span>
                     </div>
                     
-                    <div className="flex items-center gap-4 text-sm">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs md:text-sm">
                       <span className={`flex items-center gap-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        <Clock size={12} />
+                        <Clock size={12} className="md:w-4 md:h-4" />
                         {classItem.time}
                       </span>
                       <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -383,22 +366,22 @@ const StudentDashboard = () => {
           </div>
 
           {/* Pending Assignments */}
-          <div className={`mt-8 p-6 rounded-2xl border ${
+          <div className={`mt-6 md:mt-8 p-4 md:p-6 rounded-xl md:rounded-2xl border ${
             isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
           }`}>
-            <div className="flex items-center justify-between mb-6">
-              <h2 className={`text-xl font-semibold text-left ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            <div className="flex items-center justify-between mb-4 md:mb-6">
+              <h2 className={`text-lg md:text-xl font-semibold text-left ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Pending Assignments
               </h2>
-              <button className="text-blue-500 text-sm font-medium hover:text-blue-600 transition-colors"
+              <button className="text-blue-500 text-xs md:text-sm font-medium hover:text-blue-600 transition-colors"
               onClick={() => navigate('/StudentAssignments')}>
                 View All
               </button>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
               {pendingAssignments.map((assignment, index) => (
-                <div key={assignment.id} className={`p-4 rounded-lg border-l-4 ${getAssignmentStatusColor(assignment.color)} ${
+                <div key={assignment.id} className={`p-3 md:p-4 rounded-lg border-l-4 ${getAssignmentStatusColor(assignment.color)} ${
                   isDarkMode ? 'bg-slate-700 border-slate-600' : 'bg-gray-50 border-gray-200'
                 }`}>
                   <div className="flex items-center gap-2 mb-2">
@@ -406,12 +389,12 @@ const StudentDashboard = () => {
                       assignment.color === 'red' ? 'bg-red-500' : 
                       assignment.color === 'yellow' ? 'bg-yellow-500' : 'bg-green-500'
                     }`}></div>
-                    <h4 className={`font-semibold text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    <h4 className={`font-semibold text-xs md:text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                       {assignment.title}
                     </h4>
                   </div>
                   
-                  <p className={`text-sm mb-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  <p className={`text-xs md:text-sm mb-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                     {assignment.subject}
                   </p>
                   

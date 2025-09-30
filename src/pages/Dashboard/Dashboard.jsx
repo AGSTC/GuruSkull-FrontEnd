@@ -140,7 +140,6 @@ const Dashboard = () => {
     }
   ];
 
-  // Extended list of activities for demonstration
   const allActivities = [
     {
       id: 1,
@@ -283,38 +282,37 @@ const Dashboard = () => {
     activity.user.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Handle Quick Action navigation
   const handleQuickAction = (route) => {
     navigate(route);
   };
 
   const ActivityItem = ({ activity, showConnector = false, isLast = false }) => (
-    <div className="flex items-start gap-4">
+    <div className="flex items-start gap-3 md:gap-4">
       <div className="relative">
-        <div className={`w-10 h-10 rounded-full flex items-center justify-center ${activity.iconBg}`}>
-          <div className={`w-5 h-5 rounded-full ${activity.iconColor.replace('text-', 'bg-')}`} />
+        <div className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center ${activity.iconBg}`}>
+          <div className={`w-4 h-4 md:w-5 md:h-5 rounded-full ${activity.iconColor.replace('text-', 'bg-')}`} />
         </div>
         {showConnector && !isLast && (
-          <div className={`absolute left-1/2 top-10 w-px h-6 -translate-x-1/2 ${
+          <div className={`absolute left-1/2 top-8 md:top-10 w-px h-4 md:h-6 -translate-x-1/2 ${
             isDarkMode ? 'bg-slate-600' : 'bg-gray-300'
           }`} />
         )}
       </div>
       
       <div className="flex-1 min-w-0 text-left">
-        <h4 className={`font-medium text-sm mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+        <h4 className={`font-medium text-xs md:text-sm mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
           {activity.title}
         </h4>
-        <p className={`text-sm mb-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
+        <p className={`text-xs mb-1 md:mb-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
           {activity.description}
         </p>
-        <div className="flex items-center gap-3 text-xs">
+        <div className="flex items-center gap-2 md:gap-3 text-xs">
           <span className={`flex items-center gap-1 ${isDarkMode ? 'text-gray-500' : 'text-gray-600'}`}>
-            <User size={12} />
+            <User size={10} className="md:w-3 md:h-3" />
             {activity.user}
           </span>
           <span className={`flex items-center gap-1 ${isDarkMode ? 'text-gray-500' : 'text-gray-600'}`}>
-            <Clock size={12} />
+            <Clock size={10} className="md:w-3 md:h-3" />
             {activity.timeAgo}
           </span>
         </div>
@@ -332,55 +330,53 @@ const Dashboard = () => {
 
         <Sidebar isExpanded={isSidebarExpanded} activeItem="dashboard" />
 
-        <main className={`transition-all duration-300 pt-20 pb-16 min-h-screen ${
-          isSidebarExpanded ? 'ml-64' : 'ml-16'
-        }`}>
-          <div className="w-full h-full px-6 py-6">
+        <main className={`transition-all duration-300 ${
+          isSidebarExpanded ? 'ml-0 md:ml-48 lg:ml-64' : 'ml-0 md:ml-16'
+        } pt-16 md:pt-20 pb-12 md:pb-16 min-h-screen overflow-x-hidden`}>
+          <div className="w-full h-full px-3 sm:px-4 md:px-6 py-4 md:py-6">
               
-            {/* Header - Left aligned */}
-            <div className="text-left mb-8">
-              <h1 className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            <div className="text-left mb-4 md:mb-6 lg:mb-8">
+              <h1 className={`text-xl sm:text-2xl md:text-3xl font-bold mb-1 md:mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Dashboard
               </h1>
-              <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
+              <p className={`text-sm md:text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
                 Welcome back, Tony! Here's what's happening with your institute today.
               </p>
             </div>
 
-            {/* Stats Grid - Matches your third image exactly */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 mb-6 md:mb-8">
               {stats.map((stat, index) => {
                 const Icon = stat.icon;
                 const colorClasses = getColorClasses(stat.color);
                 return (
                   <div
                     key={index}
-                    className={`p-6 rounded-2xl border ${
+                    className={`p-4 md:p-6 rounded-xl md:rounded-2xl border ${
                       isDarkMode 
                         ? 'bg-slate-800 border-slate-700' 
                         : 'bg-white border-gray-300 shadow-sm'
                     }`}
                   >
-                    <div className="flex justify-between items-start mb-4">
+                    <div className="flex justify-between items-start mb-3 md:mb-4">
                       <div className="text-left">
-                        <h3 className={`text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                        <h3 className={`text-xs md:text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                           {stat.title}
                         </h3>
-                        <p className={`text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                        <p className={`text-xl md:text-2xl lg:text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                           {stat.value}
                         </p>
                       </div>
-                      <div className={`p-3 rounded-xl ${colorClasses.iconBg}`}>
-                        <Icon className={`w-6 h-6 ${colorClasses.iconColor}`} />
+                      <div className={`p-2 md:p-3 rounded-lg md:rounded-xl ${colorClasses.iconBg}`}>
+                        <Icon className={`w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 ${colorClasses.iconColor}`} />
                       </div>
                     </div>
                     
-                    <div className={`flex items-center gap-1 text-sm ${
+                    <div className={`flex items-center gap-1 text-xs md:text-sm ${
                       stat.trend === 'up' 
                         ? 'text-green-600' 
                         : 'text-red-600'
                     }`}>
-                      {stat.trend === 'up' ? <ArrowUp size={16} /> : <ArrowDown size={16} />}
+                      {stat.trend === 'up' ? <ArrowUp size={12} className="md:w-4 md:h-4" /> : <ArrowDown size={12} className="md:w-4 md:h-4" />}
                       <span className="font-medium">{stat.change}</span>
                       <span className={`ml-1 ${isDarkMode ? 'text-gray-500' : 'text-gray-600'}`}>
                         {stat.period}
@@ -391,29 +387,28 @@ const Dashboard = () => {
               })}
             </div>
 
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
               
-              {/* Quick Actions - Now with navigation functionality */}
-              <div className={`p-6 rounded-2xl border ${
+              <div className={`p-4 md:p-6 rounded-xl md:rounded-2xl border ${
                 isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
               }`}>
-                <h2 className={`text-xl font-semibold mb-6 text-left ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <h2 className={`text-lg md:text-xl font-semibold mb-4 md:mb-6 text-left ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Quick Actions
                 </h2>
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
                   {quickActions.map((action, index) => {
                     const Icon = action.icon;
                     return (
                       <button
                         key={index}
                         onClick={() => handleQuickAction(action.route)}
-                        className={`${action.color} text-white p-4 rounded-xl text-left transition-all hover:scale-105 hover:shadow-lg group relative cursor-pointer`}
+                        className={`${action.color} text-white p-3 md:p-4 rounded-lg md:rounded-xl text-left transition-all hover:scale-105 hover:shadow-lg group relative cursor-pointer`}
                       >
-                        <div className="flex items-start justify-between mb-3">
-                          <Icon size={24} className="text-white" />
-                          <ChevronRight size={20} className="text-white opacity-70 group-hover:opacity-100 transition-opacity" />
+                        <div className="flex items-start justify-between mb-2 md:mb-3">
+                          <Icon size={18} className="md:w-5 md:h-5 lg:w-6 lg:h-6 text-white" />
+                          <ChevronRight size={16} className="md:w-4 md:h-4 lg:w-5 lg:h-5 text-white opacity-70 group-hover:opacity-100 transition-opacity" />
                         </div>
-                        <h3 className="font-semibold text-sm mb-1 text-left">{action.title}</h3>
+                        <h3 className="font-semibold text-xs md:text-sm mb-1 text-left">{action.title}</h3>
                         <p className="text-xs opacity-90 text-left">{action.description}</p>
                       </button>
                     );
@@ -421,23 +416,22 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              {/* Recent Activity - Matches your second image exactly */}
-              <div className={`p-6 rounded-2xl border ${
+              <div className={`p-4 md:p-6 rounded-xl md:rounded-2xl border ${
                 isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300 shadow-sm'
               }`}>
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className={`text-xl font-semibold text-left ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <div className="flex items-center justify-between mb-4 md:mb-6">
+                  <h2 className={`text-lg md:text-xl font-semibold text-left ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     Recent Activity
                   </h2>
                   <button 
                     onClick={handleViewAllActivity}
-                    className="text-blue-500 text-sm font-medium hover:text-blue-600 transition-colors"
+                    className="text-blue-500 text-xs md:text-sm font-medium hover:text-blue-600 transition-colors"
                   >
                     View All Activity
                   </button>
                 </div>
                 
-                <div className="space-y-4">
+                <div className="space-y-3 md:space-y-4">
                   {allActivities.slice(0, displayedActivities).map((activity, index) => (
                     <ActivityItem 
                       key={activity.id}
@@ -449,10 +443,10 @@ const Dashboard = () => {
                 </div>
                 
                 {displayedActivities < allActivities.length && (
-                  <div className={`mt-6 pt-4 border-t ${isDarkMode ? 'border-slate-600' : 'border-gray-300'}`}>
+                  <div className={`mt-4 md:mt-6 pt-3 md:pt-4 border-t ${isDarkMode ? 'border-slate-600' : 'border-gray-300'}`}>
                     <button 
                       onClick={handleLoadMore}
-                      className={`w-full text-center py-2 text-sm font-medium ${
+                      className={`w-full text-center py-2 text-xs md:text-sm font-medium ${
                         isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-700 hover:text-gray-900'
                       } transition-colors`}
                     >
@@ -468,47 +462,44 @@ const Dashboard = () => {
         <Footer isSidebarExpanded={isSidebarExpanded} />
       </div>
 
-      {/* Activity Modal */}
       {showActivityModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className={`w-full max-w-4xl max-h-[95vh] rounded-2xl ${
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 sm:p-4 z-50">
+          <div className={`w-full max-w-2xl lg:max-w-4xl max-h-[90vh] sm:max-h-[95vh] rounded-xl md:rounded-2xl ${
             isDarkMode ? 'bg-slate-800' : 'bg-white'
           } shadow-2xl overflow-hidden`}>
             
-            {/* Modal Header */}
-            <div className={`px-6 py-4 border-b flex items-center justify-between ${
+            <div className={`px-4 py-3 md:px-6 md:py-4 border-b flex items-center justify-between ${
               isDarkMode ? 'border-slate-700' : 'border-gray-300'
             }`}>
               <div>
-                <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <h2 className={`text-lg md:text-xl lg:text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   All Activities
                 </h2>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                <p className={`text-xs md:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   Complete activity history for your institute
                 </p>
               </div>
               <button
                 onClick={closeModal}
-                className={`p-2 rounded-lg hover:bg-gray-100 ${
+                className={`p-1 md:p-2 rounded-lg hover:bg-gray-100 ${
                   isDarkMode ? 'text-gray-400 hover:bg-slate-700' : 'text-gray-600'
                 }`}
               >
-                <X size={24} />
+                <X size={20} className="md:w-6 md:h-6" />
               </button>
             </div>
 
-            {/* Search Bar */}
-            <div className={`px-6 py-4 border-b ${isDarkMode ? 'border-slate-700' : 'border-gray-300'}`}>
+            <div className={`px-4 py-3 md:px-6 md:py-4 border-b ${isDarkMode ? 'border-slate-700' : 'border-gray-300'}`}>
               <div className="relative">
                 <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 ${
                   isDarkMode ? 'text-gray-400' : 'text-gray-500'
-                }`} size={20} />
+                }`} size={18}/>
                 <input
                   type="text"
                   placeholder="Search activities..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className={`w-full pl-10 pr-4 py-2 rounded-lg border ${
+                  className={`w-full pl-10 pr-4 py-2 rounded-lg border text-sm md:text-base ${
                     isDarkMode 
                       ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-400 focus:border-blue-500' 
                       : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-blue-500'
@@ -517,11 +508,10 @@ const Dashboard = () => {
               </div>
             </div>
 
-            {/* Modal Content */}
-            <div className="overflow-y-auto" style={{ maxHeight: 'calc(90vh - 200px)' }}>
-              <div className="p-6">
+            <div className="overflow-y-auto" style={{ maxHeight: 'calc(90vh - 160px)' }}>
+              <div className="p-4 md:p-6">
                 {filteredActivities.length > 0 ? (
-                  <div className="space-y-6">
+                  <div className="space-y-4 md:space-y-6">
                     {filteredActivities.map((activity, index) => (
                       <ActivityItem 
                         key={activity.id}
@@ -531,8 +521,8 @@ const Dashboard = () => {
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-12">
-                    <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  <div className="text-center py-8 md:py-12">
+                    <p className={`text-sm md:text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                       No activities found matching your search.
                     </p>
                   </div>
@@ -540,15 +530,14 @@ const Dashboard = () => {
               </div>
             </div>
 
-            {/* Modal Footer */}
-            <div className={`px-6 py-4 border-t ${isDarkMode ? 'border-slate-700' : 'border-gray-300'}`}>
-              <div className="flex justify-between items-center">
-                <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+            <div className={`px-4 py-3 md:px-6 md:py-4 border-t ${isDarkMode ? 'border-slate-700' : 'border-gray-300'}`}>
+              <div className="flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-0">
+                <p className={`text-xs md:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   Showing {filteredActivities.length} of {allActivities.length} activities
                 </p>
                 <button
                   onClick={closeModal}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                  className="px-3 py-2 md:px-4 md:py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm md:text-base"
                 >
                   Close
                 </button>

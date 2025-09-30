@@ -32,7 +32,10 @@ import {
   Download,
   Eye,
   Check,
-  CheckCheck
+  CheckCheck,
+  ChevronRight,
+  ArrowUp,
+  ArrowDown
 } from 'lucide-react';
 
 const Messages = () => {
@@ -54,7 +57,6 @@ const Messages = () => {
   const emojiPickerRef = useRef(null);
   const attachmentMenuRef = useRef(null);
   
-  // Initialize conversations state
   const [conversations, setConversations] = useState([
     {
       id: 1,
@@ -191,7 +193,6 @@ const Messages = () => {
   const [messages, setMessages] = useState({});
   const [attachedFiles, setAttachedFiles] = useState({});
 
-  // Available users for new chat
   const [availableUsers] = useState([
     { id: 101, name: 'Dr. Rajesh Kumar', role: 'Teacher, Biology', avatar: 'RK', type: 'teacher' },
     { id: 102, name: 'Priyanka Singh', role: 'Student, Class 9', avatar: 'PS', type: 'student' },
@@ -200,14 +201,12 @@ const Messages = () => {
     { id: 105, name: 'Rohit Verma', role: 'Student, Class 8', avatar: 'RV', type: 'student' },
   ]);
 
-  // Emoji data
   const emojis = ['😀', '😃', '😄', '😁', '😊', '😍', '🥰', '😘', '😗', '😙', '😚', '🤗', '🤔', '😐', '😑', '😶', '😏', '😣', '😥', '😮', '🤐', '😯', '😪', '😫', '😴', '😌', '😛', '😜', '😝', '🤤', '😒', '😓', '😔', '😕', '🙃', '🤑', '😲', '☹️', '🙁', '😖', '😞', '😟', '😤', '😢', '😭', '😦', '😧', '😨', '😩'];
 
   const toggleSidebar = () => {
     setIsSidebarExpanded(!isSidebarExpanded);
   };
 
-  // Scroll to bottom when messages change
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -216,21 +215,17 @@ const Messages = () => {
     scrollToBottom();
   }, [messages, selectedConversation]);
 
-  // Handle incoming user from UserRoleManagement - FIXED VERSION
   useEffect(() => {
     if (location.state && location.state.selectedUser) {
       const incomingUser = location.state.selectedUser;
       
-      // Check if this user already exists in conversations (by name and id)
       const existingConversation = conversations.find(conv => 
         conv.id === incomingUser.id || 
         (conv.name.toLowerCase() === incomingUser.name.toLowerCase() && conv.type === incomingUser.type)
       );
       if (existingConversation) {
-        // User already exists, just select them
         setSelectedConversation(existingConversation);
       } else {
-        // User doesn't exist, add them
         const newConversation = {
           id: incomingUser.id || Date.now(),
           name: incomingUser.name,
@@ -252,7 +247,6 @@ const Messages = () => {
         setConversations(prev => [newConversation, ...prev]);
         setSelectedConversation(newConversation);
         
-        // Initialize messages for this user if they don't exist
         setMessages(prev => ({
           ...prev,
           [newConversation.id]: [
@@ -261,24 +255,21 @@ const Messages = () => {
               type: 'received', 
               content: `Hello! I'm ${incomingUser.name}. How can I help you?`, 
               time: getCurrentTime(),
-              status: 'read' // Received messages are automatically read
+              status: 'read'
             }
           ]
         }));
 
-        // Initialize attached files for new conversation
         setAttachedFiles(prev => ({
           ...prev,
           [newConversation.id]: []
         }));
       }
       
-      // Clear the location state to prevent duplicate processing
       navigate(location.pathname, { replace: true, state: {} });
     }
   }, [location.state, conversations, navigate, location.pathname]);
 
-  // Initialize default messages for conversations
   const initializeMessages = () => {
     const defaultMessages = {
       1: [
@@ -324,7 +315,6 @@ const Messages = () => {
     setMessages(defaultMessages);
   };
 
-  // Initialize messages on component mount
   useEffect(() => {
     if (Object.keys(messages).length === 0) {
       initializeMessages();
@@ -339,7 +329,6 @@ const Messages = () => {
     });
   };
 
-  // Update message status (sent -> delivered -> read)
   const updateMessageStatus = (conversationId, messageId, newStatus) => {
     setMessages(prev => ({
       ...prev,
@@ -349,22 +338,17 @@ const Messages = () => {
     }));
   };
 
-  // Simulate message delivery and reading
   const simulateMessageStatusUpdate = (conversationId, messageId) => {
-    // If recipient is online, simulate quick delivery and reading
     const conversation = conversations.find(conv => conv.id === conversationId);
     if (conversation && conversation.online) {
-      // Message delivered after 1 second
       setTimeout(() => {
         updateMessageStatus(conversationId, messageId, 'delivered');
       }, 1000);
 
-      // Message read after 3 seconds
       setTimeout(() => {
         updateMessageStatus(conversationId, messageId, 'read');
       }, 3000);
     } else {
-      // If recipient is offline, only mark as delivered
       setTimeout(() => {
         updateMessageStatus(conversationId, messageId, 'delivered');
       }, 2000);
@@ -376,22 +360,19 @@ const Messages = () => {
       const newMessages = [];
       const conversationId = selectedConversation.id;
 
-      // Add text message if exists
       if (messageInput.trim()) {
         const textMessage = {
           id: Date.now(),
           type: 'sent',
           content: messageInput.trim(),
           time: getCurrentTime(),
-          status: 'sent' // Initial status when message is sent
+          status: 'sent'
         };
         newMessages.push(textMessage);
 
-        // Simulate status update for text message
         simulateMessageStatusUpdate(conversationId, textMessage.id);
       }
 
-      // Add attached files if exist
       if (attachedFiles[selectedConversation.id]) {
         attachedFiles[selectedConversation.id].forEach(file => {
           const fileMessage = {
@@ -402,16 +383,14 @@ const Messages = () => {
             fileType: file.fileType,
             fileUrl: file.fileUrl,
             time: getCurrentTime(),
-            status: 'sent' // Initial status when file is sent
+            status: 'sent'
           };
           newMessages.push(fileMessage);
 
-          // Simulate status update for file message
           simulateMessageStatusUpdate(conversationId, fileMessage.id);
         });
       }
 
-      // Add messages to the conversation
       setMessages(prev => ({
         ...prev,
         [conversationId]: [
@@ -420,7 +399,6 @@ const Messages = () => {
         ]
       }));
 
-      // Update the conversation's last message and time
       const lastMessageContent = messageInput.trim() || `Sent ${attachedFiles[selectedConversation.id]?.length || 0} file(s)`;
       setConversations(prev => 
         prev.map(conv => 
@@ -430,7 +408,6 @@ const Messages = () => {
         )
       );
 
-      // Clear inputs
       setMessageInput('');
       setAttachedFiles(prev => ({
         ...prev,
@@ -447,11 +424,9 @@ const Messages = () => {
     }
   };
 
-  // Filter conversations based on active filter and search
   const getFilteredConversations = () => {
     let filtered = conversations;
 
-    // Apply type filter
     switch (activeFilter) {
       case 'unread':
         filtered = filtered.filter(conv => conv.unread);
@@ -466,11 +441,9 @@ const Messages = () => {
         filtered = filtered.filter(conv => conv.type === 'parent');
         break;
       default:
-        // 'all' - no filtering by type
         break;
     }
 
-    // Apply search filter
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(conv =>
@@ -498,7 +471,6 @@ const Messages = () => {
     };
   };
 
-  // Handle new chat creation
   const handleNewChat = (user) => {
     const existingConv = conversations.find(conv => 
       conv.id === user.id || (conv.name.toLowerCase() === user.name.toLowerCase() && conv.type === user.type)
@@ -524,13 +496,11 @@ const Messages = () => {
       setConversations(prev => [newConversation, ...prev]);
       setSelectedConversation(newConversation);
       
-      // Initialize empty messages for new conversation
       setMessages(prev => ({
         ...prev,
         [newConversation.id]: []
       }));
 
-      // Initialize attached files for new conversation
       setAttachedFiles(prev => ({
         ...prev,
         [newConversation.id]: []
@@ -542,7 +512,6 @@ const Messages = () => {
     setShowNewChatModal(false);
   };
 
-  // Handle file attachment
   const handleFileAttachment = (type) => {
     if (type === 'file') {
       fileInputRef.current?.click();
@@ -575,11 +544,10 @@ const Messages = () => {
         ]
       }));
 
-      event.target.value = ''; // Reset file input
+      event.target.value = '';
     }
   };
 
-  // Remove attached file
   const removeAttachedFile = (fileIndex) => {
     if (selectedConversation) {
       setAttachedFiles(prev => {
@@ -593,29 +561,23 @@ const Messages = () => {
     }
   };
 
-  // Handle emoji selection
   const handleEmojiSelect = (emoji) => {
     setMessageInput(prev => prev + emoji);
   };
 
-  // Handle phone call
   const handlePhoneCall = () => {
     if (selectedConversation?.phone) {
       window.open(`tel:${selectedConversation.phone}`, '_self');
     }
   };
 
-  // Handle video call  
   const handleVideoCall = () => {
     alert(`Starting video call with ${selectedConversation?.name}...`);
-    // In a real app, you would integrate with a video calling API here
   };
 
-  // Mark conversation as read when selected
   const handleConversationSelect = (conversation) => {
     setSelectedConversation(conversation);
     
-    // Mark as read
     if (conversation.unread) {
       setConversations(prev =>
         prev.map(conv =>
@@ -627,18 +589,14 @@ const Messages = () => {
     }
   };
 
-  // Handle file download/view
   const handleFileAction = (message, action) => {
     if (action === 'view') {
       if (message.fileType === 'image') {
-        // Open image in new tab
         window.open(message.fileUrl, '_blank');
       } else {
-        // For other files, show a preview or download
         alert(`Viewing file: ${message.fileName}`);
       }
     } else if (action === 'download') {
-      // Create a temporary link for download
       const link = document.createElement('a');
       link.href = message.fileUrl;
       link.download = message.fileName;
@@ -646,7 +604,6 @@ const Messages = () => {
     }
   };
 
-  // Render message status icon
   const renderMessageStatus = (message) => {
     if (message.type !== 'sent' && message.type !== 'file' && message.type !== 'image') {
       return null;
@@ -654,13 +611,13 @@ const Messages = () => {
 
     switch (message.status) {
       case 'sent':
-        return <Check size={14} className="text-gray-400" />;
+        return <Check size={12} className="text-gray-400" />;
       case 'delivered':
-        return <CheckCheck size={14} className="text-gray-400" />;
+        return <CheckCheck size={12} className="text-gray-400" />;
       case 'read':
-        return <CheckCheck size={14} className="text-white" />;
+        return <CheckCheck size={12} className="text-white" />;
       default:
-        return <Check size={14} className="text-gray-400" />;
+        return <Check size={12} className="text-gray-400" />;
     }
   };
 
@@ -688,7 +645,6 @@ const Messages = () => {
     }
   };
 
-  // Close modals when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (showEmojiPicker && emojiPickerRef.current && !emojiPickerRef.current.contains(event.target)) {
@@ -706,739 +662,755 @@ const Messages = () => {
   }, [showEmojiPicker, showAttachmentMenu]);
 
   return (
-    <div className={`min-h-screen w-full ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
-      <Header 
-        isSidebarExpanded={isSidebarExpanded} 
-        toggleSidebar={toggleSidebar}
-      />
+    <>
+      <div className={`min-h-screen w-full ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+        <Header 
+          isSidebarExpanded={isSidebarExpanded} 
+          toggleSidebar={toggleSidebar}
+        />
 
-      <Sidebar isExpanded={isSidebarExpanded} activeItem="messages" />
+        <Sidebar isExpanded={isSidebarExpanded} activeItem="messages" />
 
-      <main className={`transition-all duration-300 pt-20 pb-12 min-h-screen ${
-        isSidebarExpanded ? 'ml-64' : 'ml-16'
-      }`}>
-        <div className="w-full h-full flex">
-          
-          {/* Left Sidebar - Conversations List */}
-          <div className={`w-80 h-[calc(100vh-128px)] border-r flex flex-col ${
-            isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'
-          }`}>
+        <main className={`transition-all duration-300 ${
+          isSidebarExpanded ? 'ml-0 md:ml-48 lg:ml-64' : 'ml-0 md:ml-16'
+        } pt-16 md:pt-20 pb-12 md:pb-16 min-h-screen overflow-x-hidden`}>
+          <div className="w-full h-full flex flex-col lg:flex-row">
             
-            {/* Messages Header */}
-            <div className="p-4 border-b border-inherit">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <h1 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                    Messages
-                  </h1>
-                  {filterCounts.unread > 0 && (
-                    <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full">
-                      {filterCounts.unread} unread
-                    </span>
-                  )}
+            {/* Conversations List - Hidden on mobile when chat is open */}
+            <div className={`w-full lg:w-80 h-[calc(100vh-128px)] border-r flex flex-col ${
+              isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'
+            } ${selectedConversation ? 'hidden lg:flex' : 'flex'}`}>
+              
+              <div className="p-3 md:p-4 border-b border-inherit">
+                <div className="flex items-center justify-between mb-3 md:mb-4">
+                  <div className="flex items-center gap-1 md:gap-2">
+                    <h1 className={`text-lg md:text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      Messages
+                    </h1>
+                    {filterCounts.unread > 0 && (
+                      <span className="bg-red-500 text-white text-xs px-1 md:px-2 py-0.5 md:py-1 rounded-full">
+                        {filterCounts.unread} unread
+                      </span>
+                    )}
+                  </div>
+                  <button 
+                    onClick={() => setShowNewChatModal(true)}
+                    className="p-1 md:p-1.5 rounded-md text-blue-500 hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors"
+                  >
+                    <Plus size={16} className="md:w-5 md:h-5" />
+                  </button>
                 </div>
-                <button 
-                  onClick={() => setShowNewChatModal(true)}
-                  className="p-1 rounded-md text-blue-500 hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors"
-                >
-                  <Plus size={20} />
-                </button>
-              </div>
 
-              {/* Search Bar */}
-              <div className="relative mb-4">
-                <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 ${
-                  isDarkMode ? 'text-gray-400' : 'text-gray-500'
-                }`} />
-                <input
-                  type="text"
-                  placeholder="Search conversations..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className={`w-full pl-10 pr-4 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    isDarkMode 
-                      ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-400' 
-                      : 'bg-gray-50 border-gray-300 text-gray-900 placeholder-gray-500'
-                  }`}
-                />
-              </div>
+                <div className="relative mb-3 md:mb-4">
+                  <Search className={`absolute left-2 md:left-3 top-1/2 transform -translate-y-1/2 w-3 h-3 md:w-4 md:h-4 ${
+                    isDarkMode ? 'text-gray-400' : 'text-gray-500'
+                  }`} />
+                  <input
+                    type="text"
+                    placeholder="Search conversations..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className={`w-full pl-7 md:pl-10 pr-3 md:pr-4 py-1.5 md:py-2 rounded-lg border text-xs md:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                      isDarkMode 
+                        ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-400' 
+                        : 'bg-gray-50 border-gray-300 text-gray-900 placeholder-gray-500'
+                    }`}
+                  />
+                </div>
 
-              {/* Filter Tabs */}
-              <div className="flex flex-wrap gap-2 text-sm">
-                <button 
-                  onClick={() => setActiveFilter('all')}
-                  className={`px-3 py-1 rounded-full transition-colors ${
-                    activeFilter === 'all' 
-                      ? 'bg-blue-500 text-white' 
-                      : isDarkMode ? 'text-gray-400 hover:text-white hover:bg-slate-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200'
-                  }`}
-                >
-                  All ({filterCounts.all})
-                </button>
-                <button 
-                  onClick={() => setActiveFilter('unread')}
-                  className={`px-3 py-1 rounded-full transition-colors ${
-                    activeFilter === 'unread' 
-                      ? 'bg-blue-500 text-white' 
-                      : isDarkMode ? 'text-gray-400 hover:text-white hover:bg-slate-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200'
-                  }`}
-                >
-                  Unread ({filterCounts.unread})
-                </button>
-                <button 
-                  onClick={() => setActiveFilter('teachers')}
-                  className={`px-3 py-1 rounded-full transition-colors ${
-                    activeFilter === 'teachers' 
-                      ? 'bg-blue-500 text-white' 
-                      : isDarkMode ? 'text-gray-400 hover:text-white hover:bg-slate-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200'
-                  }`}
-                >
-                  Teachers ({filterCounts.teachers})
-                </button>
-                <button 
-                  onClick={() => setActiveFilter('students')}
-                  className={`px-3 py-1 rounded-full transition-colors ${
-                    activeFilter === 'students' 
-                      ? 'bg-blue-500 text-white' 
-                      : isDarkMode ? 'text-gray-400 hover:text-white hover:bg-slate-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200'
-                  }`}
-                >
-                  Students ({filterCounts.students})
-                </button>
-                <button 
-                  onClick={() => setActiveFilter('parents')}
-                  className={`px-3 py-1 rounded-full transition-colors ${
-                    activeFilter === 'parents' 
-                      ? 'bg-blue-500 text-white' 
-                      : isDarkMode ? 'text-gray-400 hover:text-white hover:bg-slate-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200'
-                  }`}
-                >
-                  Parents ({filterCounts.parents})
-                </button>
-              </div>
-            </div>
-
-            {/* Conversations List */}
-            <div className="flex-1 overflow-y-auto">
-              {filteredConversations.length > 0 ? (
-                filteredConversations.map((conversation) => (
-                  <div 
-                    key={conversation.id}
-                    onClick={() => handleConversationSelect(conversation)}
-                    className={`p-4 border-b border-inherit cursor-pointer transition-colors ${
-                      selectedConversation?.id === conversation.id
-                        ? isDarkMode ? 'bg-slate-700' : 'bg-blue-50'
-                        : isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-gray-50'
+                <div className="flex flex-wrap gap-1 md:gap-2 text-xs md:text-sm">
+                  <button 
+                    onClick={() => setActiveFilter('all')}
+                    className={`px-2 py-1 md:px-3 md:py-1 rounded-full transition-colors ${
+                      activeFilter === 'all' 
+                        ? 'bg-blue-500 text-white' 
+                        : isDarkMode ? 'text-gray-400 hover:text-white hover:bg-slate-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200'
                     }`}
                   >
-                    <div className="flex items-start gap-3">
-                      <div className="relative">
-                        <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-medium ${getAvatarColor(conversation.name)}`}>
-                          {conversation.avatar}
-                        </div>
-                        {conversation.online && (
-                          <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-white" />
-                        )}
-                      </div>
-                      
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between mb-1">
-                          <h3 className={`font-medium truncate ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                            {conversation.name}
-                          </h3>
-                          <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                            {conversation.time}
-                          </span>
-                        </div>
-                        
-                        <p className={`text-xs mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                          {conversation.role}
-                        </p>
-                        
-                        <p className={`text-sm truncate ${
-                          conversation.unread 
-                            ? isDarkMode ? 'text-white font-medium' : 'text-gray-900 font-medium'
-                            : isDarkMode ? 'text-gray-400' : 'text-gray-600'
-                        }`}>
-                          {conversation.lastMessage}
-                        </p>
-                        
-                        {conversation.badge && (
-                          <span className="inline-block mt-2 px-2 py-1 bg-purple-100 text-purple-600 text-xs rounded-full">
-                            {conversation.badge}
-                          </span>
-                        )}
-                      </div>
-                      
-                      {conversation.unread && (
-                        <div className="w-2 h-2 bg-blue-500 rounded-full ml-2 mt-2" />
-                      )}
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className={`p-8 text-center ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  <p>No conversations found.</p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Right Side - Chat Area */}
-          <div className="flex-1 flex flex-col h-[calc(100vh-128px)]">
-            {selectedConversation ? (
-              <>
-                {/* Chat Header - Fixed */}
-                <div className={`flex-shrink-0 p-4 border-b flex items-center justify-between ${
-                  isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'
-                }`}>
-                  <div 
-                    className="flex items-center gap-3 cursor-pointer hover:bg-opacity-80 rounded-lg p-2 -m-2 transition-colors"
-                    onClick={() => setShowUserDetails(true)}
+                    All ({filterCounts.all})
+                  </button>
+                  <button 
+                    onClick={() => setActiveFilter('unread')}
+                    className={`px-2 py-1 md:px-3 md:py-1 rounded-full transition-colors ${
+                      activeFilter === 'unread' 
+                        ? 'bg-blue-500 text-white' 
+                        : isDarkMode ? 'text-gray-400 hover:text-white hover:bg-slate-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200'
+                    }`}
                   >
-                    <div className="relative">
-                      <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-medium ${getAvatarColor(selectedConversation.name)}`}>
-                        {selectedConversation.avatar}
-                      </div>
-                      {selectedConversation.online && (
-                        <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-white" />
-                      )}
-                    </div>
-                    <div>
-                      <h3 className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                        {selectedConversation.name}
-                      </h3>
-                      <div className="flex items-center gap-2 text-sm">
-                        {selectedConversation.online && <div className="w-2 h-2 bg-green-400 rounded-full" />}
-                        <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>
-                          {selectedConversation.online ? 'Online' : `Last seen ${selectedConversation.lastSeen}`}
-                        </span>
-                        {selectedConversation.badge && (
-                          <span className="px-2 py-1 bg-purple-100 text-purple-600 text-xs rounded-full">
-                            {selectedConversation.badge}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-2">
-                    <button 
-                      onClick={handlePhoneCall}
-                      className={`p-2 rounded-lg transition-colors ${
-                        isDarkMode ? 'text-gray-400 hover:text-white hover:bg-slate-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                      }`}
-                      title="Call"
-                    >
-                      <Phone size={20} />
-                    </button>
-                    <button 
-                      onClick={handleVideoCall}
-                      className={`p-2 rounded-lg transition-colors ${
-                        isDarkMode ? 'text-gray-400 hover:text-white hover:bg-slate-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                      }`}
-                      title="Video Call"
-                    >
-                      <Video size={20} />
-                    </button>
-                    <button 
-                      onClick={() => setShowUserDetails(true)}
-                      className={`p-2 rounded-lg transition-colors ${
-                        isDarkMode ? 'text-gray-400 hover:text-white hover:bg-slate-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                      }`}
-                      title="User Info"
-                    >
-                      <Info size={20} />
-                    </button>
-                  </div>
+                    Unread ({filterCounts.unread})
+                  </button>
+                  <button 
+                    onClick={() => setActiveFilter('teachers')}
+                    className={`px-2 py-1 md:px-3 md:py-1 rounded-full transition-colors ${
+                      activeFilter === 'teachers' 
+                        ? 'bg-blue-500 text-white' 
+                        : isDarkMode ? 'text-gray-400 hover:text-white hover:bg-slate-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200'
+                    }`}
+                  >
+                    Teachers ({filterCounts.teachers})
+                  </button>
+                  <button 
+                    onClick={() => setActiveFilter('students')}
+                    className={`px-2 py-1 md:px-3 md:py-1 rounded-full transition-colors ${
+                      activeFilter === 'students' 
+                        ? 'bg-blue-500 text-white' 
+                        : isDarkMode ? 'text-gray-400 hover:text-white hover:bg-slate-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200'
+                    }`}
+                  >
+                    Students ({filterCounts.students})
+                  </button>
+                  <button 
+                    onClick={() => setActiveFilter('parents')}
+                    className={`px-2 py-1 md:px-3 md:py-1 rounded-full transition-colors ${
+                      activeFilter === 'parents' 
+                        ? 'bg-blue-500 text-white' 
+                        : isDarkMode ? 'text-gray-400 hover:text-white hover:bg-slate-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200'
+                    }`}
+                  >
+                    Parents ({filterCounts.parents})
+                  </button>
                 </div>
+              </div>
 
-                {/* Chat Messages - Scrollable */}
-                <div className={`flex-1 p-4 overflow-y-auto ${
-                  isDarkMode ? 'bg-slate-900' : 'bg-gray-50'
-                }`}>
-                  <div className="space-y-4">
-                    {currentMessages.map((message) => (
-                      <div key={message.id} className={`flex ${message.type === 'sent' ? 'justify-end' : 'justify-start'}`}>
-                        {message.type === 'file' ? (
-                          <div className={`max-w-xs p-3 rounded-lg ${
-                            isDarkMode ? 'bg-slate-800 border border-slate-700' : 'bg-white border border-gray-300'
-                          }`}>
-                            <div className="flex items-center gap-3">
-                              <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                                isDarkMode ? 'bg-slate-700' : 'bg-gray-100'
-                              }`}>
-                                <FileText size={20} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <p className={`font-medium text-sm truncate ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                                  {message.fileName}
-                                </p>
-                                <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                                  {message.fileSize}
-                                </p>
-                              </div>
-                            </div>
-                            <div className="flex gap-2 mt-2">
-                              <button 
-                                onClick={() => handleFileAction(message, 'view')}
-                                className={`flex items-center gap-1 text-xs px-2 py-1 rounded ${
-                                  isDarkMode ? 'bg-slate-700 text-gray-300 hover:bg-slate-600' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                                }`}
-                              >
-                                <Eye size={12} />
-                                View
-                              </button>
-                              <button 
-                                onClick={() => handleFileAction(message, 'download')}
-                                className={`flex items-center gap-1 text-xs px-2 py-1 rounded ${
-                                  isDarkMode ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-blue-500 text-white hover:bg-blue-600'
-                                }`}
-                              >
-                                <Download size={12} />
-                                Download
-                              </button>
-                            </div>
-                            <div className={`flex items-center justify-between mt-2`}>
-                              <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                                {message.time}
-                              </span>
-                              {message.type === 'sent' && (
-                                <div className="flex items-center ml-2">
-                                  {renderMessageStatus(message)}
-                                </div>
-                              )}
-                            </div>
+              <div className="flex-1 overflow-y-auto">
+                {filteredConversations.length > 0 ? (
+                  filteredConversations.map((conversation) => (
+                    <div 
+                      key={conversation.id}
+                      onClick={() => handleConversationSelect(conversation)}
+                      className={`p-3 md:p-4 border-b border-inherit cursor-pointer transition-colors ${
+                        selectedConversation?.id === conversation.id
+                          ? isDarkMode ? 'bg-slate-700' : 'bg-blue-50'
+                          : isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-gray-50'
+                      }`}
+                    >
+                      <div className="flex items-start gap-2 md:gap-3">
+                        <div className="relative">
+                          <div className={`w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 rounded-full flex items-center justify-center text-white font-medium text-xs md:text-sm ${getAvatarColor(conversation.name)}`}>
+                            {conversation.avatar}
                           </div>
-                        ) : message.type === 'image' ? (
-                          <div className={`max-w-xs p-3 rounded-lg ${
-                            isDarkMode ? 'bg-slate-800 border border-slate-700' : 'bg-white border border-gray-300'
-                          }`}>
-                            <img 
-                              src={message.fileUrl} 
-                              alt={message.fileName}
-                              className="w-full h-32 object-cover rounded-lg mb-2 cursor-pointer"
-                              onClick={() => handleFileAction(message, 'view')}
-                            />
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <p className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                                  {message.fileName}
-                                </p>
-                                <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                                  {message.fileSize}
-                                </p>
-                              </div>
-                              <button 
-                                onClick={() => handleFileAction(message, 'download')}
-                                className={`p-1 rounded ${
-                                  isDarkMode ? 'bg-slate-700 text-gray-300 hover:bg-slate-600' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                                }`}
-                                title="Download"
-                              >
-                                <Download size={14} />
-                              </button>
-                            </div>
-                            <div className={`flex items-center justify-between mt-1`}>
-                              <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                                {message.time}
-                              </span>
-                              {message.type === 'sent' && (
-                                <div className="flex items-center ml-2">
-                                  {renderMessageStatus(message)}
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        ) : (
-                          <div className={`max-w-xs px-4 py-2 rounded-lg ${
-                            message.type === 'sent' 
-                              ? 'bg-blue-500 text-white' 
-                              : isDarkMode ? 'bg-slate-800 text-white' : 'bg-white text-gray-900'
-                          }`}>
-                            <p className="text-sm">{message.content}</p>
-                            <div className={`flex items-center justify-end gap-1 mt-1 ${
-                              message.type === 'sent' ? 'justify-end' : 'justify-start'
-                            }`}>
-                              <span className={`text-xs ${
-                                message.type === 'sent' 
-                                  ? 'text-blue-100' 
-                                  : isDarkMode ? 'text-gray-400' : 'text-gray-500'
-                              }`}>
-                                {message.time}
-                              </span>
-                              {message.type === 'sent' && (
-                                <div className="flex items-center ml-1">
-                                  {renderMessageStatus(message)}
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                    {currentMessages.length === 0 && (
-                      <div className={`text-center py-8 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        <p>Start a conversation with {selectedConversation.name}</p>
-                      </div>
-                    )}
-                    <div ref={messagesEndRef} />
-                  </div>
-                </div>
-
-                {/* Attached Files Preview */}
-                {currentAttachedFiles.length > 0 && (
-                  <div className={`border-t p-3 ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'}`}>
-                    <div className="flex flex-wrap gap-2">
-                      {currentAttachedFiles.map((file, index) => (
-                        <div key={index} className={`flex items-center gap-2 p-2 rounded-lg ${
-                          isDarkMode ? 'bg-slate-700' : 'bg-gray-100'
-                        }`}>
-                          {file.fileType === 'image' ? (
-                            <img 
-                              src={file.fileUrl} 
-                              alt={file.fileName}
-                              className="w-8 h-8 object-cover rounded"
-                            />
-                          ) : (
-                            <FileText size={16} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
+                          {conversation.online && (
+                            <div className="absolute -bottom-0.5 -right-0.5 w-2 h-2 md:w-3 md:h-3 bg-green-400 rounded-full border border-white" />
                           )}
-                          <span className={`text-sm max-w-32 truncate ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                            {file.fileName}
-                          </span>
-                          <button 
-                            onClick={() => removeAttachedFile(index)}
-                            className="p-1 rounded-full hover:bg-red-500 hover:text-white transition-colors"
-                            title="Remove file"
-                          >
-                            <X size={14} />
-                          </button>
                         </div>
-                      ))}
+                        
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between mb-1">
+                            <h3 className={`font-medium text-xs md:text-sm truncate ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                              {conversation.name}
+                            </h3>
+                            <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                              {conversation.time}
+                            </span>
+                          </div>
+                          
+                          <p className={`text-xs mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                            {conversation.role}
+                          </p>
+                          
+                          <p className={`text-xs truncate ${
+                            conversation.unread 
+                              ? isDarkMode ? 'text-white font-medium' : 'text-gray-900 font-medium'
+                              : isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                          }`}>
+                            {conversation.lastMessage}
+                          </p>
+                          
+                          {conversation.badge && (
+                            <span className="inline-block mt-1 px-1.5 py-0.5 bg-purple-100 text-purple-600 text-xs rounded-full">
+                              {conversation.badge}
+                            </span>
+                          )}
+                        </div>
+                        
+                        {conversation.unread && (
+                          <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-blue-500 rounded-full ml-1 md:ml-2 mt-1 md:mt-2" />
+                        )}
+                      </div>
                     </div>
+                  ))
+                ) : (
+                  <div className={`p-4 md:p-8 text-center ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                    <p className="text-sm">No conversations found.</p>
                   </div>
                 )}
+              </div>
+            </div>
 
-                {/* Message Input - Fixed at Bottom */}
-                <div className={`flex-shrink-0 p-4 border-t relative ${
-                  isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'
-                }`}>
-                  {/* Emoji Picker */}
-                  {showEmojiPicker && (
-                    <div 
-                      ref={emojiPickerRef}
-                      className={`absolute bottom-16 left-16 w-80 h-48 rounded-lg border shadow-lg p-4 overflow-y-auto z-10 ${
-                        isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'
-                      }`}
-                    >
-                      <div className="grid grid-cols-8 gap-2">
-                        {emojis.map((emoji, index) => (
-                          <button
-                            key={index}
-                            onClick={() => handleEmojiSelect(emoji)}
-                            className="text-xl hover:bg-gray-100 dark:hover:bg-slate-700 p-2 rounded transition-colors"
-                          >
-                            {emoji}
-                          </button>
+            {/* Chat Area */}
+            <div className={`flex-1 flex flex-col h-[calc(100vh-128px)] ${!selectedConversation ? 'hidden lg:flex' : 'flex'}`}>
+              {selectedConversation ? (
+                <>
+                  <div className={`flex-shrink-0 p-3 md:p-4 border-b flex items-center justify-between ${
+                    isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'
+                  }`}>
+                    <div className="flex items-center gap-2 md:gap-3">
+                      <button 
+                        onClick={() => setSelectedConversation(null)}
+                        className="lg:hidden p-1 rounded-md text-gray-500 hover:bg-gray-100 dark:hover:bg-slate-700"
+                      >
+                        <ChevronRight size={16} />
+                      </button>
+                      <div 
+                        className="flex items-center gap-2 md:gap-3 cursor-pointer hover:bg-opacity-80 rounded-lg p-1 md:p-2 -m-1 md:-m-2 transition-colors"
+                        onClick={() => setShowUserDetails(true)}
+                      >
+                        <div className="relative">
+                          <div className={`w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 rounded-full flex items-center justify-center text-white font-medium text-xs md:text-sm ${getAvatarColor(selectedConversation.name)}`}>
+                            {selectedConversation.avatar}
+                          </div>
+                          {selectedConversation.online && (
+                            <div className="absolute -bottom-0.5 -right-0.5 w-2 h-2 md:w-3 md:h-3 bg-green-400 rounded-full border border-white" />
+                          )}
+                        </div>
+                        <div>
+                          <h3 className={`font-semibold text-sm md:text-base ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                            {selectedConversation.name}
+                          </h3>
+                          <div className="flex items-center gap-1 md:gap-2 text-xs">
+                            {selectedConversation.online && <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-green-400 rounded-full" />}
+                            <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>
+                              {selectedConversation.online ? 'Online' : `Last seen ${selectedConversation.lastSeen}`}
+                            </span>
+                            {selectedConversation.badge && (
+                              <span className="px-1.5 py-0.5 bg-purple-100 text-purple-600 text-xs rounded-full">
+                                {selectedConversation.badge}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-1 md:gap-2">
+                      <button 
+                        onClick={handlePhoneCall}
+                        className={`p-1.5 md:p-2 rounded-lg transition-colors ${
+                          isDarkMode ? 'text-gray-400 hover:text-white hover:bg-slate-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                        }`}
+                        title="Call"
+                      >
+                        <Phone size={16} className="md:w-5 md:h-5" />
+                      </button>
+                      <button 
+                        onClick={handleVideoCall}
+                        className={`p-1.5 md:p-2 rounded-lg transition-colors ${
+                          isDarkMode ? 'text-gray-400 hover:text-white hover:bg-slate-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                        }`}
+                        title="Video Call"
+                      >
+                        <Video size={16} className="md:w-5 md:h-5" />
+                      </button>
+                      <button 
+                        onClick={() => setShowUserDetails(true)}
+                        className={`p-1.5 md:p-2 rounded-lg transition-colors ${
+                          isDarkMode ? 'text-gray-400 hover:text-white hover:bg-slate-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                        }`}
+                        title="User Info"
+                      >
+                        <Info size={16} className="md:w-5 md:h-5" />
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className={`flex-1 p-3 md:p-4 overflow-y-auto ${
+                    isDarkMode ? 'bg-slate-900' : 'bg-gray-50'
+                  }`}>
+                    <div className="space-y-3 md:space-y-4">
+                      {currentMessages.map((message) => (
+                        <div key={message.id} className={`flex ${message.type === 'sent' ? 'justify-end' : 'justify-start'}`}>
+                          {message.type === 'file' ? (
+                            <div className={`max-w-xs p-2 md:p-3 rounded-lg ${
+                              isDarkMode ? 'bg-slate-800 border border-slate-700' : 'bg-white border border-gray-300'
+                            }`}>
+                              <div className="flex items-center gap-2 md:gap-3">
+                                <div className={`w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center ${
+                                  isDarkMode ? 'bg-slate-700' : 'bg-gray-100'
+                                }`}>
+                                  <FileText size={16} className="md:w-5 md:h-5" />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <p className={`font-medium text-xs md:text-sm truncate ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                                    {message.fileName}
+                                  </p>
+                                  <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                    {message.fileSize}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="flex gap-1 md:gap-2 mt-1 md:mt-2">
+                                <button 
+                                  onClick={() => handleFileAction(message, 'view')}
+                                  className={`flex items-center gap-1 text-xs px-1.5 py-1 md:px-2 md:py-1 rounded ${
+                                    isDarkMode ? 'bg-slate-700 text-gray-300 hover:bg-slate-600' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                  }`}
+                                >
+                                  <Eye size={10} className="md:w-3 md:h-3" />
+                                  View
+                                </button>
+                                <button 
+                                  onClick={() => handleFileAction(message, 'download')}
+                                  className={`flex items-center gap-1 text-xs px-1.5 py-1 md:px-2 md:py-1 rounded ${
+                                    isDarkMode ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-blue-500 text-white hover:bg-blue-600'
+                                  }`}
+                                >
+                                  <Download size={10} className="md:w-3 md:h-3" />
+                                  Download
+                                </button>
+                              </div>
+                              <div className={`flex items-center justify-between mt-1 md:mt-2`}>
+                                <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                  {message.time}
+                                </span>
+                                {message.type === 'sent' && (
+                                  <div className="flex items-center ml-1 md:ml-2">
+                                    {renderMessageStatus(message)}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          ) : message.type === 'image' ? (
+                            <div className={`max-w-xs p-2 md:p-3 rounded-lg ${
+                              isDarkMode ? 'bg-slate-800 border border-slate-700' : 'bg-white border border-gray-300'
+                            }`}>
+                              <img 
+                                src={message.fileUrl} 
+                                alt={message.fileName}
+                                className="w-full h-24 md:h-32 object-cover rounded-lg mb-1 md:mb-2 cursor-pointer"
+                                onClick={() => handleFileAction(message, 'view')}
+                              />
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <p className={`font-medium text-xs md:text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                                    {message.fileName}
+                                  </p>
+                                  <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                    {message.fileSize}
+                                  </p>
+                                </div>
+                                <button 
+                                  onClick={() => handleFileAction(message, 'download')}
+                                  className={`p-1 rounded ${
+                                    isDarkMode ? 'bg-slate-700 text-gray-300 hover:bg-slate-600' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                  }`}
+                                  title="Download"
+                                >
+                                  <Download size={12} className="md:w-3 md:h-3" />
+                                </button>
+                              </div>
+                              <div className={`flex items-center justify-between mt-1`}>
+                                <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                  {message.time}
+                                </span>
+                                {message.type === 'sent' && (
+                                  <div className="flex items-center ml-1 md:ml-2">
+                                    {renderMessageStatus(message)}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          ) : (
+                            <div className={`max-w-xs px-3 py-2 rounded-lg ${
+                              message.type === 'sent' 
+                                ? 'bg-blue-500 text-white' 
+                                : isDarkMode ? 'bg-slate-800 text-white' : 'bg-white text-gray-900'
+                            }`}>
+                              <p className="text-xs md:text-sm">{message.content}</p>
+                              <div className={`flex items-center justify-end gap-1 mt-1 ${
+                                message.type === 'sent' ? 'justify-end' : 'justify-start'
+                              }`}>
+                                <span className={`text-xs ${
+                                  message.type === 'sent' 
+                                    ? 'text-blue-100' 
+                                    : isDarkMode ? 'text-gray-400' : 'text-gray-500'
+                                }`}>
+                                  {message.time}
+                                </span>
+                                {message.type === 'sent' && (
+                                  <div className="flex items-center ml-1">
+                                    {renderMessageStatus(message)}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                      {currentMessages.length === 0 && (
+                        <div className={`text-center py-4 md:py-8 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                          <p className="text-sm">Start a conversation with {selectedConversation.name}</p>
+                        </div>
+                      )}
+                      <div ref={messagesEndRef} />
+                    </div>
+                  </div>
+
+                  {currentAttachedFiles.length > 0 && (
+                    <div className={`border-t p-2 md:p-3 ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'}`}>
+                      <div className="flex flex-wrap gap-1 md:gap-2">
+                        {currentAttachedFiles.map((file, index) => (
+                          <div key={index} className={`flex items-center gap-1 md:gap-2 p-1.5 md:p-2 rounded-lg ${
+                            isDarkMode ? 'bg-slate-700' : 'bg-gray-100'
+                          }`}>
+                            {file.fileType === 'image' ? (
+                              <img 
+                                src={file.fileUrl} 
+                                alt={file.fileName}
+                                className="w-6 h-6 md:w-8 md:h-8 object-cover rounded"
+                              />
+                            ) : (
+                              <FileText size={14} className="md:w-4 md:h-4" />
+                            )}
+                            <span className={`text-xs max-w-24 md:max-w-32 truncate ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                              {file.fileName}
+                            </span>
+                            <button 
+                              onClick={() => removeAttachedFile(index)}
+                              className="p-0.5 md:p-1 rounded-full hover:bg-red-500 hover:text-white transition-colors"
+                              title="Remove file"
+                            >
+                              <X size={12} className="md:w-3 md:h-3" />
+                            </button>
+                          </div>
                         ))}
                       </div>
                     </div>
                   )}
 
-                  {/* Attachment Menu */}
-                  {showAttachmentMenu && (
-                    <div 
-                      ref={attachmentMenuRef}
-                      className={`absolute bottom-16 left-4 w-48 rounded-lg border shadow-lg p-2 z-10 ${
-                        isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'
-                      }`}
-                    >
-                      <button
-                        onClick={() => handleFileAttachment('file')}
-                        className={`w-full flex items-center gap-3 p-3 rounded-lg text-left  transition-colors ${
-                          isDarkMode ? 'text-gray-300 hover:bg-slate-700' : 'text-gray-700 hover:bg-gray-100'
-                        }`}
-                      >
-                        <FileText size={20} />
-                        <span>Document</span>
-                      </button>
-                      <button
-                        onClick={() => handleFileAttachment('image')}
-                        className={`w-full flex items-center gap-3 p-3 rounded-lg text-left transition-colors ${
-                          isDarkMode ? 'text-gray-300 hover:bg-slate-700' : 'text-gray-700 hover:bg-gray-100'
-                        }`}
-                      >
-                        <Image size={20} />
-                        <span>Photo</span>
-                      </button>
-                    </div>
-                  )}
-
-                  <div className="flex items-center gap-3">
-                    <button 
-                      onClick={() => setShowAttachmentMenu(!showAttachmentMenu)}
-                      className={`flex-shrink-0 p-2 rounded-lg transition-colors ${
-                        isDarkMode ? 'text-gray-400 hover:text-white hover:bg-slate-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                      }`}
-                    >
-                      <Paperclip size={20} />
-                    </button>
-                    
-                    <div className={`flex-1 border rounded-lg relative ${
-                      isDarkMode ? 'border-slate-600' : 'border-gray-300'
-                    }`}>
-                      <textarea
-                        value={messageInput}
-                        onChange={(e) => setMessageInput(e.target.value)}
-                        onKeyPress={handleKeyPress}
-                        placeholder="Type a message..."
-                        rows="1"
-                        style={{ minHeight: '44px', maxHeight: '120px' }}
-                        className={`w-full p-3 rounded-lg resize-none focus:outline-none overflow-y-auto ${
-                          isDarkMode 
-                            ? 'bg-slate-700 text-white placeholder-gray-400' 
-                            : 'bg-white text-gray-900 placeholder-gray-500'
-                        }`}
-                      />
-                    </div>
-                    
-                    <button 
-                      onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                      className={`flex-shrink-0 p-2 rounded-lg transition-colors ${
-                        isDarkMode ? 'text-gray-400 hover:text-white hover:bg-slate-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                      }`}
-                    >
-                      <Smile size={20} />
-                    </button>
-                    
-                    <button 
-                      onClick={handleSendMessage}
-                      className="flex-shrink-0 p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50"
-                      disabled={!messageInput.trim() && currentAttachedFiles.length === 0}
-                    >
-                      <Send size={20} />
-                    </button>
-                  </div>
-
-                  {/* Hidden file inputs */}
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    className="hidden"
-                    onChange={(e) => handleFileUpload(e, 'file')}
-                    multiple
-                  />
-                  <input
-                    ref={imageInputRef}
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(e) => handleFileUpload(e, 'image')}
-                    multiple
-                  />
-                </div>
-              </>
-            ) : (
-              // Welcome Screen
-              <div className={`flex-1 flex flex-col items-center justify-center ${
-                isDarkMode ? 'bg-slate-900' : 'bg-gray-50'
-              }`}>
-                <div className={`w-32 h-32 rounded-full flex items-center justify-center mb-6 ${
-                  isDarkMode ? 'bg-slate-800' : 'bg-gray-200'
-                }`}>
-                  <div className={`w-16 h-16 rounded-lg flex items-center justify-center ${
-                    isDarkMode ? 'bg-slate-700' : 'bg-white'
+                  <div className={`flex-shrink-0 p-3 md:p-4 border-t relative ${
+                    isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'
                   }`}>
-                    <Send className={isDarkMode ? 'text-gray-400' : 'text-gray-500'} size={32} />
-                  </div>
-                </div>
-                
-                <h2 className={`text-2xl font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  Welcome to Messages
-                </h2>
-                <p className={`text-center max-w-md ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  Select a conversation from the sidebar to start chatting with teachers, students, parents, and staff members.
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* User Details Modal */}
-        {showUserDetails && selectedConversation && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className={`rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl ${
-              isDarkMode ? 'bg-slate-800 border border-slate-700' : 'bg-white border border-gray-200'
-            }`}>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  User Details
-                </h2>
-                <button
-                  onClick={() => setShowUserDetails(false)}
-                  className={`p-2 rounded-lg transition-colors ${
-                    isDarkMode ? 'text-gray-400 hover:text-white hover:bg-slate-700' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  <X size={20} />
-                </button>
-              </div>
-
-              <div className="text-center mb-6">
-                <div className={`w-20 h-20 rounded-full flex items-center justify-center text-white font-medium text-xl mx-auto mb-4 ${getAvatarColor(selectedConversation.name)}`}>
-                  {selectedConversation.avatar}
-                </div>
-                <h3 className={`text-lg font-semibold mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  {selectedConversation.name}
-                </h3>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  {selectedConversation.role}
-                </p>
-                <div className="flex items-center justify-center gap-2 mt-2">
-                  {selectedConversation.online && <div className="w-2 h-2 bg-green-400 rounded-full" />}
-                  <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                    {selectedConversation.online ? 'Online' : `Last seen ${selectedConversation.lastSeen}`}
-                  </span>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <Mail className={isDarkMode ? 'text-gray-400' : 'text-gray-500'} size={20} />
-                  <div>
-                    <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Email</p>
-                    <p className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                      {selectedConversation.email}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <Phone className={isDarkMode ? 'text-gray-400' : 'text-gray-500'} size={20} />
-                  <div>
-                    <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Phone</p>
-                    <p className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                      {selectedConversation.phone}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <MapPin className={isDarkMode ? 'text-gray-400' : 'text-gray-500'} size={20} />
-                  <div>
-                    <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Address</p>
-                    <p className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                      {selectedConversation.address}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <Calendar className={isDarkMode ? 'text-gray-400' : 'text-gray-500'} size={20} />
-                  <div>
-                    <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Joined</p>
-                    <p className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                      {new Date(selectedConversation.joinDate).toLocaleDateString()}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex gap-3 mt-6">
-                <button
-                  onClick={handlePhoneCall}
-                  className="flex-1 flex items-center justify-center gap-2 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
-                >
-                  <Phone size={18} />
-                  Call
-                </button>
-                <button
-                  onClick={handleVideoCall}
-                  className="flex-1 flex items-center justify-center gap-2 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-                >
-                  <Video size={18} />
-                  Video
-                </button>
-                <button
-                  onClick={() => window.open(`https://wa.me/${selectedConversation.phone.replace(/[^\d]/g, '')}`, '_blank')}
-                  className="flex-1 flex items-center justify-center gap-2 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-                >
-                  <MessageSquare size={18} />
-                  WhatsApp
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* New Chat Modal */}
-        {showNewChatModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className={`rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl ${
-              isDarkMode ? 'bg-slate-800 border border-slate-700' : 'bg-white border border-gray-200'
-            }`}>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  Start New Chat
-                </h2>
-                <button
-                  onClick={() => setShowNewChatModal(false)}
-                  className={`p-2 rounded-lg transition-colors ${
-                    isDarkMode ? 'text-gray-400 hover:text-white hover:bg-slate-700' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  <X size={20} />
-                </button>
-              </div>
-
-              <div className="mb-4">
-                <input
-                  type="text"
-                  placeholder="Search users..."
-                  className={`w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    isDarkMode 
-                      ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-400' 
-                      : 'bg-gray-50 border-gray-300 text-gray-900 placeholder-gray-500'
-                  }`}
-                />
-              </div>
-
-              <div className="max-h-64 overflow-y-auto">
-                {availableUsers.map((user) => {
-                  const RoleIcon = getRoleIcon(user.type);
-                  return (
-                    <div
-                      key={user.id}
-                      onClick={() => handleNewChat(user)}
-                      className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-colors ${
-                        isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-gray-100'
-                      }`}
-                    >
-                      <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-medium ${getAvatarColor(user.name)}`}>
-                        {user.avatar}
-                      </div>
-                      <div className="flex-1">
-                        <h3 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                          {user.name}
-                        </h3>
-                        <div className="flex items-center gap-2">
-                          <RoleIcon size={12} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
-                          <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                            {user.role}
-                          </p>
+                    {showEmojiPicker && (
+                      <div 
+                        ref={emojiPickerRef}
+                        className={`absolute bottom-12 md:bottom-16 left-2 md:left-4 w-64 md:w-80 h-32 md:h-48 rounded-lg border shadow-lg p-2 md:p-4 overflow-y-auto z-10 ${
+                          isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'
+                        }`}
+                      >
+                        <div className="grid grid-cols-8 gap-1 md:gap-2">
+                          {emojis.map((emoji, index) => (
+                            <button
+                              key={index}
+                              onClick={() => handleEmojiSelect(emoji)}
+                              className="text-lg md:text-xl hover:bg-gray-100 dark:hover:bg-slate-700 p-1 md:p-2 rounded transition-colors"
+                            >
+                              {emoji}
+                            </button>
+                          ))}
                         </div>
                       </div>
+                    )}
+
+                    {showAttachmentMenu && (
+                      <div 
+                        ref={attachmentMenuRef}
+                        className={`absolute bottom-12 md:bottom-16 left-2 md:left-4 w-40 md:w-48 rounded-lg border shadow-lg p-1 md:p-2 z-10 ${
+                          isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-300'
+                        }`}
+                      >
+                        <button
+                          onClick={() => handleFileAttachment('file')}
+                          className={`w-full flex items-center gap-2 md:gap-3 p-2 md:p-3 rounded-lg text-left transition-colors ${
+                            isDarkMode ? 'text-gray-300 hover:bg-slate-700' : 'text-gray-700 hover:bg-gray-100'
+                          }`}
+                        >
+                          <FileText size={16} className="md:w-5 md:h-5" />
+                          <span className="text-xs md:text-sm">Document</span>
+                        </button>
+                        <button
+                          onClick={() => handleFileAttachment('image')}
+                          className={`w-full flex items-center gap-2 md:gap-3 p-2 md:p-3 rounded-lg text-left transition-colors ${
+                            isDarkMode ? 'text-gray-300 hover:bg-slate-700' : 'text-gray-700 hover:bg-gray-100'
+                          }`}
+                        >
+                          <Image size={16} className="md:w-5 md:h-5" />
+                          <span className="text-xs md:text-sm">Photo</span>
+                        </button>
+                      </div>
+                    )}
+
+                    <div className="flex items-center gap-2 md:gap-3">
+                      <button 
+                        onClick={() => setShowAttachmentMenu(!showAttachmentMenu)}
+                        className={`flex-shrink-0 p-1.5 md:p-2 rounded-lg transition-colors ${
+                          isDarkMode ? 'text-gray-400 hover:text-white hover:bg-slate-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                        }`}
+                      >
+                        <Paperclip size={16} className="md:w-5 md:h-5" />
+                      </button>
+                      
+                      <div className={`flex-1 border rounded-lg relative ${
+                        isDarkMode ? 'border-slate-600' : 'border-gray-300'
+                      }`}>
+                        <textarea
+                          value={messageInput}
+                          onChange={(e) => setMessageInput(e.target.value)}
+                          onKeyPress={handleKeyPress}
+                          placeholder="Type a message..."
+                          rows="1"
+                          style={{ minHeight: '40px', maxHeight: '120px' }}
+                          className={`w-full p-2 md:p-3 rounded-lg resize-none focus:outline-none overflow-y-auto text-xs md:text-sm ${
+                            isDarkMode 
+                              ? 'bg-slate-700 text-white placeholder-gray-400' 
+                              : 'bg-white text-gray-900 placeholder-gray-500'
+                          }`}
+                        />
+                      </div>
+                      
+                      <button 
+                        onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                        className={`flex-shrink-0 p-1.5 md:p-2 rounded-lg transition-colors ${
+                          isDarkMode ? 'text-gray-400 hover:text-white hover:bg-slate-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                        }`}
+                      >
+                        <Smile size={16} className="md:w-5 md:h-5" />
+                      </button>
+                      
+                      <button 
+                        onClick={handleSendMessage}
+                        className="flex-shrink-0 p-2 md:p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50"
+                        disabled={!messageInput.trim() && currentAttachedFiles.length === 0}
+                      >
+                        <Send size={16} className="md:w-5 md:h-5" />
+                      </button>
                     </div>
-                  );
-                })}
-              </div>
+
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      className="hidden"
+                      onChange={(e) => handleFileUpload(e, 'file')}
+                      multiple
+                    />
+                    <input
+                      ref={imageInputRef}
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => handleFileUpload(e, 'image')}
+                      multiple
+                    />
+                  </div>
+                </>
+              ) : (
+                <div className={`flex-1 flex flex-col items-center justify-center ${
+                  isDarkMode ? 'bg-slate-900' : 'bg-gray-50'
+                }`}>
+                  <div className={`w-20 h-20 md:w-32 md:h-32 rounded-full flex items-center justify-center mb-4 md:mb-6 ${
+                    isDarkMode ? 'bg-slate-800' : 'bg-gray-200'
+                  }`}>
+                    <div className={`w-10 h-10 md:w-16 md:h-16 rounded-lg flex items-center justify-center ${
+                      isDarkMode ? 'bg-slate-700' : 'bg-white'
+                    }`}>
+                      <Send className={`md:w-8 md:h-8${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} size={20} />
+                    </div>
+                  </div>
+                  
+                  <h2 className={`text-lg md:text-2xl font-semibold mb-1 md:mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    Welcome to Messages
+                  </h2>
+                  <p className={`text-center max-w-xs md:max-w-md text-xs md:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                    Select a conversation from the sidebar to start chatting with teachers, students, parents, and staff members.
+                  </p>
+                </div>
+              )}
             </div>
           </div>
-        )}
-      </main>
 
-      <Footer isSidebarExpanded={isSidebarExpanded} />
-    </div>
+          {showUserDetails && selectedConversation && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 sm:p-4 z-50">
+              <div className={`w-full max-w-md rounded-xl md:rounded-2xl ${
+                isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'
+              } shadow-2xl overflow-hidden`}>
+                
+                <div className={`px-4 py-3 md:px-6 md:py-4 border-b flex items-center justify-between ${
+                  isDarkMode ? 'border-slate-700' : 'border-gray-300'
+                }`}>
+                  <div>
+                    <h2 className={`text-lg md:text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      User Details
+                    </h2>
+                    <p className={`text-xs md:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      Complete information about the user
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setShowUserDetails(false)}
+                    className={`p-1 md:p-2 rounded-lg hover:bg-gray-100 ${
+                      isDarkMode ? 'text-gray-400 hover:bg-slate-700' : 'text-gray-600'
+                    }`}
+                  >
+                    <X size={20} className="md:w-6 md:h-6" />
+                  </button>
+                </div>
+
+                <div className="p-4 md:p-6">
+                  <div className="text-center mb-4 md:mb-6">
+                    <div className={`w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-full flex items-center justify-center text-white font-medium text-sm md:text-base mx-auto mb-3 md:mb-4 ${getAvatarColor(selectedConversation.name)}`}>
+                      {selectedConversation.avatar}
+                    </div>
+                    <h3 className={`text-base md:text-lg font-semibold mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      {selectedConversation.name}
+                    </h3>
+                    <p className={`text-xs md:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      {selectedConversation.role}
+                    </p>
+                    <div className="flex items-center justify-center gap-1 md:gap-2 mt-1 md:mt-2">
+                      {selectedConversation.online && <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-green-400 rounded-full" />}
+                      <span className={`text-xs md:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                        {selectedConversation.online ? 'Online' : `Last seen ${selectedConversation.lastSeen}`}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3 md:space-y-4">
+                    <div className="flex items-center gap-2 md:gap-3">
+                      <Mail className={`md:w-5 md:h-5${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} size={16}/>
+                      <div>
+                        <p className={`text-xs md:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Email</p>
+                        <p className={`font-medium text-xs md:text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          {selectedConversation.email}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 md:gap-3">
+                      <Phone className={`md:w-5 md:h-5${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} size={16}/>
+                      <div>
+                        <p className={`text-xs md:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Phone</p>
+                        <p className={`font-medium text-xs md:text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          {selectedConversation.phone}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 md:gap-3">
+                      <MapPin className={`md:w-5 md:h-5${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} size={16}/>
+                      <div>
+                        <p className={`text-xs md:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Address</p>
+                        <p className={`font-medium text-xs md:text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          {selectedConversation.address}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 md:gap-3">
+                      <Calendar className={`md:w-5 md:h-5${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} size={16}/>
+                      <div>
+                        <p className={`text-xs md:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Joined</p>
+                        <p className={`font-medium text-xs md:text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          {new Date(selectedConversation.joinDate).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-2 md:gap-3 mt-4 md:mt-6">
+                    <button
+                      onClick={handlePhoneCall}
+                      className="flex-1 flex items-center justify-center gap-1 md:gap-2 py-1.5 md:py-2 bg-green-500 text-white rounded-lg text-xs md:text-sm hover:bg-green-600 transition-colors"
+                    >
+                      <Phone size={14} className="md:w-4 md:h-4" />
+                      Call
+                    </button>
+                    <button
+                      onClick={handleVideoCall}
+                      className="flex-1 flex items-center justify-center gap-1 md:gap-2 py-1.5 md:py-2 bg-blue-500 text-white rounded-lg text-xs md:text-sm hover:bg-blue-600 transition-colors"
+                    >
+                      <Video size={14} className="md:w-4 md:h-4" />
+                      Video
+                    </button>
+                    <button
+                      onClick={() => window.open(`https://wa.me/${selectedConversation.phone.replace(/[^\d]/g, '')}`, '_blank')}
+                      className="flex-1 flex items-center justify-center gap-1 md:gap-2 py-1.5 md:py-2 bg-green-600 text-white rounded-lg text-xs md:text-sm hover:bg-green-700 transition-colors"
+                    >
+                      <MessageSquare size={14} className="md:w-4 md:h-4" />
+                      WhatsApp
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {showNewChatModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 sm:p-4 z-50">
+              <div className={`w-full max-w-md rounded-xl md:rounded-2xl ${
+                isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'
+              } shadow-2xl overflow-hidden`}>
+                
+                <div className={`px-4 py-3 md:px-6 md:py-4 border-b flex items-center justify-between ${
+                  isDarkMode ? 'border-slate-700' : 'border-gray-300'
+                }`}>
+                  <div>
+                    <h2 className={`text-lg md:text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      Start New Chat
+                    </h2>
+                    <p className={`text-xs md:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      Select a user to start a conversation
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setShowNewChatModal(false)}
+                    className={`p-1 md:p-2 rounded-lg hover:bg-gray-100 ${
+                      isDarkMode ? 'text-gray-400 hover:bg-slate-700' : 'text-gray-600'
+                    }`}
+                  >
+                    <X size={20} className="md:w-6 md:h-6" />
+                  </button>
+                </div>
+
+                <div className="p-4 md:p-6">
+                  <div className="mb-3 md:mb-4">
+                    <input
+                      type="text"
+                      placeholder="Search users..."
+                      className={`w-full px-3 py-2 rounded-lg border text-xs md:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                        isDarkMode 
+                          ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-400' 
+                          : 'bg-gray-50 border-gray-300 text-gray-900 placeholder-gray-500'
+                      }`}
+                    />
+                  </div>
+
+                  <div className="max-h-48 md:max-h-64 overflow-y-auto">
+                    {availableUsers.map((user) => {
+                      const RoleIcon = getRoleIcon(user.type);
+                      return (
+                        <div
+                          key={user.id}
+                          onClick={() => handleNewChat(user)}
+                          className={`flex items-center gap-2 md:gap-3 p-2 md:p-3 rounded-lg cursor-pointer transition-colors ${
+                            isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-gray-100'
+                          }`}
+                        >
+                          <div className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white font-medium text-xs md:text-sm ${getAvatarColor(user.name)}`}>
+                            {user.avatar}
+                          </div>
+                          <div className="flex-1">
+                            <h3 className={`font-medium text-xs md:text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                              {user.name}
+                            </h3>
+                            <div className="flex items-center gap-1 md:gap-2">
+                              <RoleIcon size={10} className="md:w-3 md:h-3" />
+                              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                                {user.role}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </main>
+
+        <Footer isSidebarExpanded={isSidebarExpanded} />
+      </div>
+    </>
   );
 };
 
