@@ -1,13 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Sun, Moon, ArrowLeft } from 'lucide-react';
-import logo from '../../assets/images/test.png';
-import { useTheme } from '../../context/ThemeContext'; // Add this import
-
+import logoDark from '../../assets/images/LogoforDark.png';
+import logoLight from '../../assets/images/LogoforLight.png';
+import { useTheme } from '../../context/ThemeContext';
 
 const ResetPasswordPage = () => {
   const navigate = useNavigate();
-  const { isDarkMode, toggleTheme } = useTheme(); // Use theme context
+  const { isDarkMode, toggleTheme } = useTheme();
   
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [isLoading, setIsLoading] = useState(false);
@@ -15,7 +15,6 @@ const ResetPasswordPage = () => {
   const [canResend, setCanResend] = useState(false);
   const inputRefs = useRef([]);
 
-  // Countdown timer
   useEffect(() => {
     let timer;
     if (countdown > 0 && !canResend) {
@@ -26,28 +25,33 @@ const ResetPasswordPage = () => {
     return () => clearTimeout(timer);
   }, [countdown, canResend]);
 
-  // Theme persistence
   useEffect(() => {
     localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
   }, [isDarkMode]);
 
   const handleOtpChange = (index, value) => {
-    if (value.length > 1) return; // Prevent multiple characters
+    if (value.length > 1) return;
     
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
 
-    // Auto-focus next input
     if (value !== '' && index < 5) {
       inputRefs.current[index + 1].focus();
     }
   };
 
   const handleKeyDown = (index, e) => {
-    // Handle backspace
     if (e.key === 'Backspace' && otp[index] === '' && index > 0) {
       inputRefs.current[index - 1].focus();
+    }
+    
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const otpString = otp.join('');
+      if (otpString.length === 6) {
+        handleVerifyOTP();
+      }
     }
   };
 
@@ -63,7 +67,6 @@ const ResetPasswordPage = () => {
     }
     setOtp(newOtp);
     
-    // Focus next empty input or last input
     const nextEmptyIndex = newOtp.findIndex(digit => digit === '');
     if (nextEmptyIndex !== -1) {
       inputRefs.current[nextEmptyIndex].focus();
@@ -72,20 +75,19 @@ const ResetPasswordPage = () => {
     }
   };
 
-  const handleVerifyOTP = async () => {
+  const handleVerifyOTP = async (e) => {
+    if (e) e.preventDefault();
+    
     const otpString = otp.join('');
     if (otpString.length !== 6) return;
 
     setIsLoading(true);
     
-    // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1500));
     
     console.log('Verifying OTP:', otpString);
-    // Navigate to new password page or success page
-    alert('OTP verified successfully!');
     setIsLoading(false);
-    navigate('/NewPassword')
+    navigate('/NewPassword');
   };
 
   const handleResendOTP = async () => {
@@ -94,14 +96,12 @@ const ResetPasswordPage = () => {
     setCountdown(59);
     setOtp(['', '', '', '', '', '']);
     
-    // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000));
     
     console.log('Resending OTP...');
     alert('New OTP sent to your email!');
     setIsLoading(false);
     
-    // Focus first input
     inputRefs.current[0].focus();
   };
 
@@ -109,22 +109,17 @@ const ResetPasswordPage = () => {
     navigate('/ForgotPassword');
   };
 
-//   const toggleTheme = () => {
-//     setIsDarkMode(!isDarkMode);
-//   };
-
   const isOtpComplete = otp.every(digit => digit !== '');
 
   return (
-    <div className={`fixed inset-0 w-screen h-screen overflow-hidden font-sans ${isDarkMode
+    <div className={`min-h-screen w-full font-sans overflow-x-hidden ${isDarkMode
         ? 'bg-gradient-to-b from-gray-900 via-gray-900 to-black'
         : 'bg-gradient-to-br from-blue-50 via-white to-cyan-50'
       }`}>
 
-      {/* Animated Stars Background - Only in Dark Mode */}
       {isDarkMode && (
         <div
-          className="absolute inset-0 opacity-60"
+          className="absolute inset-0 opacity-60 pointer-events-none"
           style={{
             background: `
               radial-gradient(2px 2px at 20px 30px, white, transparent),
@@ -149,151 +144,144 @@ const ResetPasswordPage = () => {
         ></div>
       )}
 
-      {/* Back Button */}
-      <div className="absolute top-5 left-5 z-50">
+      <div className="fixed top-4 left-4 z-50">
         <button
           onClick={handleBackToForgotPassword}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 ${
+          className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg transition-all duration-300 ${
             isDarkMode
               ? 'text-white/80 hover:text-white hover:bg-white/10'
               : 'text-gray-700 hover:text-gray-900 hover:bg-black/10'
           }`}
           title="Back to Forgot Password"
         >
-          <ArrowLeft size={20} />
-          <span className="text-sm font-medium">Back</span>
+          <ArrowLeft size={18} />
+          <span className="text-xs sm:text-sm font-medium">Back</span>
         </button>
       </div>
 
-      {/* Theme Toggle Switch */}
-      <div className="absolute top-5 right-5 z-50">
+      <div className="fixed top-4 right-4 z-50">
         <button
           onClick={toggleTheme}
-          className={`relative w-20 h-10 rounded-full border-0 cursor-pointer transition-all duration-500 ease-in-out ${isDarkMode
+          className={`relative w-16 h-8 rounded-full border-0 cursor-pointer transition-all duration-500 ease-in-out ${isDarkMode
               ? 'bg-white'
               : 'bg-black'
             }`}
           title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
         >
-          <div className={`absolute left-2.5 top-1/2 transform -translate-y-1/2 transition-all duration-300`}>
+          <div className={`absolute left-2 top-1/2 transform -translate-y-1/2 transition-all duration-300`}>
             <Sun
               className={isDarkMode ? 'text-gray-400' : 'text-orange-500'}
-              size={18}
+              size={14}
             />
           </div>
 
-          <div className={`absolute right-2.5 top-1/2 transform -translate-y-1/2 transition-all duration-300`}>
+          <div className={`absolute right-2 top-1/2 transform -translate-y-1/2 transition-all duration-300`}>
             <Moon
               className={isDarkMode ? 'text-blue-300' : 'text-white'}
-              size={18}
+              size={14}
             />
           </div>
 
-          <div className={`absolute top-1 w-8 h-8 rounded-full transition-all duration-500 ease-in-out shadow-md ${isDarkMode
-              ? 'transform translate-x-11 bg-black'
+          <div className={`absolute top-1 w-6 h-6 rounded-full transition-all duration-500 ease-in-out shadow-md ${isDarkMode
+              ? 'transform translate-x-8 bg-black'
               : 'transform translate-x-1 bg-white'
             }`}>
             <div className="absolute inset-0 flex items-center justify-center">
               {isDarkMode ? (
-                <Moon className="text-white" size={14.5} />
+                <Moon className="text-white" size={12} />
               ) : (
-                <Sun className="text-orange-400" size={14.5} />
+                <Sun className="text-orange-400" size={12} />
               )}
             </div>
           </div>
         </button>
       </div>
 
-      {/* Main Content */}
-      <div className="flex w-full h-full items-center justify-center relative z-10">
-        <div className={`w-full max-w-md mx-4 rounded-3xl p-10 backdrop-blur-3xl shadow-2xl ${
+      <div className="flex w-full min-h-screen items-center justify-center relative z-10 px-4 py-20">
+        <div className={`w-full max-w-md rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 backdrop-blur-3xl shadow-2xl ${
           isDarkMode
             ? 'bg-black/40 border border-white/10'
             : 'bg-white/80 border border-black/10'
         }`}>
           
-          {/* Logo */}
-          <div className="flex items-center justify-center mb-6">
-            <img src={logo} alt="GuruSkull Logo" className='w-64'></img>
+          <div className="flex items-center justify-center mb-4 sm:mb-6 gap-3 w-full">
+            <img src={isDarkMode ? logoDark : logoLight} alt="GuruSkull Logo" className='w-48 sm:w-64 md:w-80'/>
           </div>
 
-          {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className={`text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <div className="text-center mb-6 sm:mb-8">
+            <h1 className={`text-2xl sm:text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               Reset Password
             </h1>
-            <p className={`text-sm mt-2 ${isDarkMode ? 'text-white/70' : 'text-gray-600'}`}>
+            <p className={`text-xs sm:text-sm mt-2 ${isDarkMode ? 'text-white/70' : 'text-gray-600'}`}>
               Enter OTP which we send to your email
             </p>
           </div>
 
-          {/* OTP Input */}
-          <div className="flex justify-center gap-3 mb-6">
-            {otp.map((digit, index) => (
-              <input
-                key={index}
-                ref={el => inputRefs.current[index] = el}
-                type="text"
-                maxLength="1"
-                value={digit}
-                onChange={(e) => handleOtpChange(index, e.target.value)}
-                onKeyDown={(e) => handleKeyDown(index, e)}
-                onPaste={handlePaste}
-                className={`w-14 h-14 text-2xl font-bold text-center rounded-xl border-2 transition-all duration-300 outline-none ${
-                  digit
-                    ? isDarkMode
-                      ? 'border-cyan-400 bg-white/10 text-white'
-                      : 'border-cyan-500 bg-white text-gray-900'
-                    : isDarkMode
-                      ? 'border-white/20 bg-white/5 text-white focus:border-cyan-400'
-                      : 'border-gray-300 bg-white text-gray-900 focus:border-cyan-500'
-                }`}
-              />
-            ))}
-          </div>
+          <form onSubmit={handleVerifyOTP}>
+            <div className="flex justify-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+              {otp.map((digit, index) => (
+                <input
+                  key={index}
+                  ref={el => inputRefs.current[index] = el}
+                  type="text"
+                  maxLength="1"
+                  value={digit}
+                  onChange={(e) => handleOtpChange(index, e.target.value)}
+                  onKeyDown={(e) => handleKeyDown(index, e)}
+                  onPaste={handlePaste}
+                  className={`w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 text-lg sm:text-xl md:text-2xl font-bold text-center rounded-lg sm:rounded-xl border-2 transition-all duration-300 outline-none ${
+                    digit
+                      ? isDarkMode
+                        ? 'border-cyan-400 bg-white/10 text-white'
+                        : 'border-cyan-500 bg-white text-gray-900'
+                      : isDarkMode
+                        ? 'border-white/20 bg-white/5 text-white focus:border-cyan-400'
+                        : 'border-gray-300 bg-white text-gray-900 focus:border-cyan-500'
+                  }`}
+                />
+              ))}
+            </div>
 
-          {/* Countdown Timer */}
-          <div className="text-center mb-6">
-            <p className={`text-sm ${isDarkMode ? 'text-white/70' : 'text-gray-600'}`}>
-              {canResend ? (
-                'You can now resend the OTP'
-              ) : (
-                `Resend OTP in : ${countdown.toString().padStart(2, '0')}:59`
-              )}
-            </p>
-          </div>
+            <div className="text-center mb-4 sm:mb-6">
+              <p className={`text-xs sm:text-sm ${isDarkMode ? 'text-white/70' : 'text-gray-600'}`}>
+                {canResend ? (
+                  'You can now resend the OTP'
+                ) : (
+                  `Resend OTP in : 00:${countdown.toString().padStart(2, '0')}`
+                )}
+              </p>
+            </div>
 
-          {/* Action Buttons */}
-          <div className="flex flex-col gap-4">
-            {/* Next Button */}
-            <button
-              onClick={handleVerifyOTP}
-              disabled={!isOtpComplete || isLoading}
-              className="w-full bg-gradient-to-r from-cyan-500 to-cyan-600 text-white py-4 rounded-xl font-semibold text-base transition-all duration-300 flex items-center justify-center gap-2 hover:from-cyan-600 hover:to-cyan-700 hover:shadow-lg hover:shadow-cyan-500/25 disabled:opacity-60 disabled:cursor-not-allowed"
-            >
-              {isLoading ? (
-                <>
-                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                  Verifying...
-                </>
-              ) : (
-                'Next'
-              )}
-            </button>
+            <div className="flex flex-col gap-3 sm:gap-4">
+              <button
+                type="submit"
+                disabled={!isOtpComplete || isLoading}
+                className="w-full bg-gradient-to-r from-cyan-500 to-cyan-600 text-white py-3 sm:py-4 rounded-xl font-semibold text-sm sm:text-base transition-all duration-300 flex items-center justify-center gap-2 hover:from-cyan-600 hover:to-cyan-700 hover:shadow-lg hover:shadow-cyan-500/25 disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {isLoading ? (
+                  <>
+                    <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    Verifying...
+                  </>
+                ) : (
+                  'Next'
+                )}
+              </button>
 
-            {/* Resend Button */}
-            <button
-              onClick={handleResendOTP}
-              disabled={!canResend || isLoading}
-              className={`w-full py-4 rounded-xl font-semibold text-base transition-all duration-300 border ${
-                isDarkMode
-                  ? 'border-cyan-400 text-cyan-400 hover:bg-cyan-400/10'
-                  : 'border-cyan-500 text-cyan-500 hover:bg-cyan-50'
-              } disabled:opacity-60 disabled:cursor-not-allowed`}
-            >
-              Resend
-            </button>
-          </div>
+              <button
+                type="button"
+                onClick={handleResendOTP}
+                disabled={!canResend || isLoading}
+                className={`w-full py-3 sm:py-4 rounded-xl font-semibold text-sm sm:text-base transition-all duration-300 border ${
+                  isDarkMode
+                    ? 'border-cyan-400 text-cyan-400 hover:bg-cyan-400/10'
+                    : 'border-cyan-500 text-cyan-500 hover:bg-cyan-50'
+                } disabled:opacity-60 disabled:cursor-not-allowed`}
+              >
+                Resend
+              </button>
+            </div>
+          </form>
         </div>
       </div>
 

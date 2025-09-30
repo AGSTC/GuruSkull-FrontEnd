@@ -1,9 +1,9 @@
-// Updated Header.jsx with role-based profile handling
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext';
 import { Menu, Sun, Moon, Bell, User, Settings, LogOut } from 'lucide-react';
-import logo from '../../assets/images/test.png';
+import logoDark from '../../assets/images/LogoforDark.png';
+import logoLight from '../../assets/images/LogoforLight.png';
 import profile from '../../assets/images/profile.png';
 import teacherProfile from '../../assets/images/teacher-profile.png';
 import studentProfile from '../../assets/images/student-profile.png';
@@ -16,10 +16,10 @@ const Header = ({ isSidebarExpanded, toggleSidebar }) => {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [userData, setUserData] = useState(null);
   const [userRole, setUserRole] = useState('tuition_owner');
+  const [profilePhoto, setProfilePhoto] = useState(profile);
   const profileRef = useRef(null);
   const notificationRef = useRef(null);
 
-  // Get user data from localStorage
   useEffect(() => {
     const getUserData = () => {
       const storedUser = localStorage.getItem('user');
@@ -28,39 +28,59 @@ const Header = ({ isSidebarExpanded, toggleSidebar }) => {
           const user = JSON.parse(storedUser);
           setUserData(user);
           setUserRole(user.role);
+          
+          if (user.profilePhotoUrl) {
+            setProfilePhoto(user.profilePhotoUrl);
+          } else {
+            setProfilePhoto(getRoleBasedProfileImage(user.role));
+          }
         } catch (error) {
           console.error('Error parsing user data:', error);
-          // Set defaults if parsing fails
           setUserData(null);
           setUserRole('tuition_owner');
+          setProfilePhoto(profile);
         }
       } else {
-        // Set defaults if no user data
         setUserData(null);
         setUserRole('tuition_owner');
+        setProfilePhoto(profile);
       }
     };
 
-    // Initial load
     getUserData();
     
-    // Listen for storage changes (in case user switches roles)
+    const handleProfilePhotoChange = (event) => {
+      if (event.detail && event.detail.photoUrl) {
+        setProfilePhoto(event.detail.photoUrl);
+      }
+    };
+    
     const handleStorageChange = () => {
       getUserData();
     };
     
     window.addEventListener('storage', handleStorageChange);
-    
-    // Also listen for custom events when localStorage is updated in the same tab
     window.addEventListener('userDataChanged', handleStorageChange);
+    window.addEventListener('profilePhotoChanged', handleProfilePhotoChange);
     
     return () => {
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('userDataChanged', handleStorageChange);
+      window.removeEventListener('profilePhotoChanged', handleProfilePhotoChange);
     };
   }, []);
 
-  // Role-based notifications
+  const getRoleBasedProfileImage = (role) => {
+    if (role === 'teacher') {
+      return teacherProfile;
+    } else if (role === 'student') {
+      return studentProfile;
+    } else if (role === 'parent') {
+      return parentProfile;
+    }
+    return profile;
+  };
+
   const getNotifications = () => {
     if (userRole === 'teacher') {
       return [
@@ -117,7 +137,6 @@ const Header = ({ isSidebarExpanded, toggleSidebar }) => {
         }
       ];
     } else {
-      // Original owner notifications
       return [
         {
           id: 1,
@@ -139,34 +158,21 @@ const Header = ({ isSidebarExpanded, toggleSidebar }) => {
     }
   };
 
-  const Notification = getNotifications();
+  const notifications = getNotifications();
 
-  // Get profile image based on user role
-  const getProfileImage = () => {
-    if (userData && userData.profileImage === 'teacher-profile.png') {
-      return teacherProfile;
-    } else if (userData && userData.profileImage === 'student-profile.png') {
-      return studentProfile;
-    }
-    else if (userData && userData.profileImage === 'parent-profile.png') {
-      return parentProfile;
-    }
-    return profile;
-  };
-
-  // Get user title based on role
   const getUserTitle = () => {
     if (userRole === 'teacher') {
       return 'Teacher';
     } else if (userRole === 'student') {
       return 'Student';
+    } else if (userRole === 'parent') {
+      return 'Parent';
     }
     return 'Tuition Owner';
   };
 
-  // Handle profile navigation based on role
   const handleProfileNavigation = () => {
-    console.log('Header - Navigating to profile for role:', userRole); // Debug log
+    console.log('Header - Navigating to profile for role:', userRole);
     
     if (userRole === 'teacher') {
       navigate('/TeacherProfile');
@@ -174,15 +180,14 @@ const Header = ({ isSidebarExpanded, toggleSidebar }) => {
       navigate('/StudentProfile');
     } else if (userRole === 'parent') {
       navigate('/ParentSettings');
-    }else {
+    } else {
       navigate('/Profile');
     }
-    setIsProfileOpen(false); // Close the dropdown
+    setIsProfileOpen(false);
   };
 
-  // Handle settings navigation based on role
   const handleSettingsNavigation = () => {
-    console.log('Header - Navigating to settings for role:', userRole); // Debug log
+    console.log('Header - Navigating to settings for role:', userRole);
     
     if (userRole === 'teacher') {
       navigate('/TeacherSettings');
@@ -190,98 +195,89 @@ const Header = ({ isSidebarExpanded, toggleSidebar }) => {
       navigate('/StudentSettings');
     } else if (userRole === 'parent') {
       navigate('/ParentSettings');
-    }else {
+    } else {
       navigate('/SettingsManagement');
     }
-    setIsProfileOpen(false); // Close the dropdown
+    setIsProfileOpen(false);
   };
 
   const logouthandle = () => {
-    // Clear any stored authentication data
     localStorage.removeItem('authToken');
     localStorage.removeItem('user');
-    
-    // Navigate to login page
     navigate('/login');
   };
 
-  // Handle notification click
   const handleNotificationClick = (notificationId) => {
     navigate('/Notification');
-    setIsNotificationOpen(false); // Close the dropdown
+    setIsNotificationOpen(false);
   };
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-40 h-20 ${
-      isDarkMode ? 'bg-slate-900 border-b border-slate-700' : 'bg-gray-300 border-b border-gray-300'
+    <header className={`fixed top-0 left-0 right-0 z-40 h-16 md:h-20 ${
+      isDarkMode ? 'bg-slate-900 border-b border-slate-700' : 'bg-white border-b border-gray-300'
     }`}>
-      <div className="flex items-center justify-between h-full px-4 md:px-6">
+      <div className="flex items-center justify-between h-full px-3 sm:px-4 md:px-6">
         
-        {/* Left Section */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 md:gap-3">
           <button
             onClick={toggleSidebar}
-            className={`p-2 rounded-md focus:outline-none focus:ring-0 ${
+            className={`p-1 md:p-2 rounded-md focus:outline-none focus:ring-0 ${
               isDarkMode ? 'text-white hover:bg-slate-800' : 'text-gray-700 hover:bg-gray-200'
             }`}
           >
-            <Menu size={26} />
+            <Menu size={20} className="md:w-6 md:h-6" />
           </button>
 
-          <div className="flex items-center gap-3">
-            <img src={logo} alt="GuruSkull Logo" className="w-16 h-16" />
-            <span className={`font-bold text-xl ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <div className="flex items-center">
+            <img 
+              src={isDarkMode ? logoDark : logoLight} 
+              alt="GuruSkull Logo" 
+              className="w-16 h-16 md:w-28 md:h-28" 
+            />
+            <span className={`font-bold text-lg md:text-2xl ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               GuruSkull
             </span>
           </div>
-      </div>
-  
+        </div>
 
-        {/* Right Section */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 md:gap-2">
           
-           {/* Theme Toggle Switch */}
           <button
             onClick={toggleTheme}
-            className={`relative w-20 h-10 rounded-full border-0 cursor-pointer transition-all duration-500 ease-in-out focus:outline-none focus:ring-0 ${isDarkMode
+            className={`relative w-12 h-6 md:w-16 md:h-8 lg:w-20 lg:h-10 rounded-full border-0 cursor-pointer transition-all duration-500 ease-in-out focus:outline-none focus:ring-0 ${isDarkMode
                 ? 'bg-white'
                 : 'bg-black'
               }`}
             title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
           >
-            {/* Sun Icon (Left side) */}
-            <div className={`absolute left-2.5 top-1/2 transform -translate-y-1/2 transition-all duration-300`}>
+            <div className={`absolute left-1 md:left-2 top-1/2 transform -translate-y-1/2 transition-all duration-300`}>
               <Sun
-                className={isDarkMode ? 'text-gray-400' : 'text-orange-500'}
-                size={18}
+                className={`md:w-3 md:h-3 lg:w-4 lg:h-4 ${isDarkMode ? 'text-gray-400' : 'text-orange-500'}`}
+                size={12}
               />
             </div>
-  
-            {/* Moon Icon (Right side) */}
-            <div className={`absolute right-2.5 top-1/2 transform -translate-y-1/2 transition-all duration-300`}>
+
+            <div className={`absolute right-1 md:right-2 top-1/2 transform -translate-y-1/2 transition-all duration-300`}>
               <Moon
-                className={isDarkMode ? 'text-blue-300' : 'text-white'}
-                size={18}
+                className={`md:w-3 md:h-3 lg:w-4 lg:h-4 ${isDarkMode ? 'text-blue-300' : 'text-white'}`}
+                size={12}
               />
             </div>
-  
-            {/* Switch Slider Circle */}
-            <div className={`absolute top-1 w-8 h-8 rounded-full transition-all duration-500 ease-in-out shadow-md ${isDarkMode
-                ? 'transform translate-x-11 bg-black'
-                : 'transform translate-x-1 bg-white'
+
+            <div className={`absolute top-0.5 md:top-1 w-5 h-5 md:w-6 md:h-6 lg:w-8 lg:h-8 rounded-full transition-all duration-500 ease-in-out shadow-md ${isDarkMode
+                ? 'transform translate-x-6 md:translate-x-8 lg:translate-x-11 bg-black'
+                : 'transform translate-x-0.5 md:translate-x-1 bg-white'
               }`}>
-              {/* Small icon on the slider */}
               <div className="absolute inset-0 flex items-center justify-center">
                 {isDarkMode ? (
-                  <Moon className="text-white" size={14.5} />
+                  <Moon className="text-white w-3 h-3 md:w-3 md:h-3 lg:w-4 lg:h-4" />
                 ) : (
-                  <Sun className="text-orange-400" size={14.5} />
+                  <Sun className="text-orange-400 w-3 h-3 md:w-3 md:h-3 lg:w-4 lg:h-4" />
                 )}
               </div>
             </div>
           </button>
 
-          {/* Bell Icon with Hover */}
           <div 
             className="relative" 
             ref={notificationRef}
@@ -289,47 +285,47 @@ const Header = ({ isSidebarExpanded, toggleSidebar }) => {
             onMouseLeave={() => setIsNotificationOpen(false)}
           >
             <button
-              className={`p-2 rounded-md focus:outline-none focus:ring-0 ${
+              className={`p-1 md:p-2 rounded-md focus:outline-none focus:ring-0 ${
                 isDarkMode ? 'text-white hover:bg-slate-800' : 'text-gray-600 hover:bg-gray-200'
               }`}
             >
-              <Bell size={26} />
-              {Notification.length > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-                  {Notification.length}
+              <Bell size={20} className="md:w-6 md:h-6" />
+              {notifications.length > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 w-3 h-3 md:w-4 md:h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                  {notifications.length}
                 </span>
               )}
             </button>
 
             {isNotificationOpen && (
-              <div className={`absolute right-0 top-12 w-80 md:w-96 rounded-lg shadow-xl border z-50 ${
+              <div className={`absolute right-0 top-10 md:top-12 w-72 md:w-80 rounded-lg shadow-xl border z-50 ${
                 isDarkMode ? 'bg-slate-800 border-slate-600' : 'bg-white border-gray-300'
               }`}>
-                <div className={`px-4 py-3 border-b ${isDarkMode ? 'border-slate-600' : 'border-gray-300'}`}>
-                  <h3 className={`font-semibold text-left ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <div className={`px-3 md:px-4 py-2 md:py-3 border-b ${isDarkMode ? 'border-slate-600' : 'border-gray-300'}`}>
+                  <h3 className={`font-semibold text-left text-sm md:text-base ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     Notifications
                   </h3>
                 </div>
                 
-                <div className="max-h-96 overflow-y-auto">
-                  {Notification.map((notification) => (
+                <div className="max-h-64 md:max-h-96 overflow-y-auto">
+                  {notifications.map((notification) => (
                     <div 
                       key={notification.id} 
                       onClick={() => handleNotificationClick(notification.id)}
-                      className={`px-4 py-3 border-b cursor-pointer ${
+                      className={`px-3 md:px-4 py-2 md:py-3 border-b cursor-pointer ${
                         isDarkMode ? 'border-slate-600 hover:bg-slate-700' : 'border-gray-200 hover:bg-gray-100'
                       }`}
                     >
-                      <div className="flex items-start gap-3 text-left">
-                        <div className="text-xl">{notification.avatar}</div>
+                      <div className="flex items-start gap-2 md:gap-3 text-left">
+                        <div className="text-lg md:text-xl">{notification.avatar}</div>
                         <div className="flex-1">
-                          <h4 className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          <h4 className={`font-medium text-xs md:text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                             {notification.title}
                           </h4>
-                          <p className={`text-xs mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
+                          <p className={`text-xs mt-0.5 md:mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
                             {notification.description}
                           </p>
-                          <p className={`text-xs mt-1 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>
+                          <p className={`text-xs mt-0.5 md:mt-1 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>
                             {notification.timeAgo}
                           </p>
                         </div>
@@ -338,11 +334,10 @@ const Header = ({ isSidebarExpanded, toggleSidebar }) => {
                   ))}
                 </div>
                 
-                {/* View All Notifications Button */}
-                <div className={`px-4 py-3 border-t ${isDarkMode ? 'border-slate-600' : 'border-gray-300'}`}>
+                <div className={`px-3 md:px-4 py-2 md:py-3 border-t ${isDarkMode ? 'border-slate-600' : 'border-gray-300'}`}>
                   <button 
                     onClick={() => handleNotificationClick('all')}
-                    className={`w-full text-center py-2 text-sm font-medium ${
+                    className={`w-full text-center py-1 md:py-2 text-xs md:text-sm font-medium ${
                       isDarkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'
                     } transition-colors`}
                   >
@@ -353,7 +348,6 @@ const Header = ({ isSidebarExpanded, toggleSidebar }) => {
             )}
           </div>
 
-          {/* Profile with Hover */}
           <div 
             className="relative" 
             ref={profileRef}
@@ -361,75 +355,75 @@ const Header = ({ isSidebarExpanded, toggleSidebar }) => {
             onMouseLeave={() => setIsProfileOpen(false)}
           >
             <button
-              className="flex items-center gap-2 p-1 rounded-md focus:outline-none focus:ring-0"
+              className="flex items-center gap-1 md:gap-2 p-0.5 md:p-1 rounded-md focus:outline-none focus:ring-0"
             >
               <img
-                src={getProfileImage()}
+                src={profilePhoto}
                 alt="Profile"
-                className="w-12 h-12 rounded-full"
+                className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 rounded-full"
               />
             </button>
 
             {isProfileOpen && (
-              <div className={`absolute right-0 top-12 w-72 rounded-lg shadow-xl border z-50 ${
+              <div className={`absolute right-0 top-10 md:top-12 w-64 md:w-72 rounded-lg shadow-xl border z-50 ${
                 isDarkMode ? 'bg-slate-800 border-slate-600' : 'bg-white border-gray-300'
               }`}>
-                <div className={`px-4 py-4 border-b ${isDarkMode ? 'border-slate-600' : 'border-gray-300'}`}>
-                  <div className="flex items-center gap-3 text-left">
+                <div className={`px-3 md:px-4 py-3 md:py-4 border-b ${isDarkMode ? 'border-slate-600' : 'border-gray-300'}`}>
+                  <div className="flex items-center gap-2 md:gap-3 text-left">
                     <img
-                      src={getProfileImage()}
+                      src={profilePhoto}
                       alt={userData ? userData.name : 'User'}
-                      className="w-12 h-12 rounded-full"
+                      className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 rounded-full"
                     />
                     <div>
-                      <h3 className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <h3 className={`font-semibold text-sm md:text-base ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                         {userData ? userData.name : 'User'}
                       </h3>
-                      <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
+                      <p className={`text-xs md:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
                         {getUserTitle()}
                       </p>
                     </div>
                   </div>
                 </div>
 
-                <div className="py-2">
+                <div className="py-1 md:py-2">
                   <button 
                     onClick={handleProfileNavigation}
-                    className={`flex items-center gap-3 px-4 py-2 text-sm transition-colors text-left w-full ${
+                    className={`flex items-center gap-2 md:gap-3 px-3 md:px-4 py-2 text-xs md:text-sm transition-colors text-left w-full ${
                       isDarkMode ? 'text-gray-300 hover:bg-slate-700' : 'text-gray-700 hover:bg-gray-100'
                     }`}
                   >
-                    <User size={16} />
+                    <User size={14} className="md:w-4 md:h-4" />
                     My Profile
                   </button>
                   
                   <button 
                     onClick={handleSettingsNavigation}
-                    className={`flex items-center gap-3 px-4 py-2 text-sm transition-colors text-left w-full ${
+                    className={`flex items-center gap-2 md:gap-3 px-3 md:px-4 py-2 text-xs md:text-sm transition-colors text-left w-full ${
                       isDarkMode ? 'text-gray-300 hover:bg-slate-700' : 'text-gray-700 hover:bg-gray-100'
                     }`}
                   >
-                    <Settings size={16} />
+                    <Settings size={14} className="md:w-4 md:h-4" />
                     Settings
                   </button>
                   <button 
                     onClick={() => navigate('/Notification')}
-                    className={`flex items-center gap-3 px-4 py-2 text-sm transition-colors text-left w-full ${
+                    className={`flex items-center gap-2 md:gap-3 px-3 md:px-4 py-2 text-xs md:text-sm transition-colors text-left w-full ${
                       isDarkMode ? 'text-gray-300 hover:bg-slate-700' : 'text-gray-700 hover:bg-gray-100'
                     }`}
                   >
-                    <Bell size={16} />
+                    <Bell size={14} className="md:w-4 md:h-4" />
                     Notification
                   </button>
                 </div>
 
-                <div className={`border-t px-4 py-3 ${isDarkMode ? 'border-slate-600' : 'border-gray-300'}`}>
+                <div className={`border-t px-3 md:px-4 py-2 md:py-3 ${isDarkMode ? 'border-slate-600 hover:bg-slate-700' : 'border-gray-300 hover:bg-gray-100'}`}>
                   <button 
                     onClick={logouthandle} 
-                    className="flex items-center gap-3 text-sm text-red-500 hover:text-red-600 transition-colors text-left" 
+                    className="flex items-center gap-2 md:gap-3 text-xs md:text-sm text-red-500 hover:text-red-600 transition-colors text-left w-full" 
                     type="button"
                   >
-                    <LogOut size={16} />
+                    <LogOut size={14} className="md:w-4 md:h-4" />
                     Log out
                   </button>
                 </div>
