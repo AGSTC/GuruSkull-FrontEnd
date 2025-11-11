@@ -250,14 +250,14 @@ const Header = ({ isSidebarExpanded, toggleSidebar }) => {
               }`}
             title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
           >
-            <div className={`absolute left-1 md:left-2 top-1/2 transform -translate-y-1/2 transition-all duration-300`}>
+            <div className={`absolute left-1 md:left-3 top-1/2 transform -translate-y-1/2 transition-all duration-300`}>
               <Sun
                 className={`md:w-3 md:h-3 lg:w-4 lg:h-4 ${isDarkMode ? 'text-gray-400' : 'text-orange-500'}`}
                 size={12}
               />
             </div>
 
-            <div className={`absolute right-1 md:right-2 top-1/2 transform -translate-y-1/2 transition-all duration-300`}>
+            <div className={`absolute right-1 md:right-3 top-1/2 transform -translate-y-1/2 transition-all duration-300`}>
               <Moon
                 className={`md:w-3 md:h-3 lg:w-4 lg:h-4 ${isDarkMode ? 'text-blue-300' : 'text-white'}`}
                 size={12}
