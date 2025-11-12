@@ -433,7 +433,7 @@ const LoginPage = () => {
                   )}
                 </button>
 
-                <div className="mt-4 sm:mt-6 p-3 sm:p-4 rounded-lg border border-yellow-400 bg-yellow-50">
+                {/* <div className="mt-4 sm:mt-6 p-3 sm:p-4 rounded-lg border border-yellow-400 bg-yellow-50">
                   <div className="text-xs sm:text-sm font-medium text-yellow-800 mb-2">Debug Info (Remove in Production):</div>
                   <div className="flex flex-col sm:flex-row gap-2">
                     <button
@@ -469,7 +469,7 @@ const LoginPage = () => {
                       Clear Dynamic Credentials
                     </button>
                   </div>
-                </div>
+                </div> */}
                 
                 <div className="mt-4 sm:mt-6">
                   <div className="relative mb-3 sm:mb-4">
